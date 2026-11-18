@@ -1,0 +1,16 @@
+# Public copy: owner handles and public endpoints removed.
+case=heat2-heat3
+utc=2026-11-17T20:56:24Z
+source=HEAT2_TAILSCALE_IP
+destination=HEAT3_TAILSCALE_IP
+pong from heat-3 (HEAT3_TAILSCALE_IP) via DERP(ams) in 404ms
+pong from heat-3 (HEAT3_TAILSCALE_IP) via DERP(ams) in 170ms
+pong from heat-3 (HEAT3_TAILSCALE_IP) via DERP(ams) in 170ms
+pong from heat-3 (HEAT3_TAILSCALE_IP) via DERP(ams) in 169ms
+pong from heat-3 (HEAT3_TAILSCALE_IP) via DERP(ams) in 359ms
+pong from heat-3 (HEAT3_TAILSCALE_IP) via DERP(ams) in 213ms
+pong from heat-3 (HEAT3_TAILSCALE_IP) via DERP(ams) in 187ms
+pong from heat-3 (HEAT3_TAILSCALE_IP) via DERP(ams) in 179ms
+pong from heat-3 (HEAT3_TAILSCALE_IP) via DERP(ams) in 263ms
+pong from heat-3 (HEAT3_TAILSCALE_IP) via DERP(ams) in 174ms
+direct connection not established

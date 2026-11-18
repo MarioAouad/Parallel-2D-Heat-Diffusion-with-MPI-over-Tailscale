@@ -1,0 +1,6 @@
+# Example used for our six-process cluster test: two allocated vCPUs per VM.
+# A slot permits a process; writing slots=4 does NOT allocate four virtual CPUs.
+# Confirm each VM's real vCPU count before increasing any slot count.
+HEAT1_TAILSCALE_IP slots=2
+HEAT2_TAILSCALE_IP slots=2
+HEAT3_TAILSCALE_IP slots=2

@@ -1,0 +1,4 @@
+# Public copy: owner handles and public endpoints removed.
+case=heat1-local
+utc=2026-11-17T20:17:01Z
+Same-VM case: MPI uses shared memory; no inter-VM route.

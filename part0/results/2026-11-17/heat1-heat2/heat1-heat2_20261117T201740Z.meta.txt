@@ -1,0 +1,14 @@
+# Public copy: owner handles and public endpoints removed.
+case=heat1-heat2
+profile=full
+utc=20261117T201740Z
+hosts=HEAT1_TAILSCALE_IP:1,HEAT2_TAILSCALE_IP:1
+transport=tcp,self
+MPI version on launch VM:
+mpirun (Open MPI) 4.1.6
+
+Report bugs to http://www.open-mpi.org/community/help/
+Tailscale status on launch VM (record pair-specific direct/DERP separately):
+HEAT1_TAILSCALE_IP   heat-1            [owner-removed]        linux  -                                                      
+HEAT2_TAILSCALE_IP  heat-2            [owner-removed]       linux  active; direct [public-endpoint-removed], tx 12764 rx 32588  
+HEAT3_TAILSCALE_IP    heat-3  [owner-removed]  linux  active; direct [public-endpoint-removed], tx 13388 rx 32924   

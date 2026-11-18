@@ -1,0 +1,5 @@
+# Copy to cluster.local.sh (ignored by Git), then enter your real VM addresses.
+# Run "tailscale ip -4" inside each VM to obtain them.
+HEAT1_IP="YOUR_FIRST_VM_TAILSCALE_IPV4"
+HEAT2_IP="YOUR_SECOND_VM_TAILSCALE_IPV4"
+HEAT3_IP="YOUR_THIRD_VM_TAILSCALE_IPV4"

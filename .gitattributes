@@ -1,0 +1,10 @@
+# Ubuntu shell scripts need LF line endings even when cloned on Windows.
+* text=auto
+*.sh text eol=lf
+*.cpp text eol=lf
+*.py text eol=lf
+Makefile text eol=lf
+# Preserve the exact byte representation of archived measurement files.
+part0/results/2026-11-17/** -text
+*.pdf binary
+*.png binary

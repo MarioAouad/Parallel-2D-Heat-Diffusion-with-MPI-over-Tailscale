@@ -1,0 +1,242 @@
+[
+  {
+    "file": "part0/results/2026-11-17/heat1-heat2/heat1-heat2_20261117T201740Z.csv",
+    "sha256": "5887dfb40bda62babbb3415a936d0dc75dedca4df5cf4f4eded0a3ca33c7833d",
+    "bytes": 2118,
+    "original_sha256": "5887dfb40bda62babbb3415a936d0dc75dedca4df5cf4f4eded0a3ca33c7833d",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat1-heat2/heat1-heat2_20261117T201740Z.log",
+    "sha256": "ec07806d5cf2b82493a002774481e127dcb94cafa01cc69e916da7668af23a3b",
+    "bytes": 903,
+    "original_sha256": "ec07806d5cf2b82493a002774481e127dcb94cafa01cc69e916da7668af23a3b",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat1-heat2/heat1-heat2_20261117T201740Z.meta.txt",
+    "sha256": "146f8524b99cd869d6153f2452c60b191ce73fe7b495e0d58d4c5e2e38981713",
+    "bytes": 731,
+    "original_sha256": "c7eb61a4acf037f8b340ba66f50098136726fee12861d41fc331d790114fa7da",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat1-heat2/heat1-heat2_20261117T201740Z.route-after.txt",
+    "sha256": "05c7f632fee6c49fc62d004f661b23a94d1ab3a503f834572aea603b18c23f20",
+    "bytes": 234,
+    "original_sha256": "305af97b7282c730761820664ec443bf6421a4e15fbbc1b7ce1db8c9816ff068",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat1-heat2/heat1-heat2_20261117T201740Z.route-before.txt",
+    "sha256": "c6f6aabd7eb2b6f38d9e8e7b8c5beb4bc13f1be9e991b7ff0d230bb69219cad9",
+    "bytes": 234,
+    "original_sha256": "9873efbd54df5a25e0bcc9dc2f56ca9cd344d95635abccb8f33771bb2030393b",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat1-heat3/heat1-heat3_20261117T215700Z.csv",
+    "sha256": "c060b984298107610969ecb7b92e55e0dd1df95279b3023960ef2f90c4230894",
+    "bytes": 2116,
+    "original_sha256": "e5a0b9028a267ed73c266386ad8e7793f107f34a89b43c3c11a74283c009449a",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat1-heat3/heat1-heat3_20261117T215700Z.log",
+    "sha256": "848aa92edba61ba60b027679ae00e21c247c8c26d7e54603627965eeba6ed0f2",
+    "bytes": 903,
+    "original_sha256": "c3e8676ad35706d5fdb69f30e33bcf83f2452f6f1eeaf590efce5728a21a01b3",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat1-heat3/heat1-heat3_20261117T215700Z.meta.txt",
+    "sha256": "cc41a7fccaad9241e1b9760115fb9ca963cee8279f2b24098cf1edc391860029",
+    "bytes": 652,
+    "original_sha256": "1802969a78b984e8235d1fcb957b763bd03f413d7354bfbbb3b6f7e04e80d906",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat1-heat3/heat1-heat3_20261117T215700Z.route-after.txt",
+    "sha256": "0a7be5576dc9cbd6f1da32696f1ec6baaa7a780379f16b967f168e6e11784eca",
+    "bytes": 234,
+    "original_sha256": "02ccd5b97d672b81c956536f15e4cc6e412819494331818f6c6c945a109a3359",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat1-heat3/heat1-heat3_20261117T215700Z.route-before.txt",
+    "sha256": "e1db878258dfb4d295e752531f1b4237352a5484204563cff8af954e401c0ae6",
+    "bytes": 417,
+    "original_sha256": "afed2206912aaa8c0c0b4eb34a083027068bcca9f4db4527f18dcae70257b519",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat1-local/heat1-local_20261117T201700Z.csv",
+    "sha256": "c92031f7d0a7399a8a2aff653c04acfdfa71650ba4782de335f40dc48dc18d9e",
+    "bytes": 2173,
+    "original_sha256": "c92031f7d0a7399a8a2aff653c04acfdfa71650ba4782de335f40dc48dc18d9e",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat1-local/heat1-local_20261117T201700Z.log",
+    "sha256": "fbd6f9d04ae0c7258b7796f33f86cc95f656432d7da1450919769e54499f02a3",
+    "bytes": 903,
+    "original_sha256": "fbd6f9d04ae0c7258b7796f33f86cc95f656432d7da1450919769e54499f02a3",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat1-local/heat1-local_20261117T201700Z.meta.txt",
+    "sha256": "7da6c61662e6461143fef8a14d803ef16acc6ff0167efa3d59ed15e374c2d416",
+    "bytes": 543,
+    "original_sha256": "4d4e509428d4f8eeb0eaa3e5c0b301942c20607b57e61cf280fa1e136edb4930",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat1-local/heat1-local_20261117T201700Z.route-after.txt",
+    "sha256": "618233ae5f9e1eaa86e7c7b439bc3b3773db6a18af47594d1896f2ccd25a4abb",
+    "bytes": 158,
+    "original_sha256": "7ea07d7ed6f99b7931e1e571ee985f33c4c668c72981e15f3abd311ee49664c2",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat1-local/heat1-local_20261117T201700Z.route-before.txt",
+    "sha256": "e58cf807bbae435de24f404f2bb3a01c68085555a3bfe953ce45399584c4890d",
+    "bytes": 158,
+    "original_sha256": "b86e56b6dd8e65d797da4ae8f1d4e8342b5a0ab9f3e57fa7473b549eac7abfba",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat2-heat3/heat2-heat3_20261117T205624Z.csv",
+    "sha256": "6f10eec8e102e9f4f2aaf4e2e6666fd5224fd619493b392dfd2b1e3ddffd1191",
+    "bytes": 2116,
+    "original_sha256": "ec9ef0364880cbd6cd350796aa6d89faabe7c1d29ecf3041036e9891c6699f67",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat2-heat3/heat2-heat3_20261117T205624Z.log",
+    "sha256": "84f8740f649a3f3dcbe55f1980d831998f6e71e0ff459252c99d49cfda993b77",
+    "bytes": 903,
+    "original_sha256": "a3a0b57b9dd81dcc537dc0027a71c7a54d469fd953e22cf61c7d039bf0625885",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat2-heat3/heat2-heat3_20261117T205624Z.meta.txt",
+    "sha256": "dbc05fbdb6656a36c396b0eb66101f1713297744a7e23095d39212809c38757b",
+    "bytes": 652,
+    "original_sha256": "35ac4a7ab806869093ec7edead9d8d511deab245ed3f3bf76b1621ea8c06cde4",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat2-heat3/heat2-heat3_20261117T205624Z.route-after.txt",
+    "sha256": "e39659582bc95ca8bc95e16f1de6e774b51caf1159f96eb9c4376d6ba429fb6f",
+    "bytes": 234,
+    "original_sha256": "3156fa535065c0e57f22c5091b10889c716fbb9513e9047bd071f5cdce9d3771",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat2-heat3/heat2-heat3_20261117T205624Z.route-before.txt",
+    "sha256": "22704ad82f4e4aa2a1c1ac460ea6ff238d0ac529022b33824d2e087e01e40f27",
+    "bytes": 802,
+    "original_sha256": "6d4367afe05b8e7555ac5cd861f54db00d3b42e11b0bfdfc54842586bacc6c23",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat2-local/heat2-local_20261117T201708Z.csv",
+    "sha256": "bb6ccecbf9703094b56fda119ee1a0d37042c9521e59438eb7689db3b62a2d02",
+    "bytes": 2172,
+    "original_sha256": "bb6ccecbf9703094b56fda119ee1a0d37042c9521e59438eb7689db3b62a2d02",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat2-local/heat2-local_20261117T201708Z.log",
+    "sha256": "6d85fe061155f454f0a58e4386eb47eab7fae7bbc61372e3dfae803a006a3fb2",
+    "bytes": 903,
+    "original_sha256": "6d85fe061155f454f0a58e4386eb47eab7fae7bbc61372e3dfae803a006a3fb2",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat2-local/heat2-local_20261117T201708Z.meta.txt",
+    "sha256": "37d20100297a38a906ccc78f0e14c182272eeee656830b03963c841bc891ff9b",
+    "bytes": 543,
+    "original_sha256": "715cfb70ea836e149cf3a7730398cfd1460e39cf44a42b150dcf05c46dc7f452",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat2-local/heat2-local_20261117T201708Z.route-after.txt",
+    "sha256": "6b72894b078f939e6fed341a97e508920c2e61bb4231c5a010157413715ed95e",
+    "bytes": 158,
+    "original_sha256": "80ca6c68af62337b047911c2c1ad073bfe4f693289dfff250bc4e9b1ec7ceffb",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat2-local/heat2-local_20261117T201708Z.route-before.txt",
+    "sha256": "bde11677fe30d64d3dfd36cb680e17a4ba8221382301c702bcd91303053f2479",
+    "bytes": 158,
+    "original_sha256": "af327f549034fdfe15dc20c2f18a62ecd91dcea9de1833fa643822b70e4fbd85",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat3-local/heat3-local_20261117T201725Z.csv",
+    "sha256": "55ee967c47797858e78c76b22633a0d47e4eb506696b7151134cb37e0306a72d",
+    "bytes": 2171,
+    "original_sha256": "20e4a56b26c8dcfc75e55f3bb03e47d4316af55883ff8ae1502ba5b5b2ad0797",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat3-local/heat3-local_20261117T201725Z.log",
+    "sha256": "5826fb07b22a023ab8e1b1cdb0e210abd81aaf585764e5eeb4e547adb7b29489",
+    "bytes": 903,
+    "original_sha256": "14a6449eddafd89859a680b3c510bf1489e40b48e5ff2af1172be114a342f0ba",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat3-local/heat3-local_20261117T201725Z.meta.txt",
+    "sha256": "880062acd24dfd42a5017e08d435f539adc2f06d6c76c4a60736eefbdb2eb778",
+    "bytes": 705,
+    "original_sha256": "ac28438c8a1f741d9840c6948d282c2db4aa65e4216f71b8060e05d9593e1791",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat3-local/heat3-local_20261117T201725Z.route-after.txt",
+    "sha256": "1f38f9eb3c1663a035e77ac9f73a0774673ab823dedb08eb9488b5d5ab73db79",
+    "bytes": 158,
+    "original_sha256": "846dcafb265d47a72451748a0e7a2baeac4806d533c075b8974cccfa5652a3ec",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  },
+  {
+    "file": "part0/results/2026-11-17/heat3-local/heat3-local_20261117T201725Z.route-before.txt",
+    "sha256": "614192a94d1bd9c4a19f29d18acc3d986a6bdf28c2aa98257c3599348a6bd135",
+    "bytes": 158,
+    "original_sha256": "b626badf7db2740a72c0e8cc25970f965048b467703117603f25644b0d3a44bf",
+    "public_copy_sanitized": true,
+    "note": "Public copy uses generic node labels and no real network addresses. Numeric measurement fields are unchanged."
+  }
+]

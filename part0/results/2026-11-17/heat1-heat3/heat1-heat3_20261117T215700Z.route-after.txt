@@ -1,0 +1,6 @@
+# Public copy: owner handles and public endpoints removed.
+case=heat1-heat3
+utc=2026-11-17T23:09:35Z
+source=HEAT1_TAILSCALE_IP
+destination=HEAT3_TAILSCALE_IP
+pong from heat-3 (HEAT3_TAILSCALE_IP) via [public-endpoint-removed] in 61ms

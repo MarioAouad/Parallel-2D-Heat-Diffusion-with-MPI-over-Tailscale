@@ -1,0 +1,17 @@
+[
+  {
+    "original_filename": "mpi_hello.cpp",
+    "sha256_before_annotation": "427638c7bbe47f755ed300d2525f73c2b241d0a9027dc5c1e242b5e9761405c6",
+    "note": "Executable statements retained in the annotated counterpart."
+  },
+  {
+    "original_filename": "mpi_pingpong.cpp",
+    "sha256_before_annotation": "87583b2d07f08268436dcd649326537ed20296b514223eb0c17a515e5c898b2b",
+    "note": "Executable statements retained in the annotated counterpart."
+  },
+  {
+    "original_filename": "analyze_pingpong.py",
+    "sha256_before_annotation": "337952fed8f913cf6753a5f8518b91e82dca33925bc9c99b5dd527574decb5a3",
+    "note": "Executable statements retained in the annotated counterpart."
+  }
+]
