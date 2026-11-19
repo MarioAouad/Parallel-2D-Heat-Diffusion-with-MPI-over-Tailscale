@@ -1,0 +1,107 @@
+{
+  "reviewed_utc": "2026-11-19T19:15:00+00:00",
+  "status": "PASS",
+  "source_run": "20261119T184915639127Z",
+  "executed_commit": "1c2b5e6 (merge of part2-strips 85b2358; heat_mpi.cpp and heat_serial.cpp hashes match metadata.json)",
+  "correctness_suite": {
+    "file": "console/check-strips.txt",
+    "groups": 6,
+    "result": "OK"
+  },
+  "comparisons": {
+    "total": 84,
+    "identical": 84,
+    "P": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "N": [
+      8,
+      9,
+      10,
+      16,
+      17,
+      64,
+      101
+    ],
+    "cases": [
+      "1",
+      "2",
+      "V"
+    ],
+    "uneven_strip_rows": 36,
+    "machines_by_P": {
+      "1": [
+        1
+      ],
+      "2": [
+        2
+      ],
+      "3": [
+        3
+      ],
+      "4": [
+        3
+      ]
+    }
+  },
+  "raw_runs": {
+    "count": 111,
+    "all_returncode_zero": true,
+    "all_stderr_empty": true
+  },
+  "halo_debug": "debug_halo.txt: P=2 (rows 4,3) and P=3 (rows 3,2,2); every ghost row equals the neighbour's owned row; boundary rows 1.0; first interior rows equal r=0.2 after one step",
+  "figures_inspected": [
+    "decomposition.png",
+    "cases.png"
+  ],
+  "incidental_timing": {
+    "note": "Single correctness runs, not Part 4 measurements",
+    "median_comm_ms_per_step": {
+      "1": 0.0,
+      "2": 106.843,
+      "3": 138.231,
+      "4": 213.868
+    },
+    "min_comm_share_multi_machine": 0.99982,
+    "figure_runs_P4_N64_500_steps": [
+      {
+        "case": "1",
+        "t_total_s": 68.015815455,
+        "t_comp_s": 0.0035299780000112024,
+        "t_comm_s": 68.01366849900012
+      },
+      {
+        "case": "2",
+        "t_total_s": 77.102997868,
+        "t_comp_s": 0.0036790510000448418,
+        "t_comm_s": 77.10147810400001
+      }
+    ]
+  },
+  "privacy_scan": "No Tailscale/public addresses, hostnames or account identifiers in published files",
+  "console_files": [
+    {
+      "file": "console/check-strips.txt",
+      "bytes": 785,
+      "sha256": "3d9dd735e819580ca3edfe89825c4059dfd49d2013572b2a6d5a5a87060105c9"
+    },
+    {
+      "file": "console/commit.txt",
+      "bytes": 59,
+      "sha256": "5eb9786d1a75f9f7e139138d5f4a4bc4e90f656062b738c59e1a4d41bb9b4a00"
+    },
+    {
+      "file": "console/run-cluster.txt",
+      "bytes": 5046,
+      "sha256": "22102a48eda395cb55bc1ebfb6c6df8525f158d72d70fdf4a0cdd827982e33d5"
+    },
+    {
+      "file": "console/verify-results.txt",
+      "bytes": 307,
+      "sha256": "b0e79581687bc3bab701f27ce4b5496bb9a129465ddc050372ca7835b1e33474"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+PASS 7 published hashes and unchanged serial/strips sources (cluster study)
+PASS 84 comparisons bit-for-bit identical; P = [1, 2, 3, 4]; N = [8, 9, 10, 16, 17, 64, 101]
+PASS every P >= 2 run used at least two machines
+PASS raw runs successful and consistent with compare.csv; halo debug transcripts present

@@ -721,3 +721,28 @@ Work done (Part 3 still not started):
 - Updated part2/README.md (now lines 1-157), the Makefile Part 2 targets (check-strips, verify-part2, verify-part2-results), and the root README.md (status, guide rows, build commands, layout, results scope).
 
 Checks: all three Part 2 scripts byte-compile. The decomposition figure function renders correctly. All local Markdown links resolve, and the Makefile recipes are tab-indented. The C++ still has not been compiled or run (no compiler/MPI on the Windows host). Nothing was committed or pushed.
+
+
+# Part 2 commit, cluster C2 run, review and finalization - 2026-11-19T21:12:54+02:00
+
+Team member: operator of node heat-3. Tool: Claude Code, VS Code extension. Model: Claude Opus 5.5 (claude-opus-5-5). Manual visible-message record, not a raw export.
+
+User requests (verbatim, in order):
+
+yes commit and push
+
+give me step by step how to do this task and run it now that you have wrote the code, like the commands to run step by step and for each team member (VM's heat-1, heat-2, mohamadfarchoukh) and what to run each person, and at the end to get the resutls (data) and to give it for you to analyse it and do the delivrables demanded for this task and finalize it
+
+(screenshot) python3 part2/run_experiments.py --cluster failed: ModuleNotFoundError: No module named 'matplotlib'
+
+(screenshot) 84/84 comparisons bit-for-bit identical; 63 multi-process runs spanned more than one machine; verify_results: four PASS lines
+
+(screenshot) scp of ~/part2-evidence from the heat3 VM to Windows completed
+
+Agent actions:
+
+- Committed the Part 2 code as 85b2358 on new branch part2-strips and pushed it. A team member then merged it into main as PR #1 (1c2b5e6).
+- Gave a per-member runbook: every VM pulls and builds; heat-3 runs check-strips and the cluster study, then copies the evidence to Windows with scp. Advised installing python3-numpy and python3-matplotlib on heat-3 after the import error.
+- The user ran everything on the VMs. Results: six correctness groups OK; cluster study 20261119T184915639127Z with 84/84 byte-identical comparisons (P=1-4, N=8,9,10,16,17,64,101, Cases 1/2/V; nodes 2 for P=2 and 3 for P=3/4); verify_results PASS.
+- Review on Windows: source hashes in metadata equal the committed heat_mpi.cpp and heat_serial.cpp; manifest re-verified; 111 raw runs all rc 0 with empty stderr; debug transcripts and both figures inspected; privacy scan clean.
+- On new branch part2-results, from main 1c2b5e6: archived the run without .bin fields as part2/results/2026-11-19-cluster/ with console/ transcripts, review.json and README.md. Added .gitattributes rule part2/results/** -text. Wrote the Results section of part2/ANALYSIS.md (C2 table; incidental timing: median comm per step 107/138/214 ms for P=2/3/4, comm share >= 99.98%, P=4 N=64 500 steps 68.0 s). Rewrote part2/DELIVERY.md with evidence links. Updated part2/README.md, part2/results/README.md, README.md and docs/deliverables.md status. The timings are labelled incidental, not Part 4 data.

@@ -1,0 +1,12 @@
+python3 part2/verify_strips.py --exe build/heat_mpi --serial build/heat
+test_bad_inputs_are_rejected_once (__main__.StripChecks.test_bad_inputs_are_rejected_once) ... ok
+test_bit_identical_to_serial (__main__.StripChecks.test_bit_identical_to_serial) ... ok
+test_ghost_rows_equal_neighbour_rows (__main__.StripChecks.test_ghost_rows_equal_neighbour_rows) ... ok
+test_maximum_principle_symmetry_and_unstable_demo (__main__.StripChecks.test_maximum_principle_symmetry_and_unstable_demo) ... ok
+test_strip_sizes_follow_section_6_1 (__main__.StripChecks.test_strip_sizes_follow_section_6_1) ... ok
+test_summary_fields_and_timers (__main__.StripChecks.test_summary_fields_and_timers) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 61.248s
+
+OK

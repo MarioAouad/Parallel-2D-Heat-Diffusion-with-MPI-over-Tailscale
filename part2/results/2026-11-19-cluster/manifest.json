@@ -1,0 +1,39 @@
+{
+  "published_files": [
+    {
+      "file": "compare.csv",
+      "bytes": 7982,
+      "sha256": "ba435982e73dee9a58e1f54c203005d2f4e7de6bae218f39ec40cd5c260e7cb5"
+    },
+    {
+      "file": "debug_halo.txt",
+      "bytes": 3234,
+      "sha256": "7b4a3cb7e4963ffa3be8759bb799bc2af6ce9c522eb3af256d47431377e88f7e"
+    },
+    {
+      "file": "decomposition.png",
+      "bytes": 106318,
+      "sha256": "b794aa5032c9759c6f41124b3efa4d72f612ccfe81c03849332cfc73c3e7494b"
+    },
+    {
+      "file": "decomposition.pdf",
+      "bytes": 25045,
+      "sha256": "68cd9a69cdd83bfc15d1321952b5872faad76582006314da16073b9f6655c17b"
+    },
+    {
+      "file": "cases.png",
+      "bytes": 72655,
+      "sha256": "f622720f6e5a06202c94fa055e931a0f52233889bce64bdcafe3e63b2eed4013"
+    },
+    {
+      "file": "raw_runs.json",
+      "bytes": 97088,
+      "sha256": "f0cbc4ee1face516f00f01f7a11cff5ba757c2869264ac26ec55a69128ec344d"
+    },
+    {
+      "file": "metadata.json",
+      "bytes": 1072,
+      "sha256": "afa26751cbcc8a084e18d64850fe8051c9474ce77c90ab5b556cad772a5c7475"
+    }
+  ]
+}

@@ -5,9 +5,9 @@ different homes. Tailscale connects the VMs, SSH launches remote processes, and
 MPI carries messages between them.
 
 **Status, 19 November 2026:** Parts 0 and 1 technical work and evidence review
-are complete. Part 2 strip decomposition is implemented; its compilation and the
-C2 cluster comparison on the VMs are pending. Blocks and performance studies
-follow. See the [assignment status](docs/deliverables.md) for the full hand-in.
+are complete. Part 2 strip decomposition is complete: checkpoint C2 was reached with
+84/84 byte-identical comparisons across the VMs. Blocks (Part 3) and performance
+studies follow. See the [assignment status](docs/deliverables.md) for the full hand-in.
 
 ## Start here
 
@@ -86,7 +86,7 @@ part1/                   serial solver, checks and experiment scripts
 part2/                   strip-decomposed MPI solver, checks and C2 study script
   ANALYSIS.md            correctness argument and communication cost model
   DELIVERY.md            section 6 / C2 requirement-by-requirement evidence
-  results/               C2 study index (cluster evidence pending)
+  results/               reviewed C2 cluster study and index
 docs/                    documentation index, assignment PDFs and solutions
 llm_log/                 append-only interaction index and record status
 AGENTS.md                course logging instructions
@@ -106,8 +106,11 @@ stable Cases 1 and 2. The [results index](part1/results/README.md) distinguishes
 it from the earlier Windows study and Ubuntu smoke test. Timings in these serial
 records are incidental; controlled scaling measurements belong to Part 4.
 
-Part 2 has no measured results yet. Its [results index](part2/results/README.md)
-explains how the cluster C2 study is produced, reviewed and archived.
+The [Part 2 cluster study](part2/results/2026-11-19-cluster/) shows the strips output
+byte-identical to serial in 84/84 comparisons (P = 1–4, seven N, uneven strips, two to
+three VMs). Its incidental timers already show halo latency taking at least 99.98 % of
+cross-VM run time. The [results index](part2/results/README.md) explains how studies are
+reviewed and archived.
 
 ## Submission and private records
 
