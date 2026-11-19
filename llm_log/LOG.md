@@ -677,3 +677,47 @@ The two outdated documentation pages were deleted from GitHub in the cleanup. Yo
 Full visible private record: llm_log/private/2026-11-19-cleanup/ignore-clarification.md, lines 1-19.
 
 This LOG.md append occupies lines 656-680.
+
+
+# Part 2 strip decomposition implemented - 2026-11-19T19:42:17+02:00
+
+Team member: operator of node heat-3 (name not recorded by the tool). Tool: Claude Code, VS Code extension. Model: Claude Opus 5.5 (claude-opus-5-5). Manual visible-message record written by the agent, not a raw export. Earlier messages in this same session (Part 0 explanation, heat-3 checks, git pull, Part 1 explanation PDF) are not reproduced here and still need the session export.
+
+User requests (verbatim):
+
+can you part 3 , if yes tell me yes and if it is a yes and need more resource tell me
+
+yes do part 2 ONLY do not do part 3
+
+Agent answer to the first request (summary of the visible reply): yes, possible. Part 2 does not exist yet and Part 3 builds on it. Code cannot be compiled or run on this Windows PC (no compiler, no MPI), so the user must run it on the VMs. P = 8 needs more than the cluster's 6 vCPU slots. Cluster runs need all VMs online.
+
+Work done for the second request (Part 3 not started):
+
+- Created part2/heat_mpi.cpp (lines 1-382): strip decomposition with MPI_Sendrecv halo exchange, MPI_PROC_NULL edges, MPI_Gatherv output, MAX-reduced timers, --debug-print. Stencil, initial data and time-step selection copied from part1/heat_serial.cpp, which is unchanged.
+- Created part2/compare_strips.py (lines 1-145): byte-for-byte serial vs strips comparison over cases, N and P, local or --cluster mode, writes part2/results/runs/<stamp>/.
+- Created part2/README.md (lines 1-142): build/run, design, deadlock explanation, C2 procedure.
+- Modified Makefile lines 11-29: strips and check-strips targets; build/heat_mpi added to all.
+- Modified .gitignore line 24: /part2/results/runs/.
+- Modified docs/deliverables.md line 16: Part 2 status.
+
+Checks performed: compare_strips.py byte-compiles. A Python emulation of the exact row split, ghost layout and two-shift exchange gave 96/96 fields bit-identical to an emulated serial loop (Cases 1, 2, V; N 3-24; P 1-7). heat_mpi.cpp has NOT been compiled or run: no C++ compiler or MPI on the Windows host. Compilation and C2 runs on the VMs are pending. Nothing was committed or pushed.
+
+
+# Part 2 deliverables aligned with Parts 0 and 1 - 2026-11-19T20:00:12+02:00
+
+Team member: operator of node heat-3. Tool: Claude Code, VS Code extension. Model: Claude Opus 5.5 (claude-opus-5-5). Manual visible-message record, not a raw export.
+
+User request (verbatim):
+
+i want to have the same deleveable in part 0 -1 and the part 2
+
+Work done (Part 3 still not started):
+
+- Correction to the previous entry: part2/compare_strips.py was replaced by part2/run_experiments.py (lines 1-240). It adds halo-debug transcripts, decomposition and Case 1/2 figures, and a manifest. The previous entry is left unchanged.
+- Created part2/verify_strips.py (lines 1-148): six correctness groups, the counterpart of part1/verify_serial.py.
+- Created part2/verify_results.py (lines 1-92): offline archive verifier, the counterpart of part1/verify_results.py.
+- Created part2/ANALYSIS.md (lines 1-132): correctness argument and a model prediction from archived Part 0/Part 1 data (no Part 2 measurements).
+- Created part2/DELIVERY.md (lines 1-54) and part2/results/README.md (lines 1-20).
+- Updated part2/README.md (now lines 1-157), the Makefile Part 2 targets (check-strips, verify-part2, verify-part2-results), and the root README.md (status, guide rows, build commands, layout, results scope).
+
+Checks: all three Part 2 scripts byte-compile. The decomposition figure function renders correctly. All local Markdown links resolve, and the Makefile recipes are tab-indented. The C++ still has not been compiled or run (no compiler/MPI on the Windows host). Nothing was committed or pushed.

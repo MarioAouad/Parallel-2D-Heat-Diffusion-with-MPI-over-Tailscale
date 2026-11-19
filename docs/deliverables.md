@@ -13,7 +13,7 @@ This maps the supplied `heat_mpi_project.pdf` to actual repository contents. A d
 | 4.7 | Same-VM and every-pair ping-pong, 8 B to 16 MiB; model | Six complete sweeps / 132 measured rows; analysis, plots, route qualifications included |
 | C1 | Part 0 plus serial convergence and background tasks | Technical materials ready: verified cluster, reviewed Ubuntu convergence evidence, and written-task PDF/source. Team explanation and private course-record obligations remain |
 | 5 / Part 1 | Serial heat solver and verification | COMPLETE: actual Ubuntu results archived, numerically cross-checked and visually reviewed; six correctness groups pass; analysis and delivery checklist included |
-| 6 / Part 2 | 1D strips, correct halos, identical final output | Future work |
+| 6 / Part 2 | 1D strips, correct halos, identical final output | Implemented in [part2/](../part2/README.md); compilation and C2 cluster comparison on the VMs pending |
 | 7 / Part 3 | 2D Cartesian blocks and column communication | Future work |
 | 8 / Part 4 | Repeated performance study, model and scaling | Future work |
 | 9 / Part 5 | Optional GPU extension | Not attempted here; optional |
