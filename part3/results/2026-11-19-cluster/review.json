@@ -1,0 +1,110 @@
+{
+  "reviewed_utc": "2026-11-19T21:30:00+00:00",
+  "status": "PASS",
+  "source_run": "20261119T200747311497Z",
+  "executed_commit": "7a8f45f or its merge 9c7e6e7 (PR #3), which have identical sources; heat_serial.cpp, heat_mpi.cpp and heat_blocks.cpp hashes match metadata.json",
+  "correctness_suite": {
+    "file": "console/check-blocks.txt",
+    "groups": 6,
+    "result": "OK"
+  },
+  "comparisons": {
+    "total": 90,
+    "identical": 90,
+    "P": [
+      1,
+      2,
+      3,
+      4,
+      6
+    ],
+    "grids": [
+      "1x1",
+      "2x1",
+      "3x1",
+      "2x2",
+      "3x2"
+    ],
+    "N": [
+      8,
+      9,
+      10,
+      17,
+      64,
+      101
+    ],
+    "cases": [
+      "1",
+      "2",
+      "V"
+    ],
+    "uneven_block_rows": 48,
+    "machines_by_P": {
+      "1": [
+        1
+      ],
+      "2": [
+        2
+      ],
+      "3": [
+        3
+      ],
+      "4": [
+        3
+      ],
+      "6": [
+        3
+      ]
+    },
+    "multi_machine_runs": 72
+  },
+  "raw_runs": {
+    "count": 150,
+    "all_returncode_zero": true,
+    "stderr": "148 empty; 2 contain only the Open MPI launcher warning 'plm:rsh: Warning: setpgid(...) failed in parent with errno=Permission denied(13)'; both runs returned 0 and their fields are byte-identical to serial"
+  },
+  "redaction": {
+    "file": "raw_runs.json",
+    "change": "the launching VM's device hostname (2 occurrences, inside the two launcher warnings) replaced by the alias heat3",
+    "original_sha256": "d81158f999d18d2540598c04306bc74704ff9161ef74915451307b3983af0e19",
+    "original_bytes": 135693,
+    "published_sha256": "ce2a03ed7417f7ae23099c8d583a97b2f8c5133a144a7f3e217f5e72163e43b1",
+    "manifest": "only the raw_runs.json entry of manifest.json was updated to the published hash/size"
+  },
+  "omitted": "fields/*.bin (regenerable reference and figure fields)",
+  "halo_debug": "debug_halo.txt: 2x2 (rows 4/3, cols 4/3) and 3x2 (rows 3/2/2, cols 4/3), Case 1, N=8, one step; every ghost row and column equals the neighbour's owned values; plate-edge ghosts are 1.0; corners printed as '-'",
+  "figures_inspected": [
+    "decomposition.png",
+    "cases.png",
+    "timing.png"
+  ],
+  "timing_check": {
+    "note": "3 interleaved repetitions, Case 1, 10 steps; a Part 3 check, not the Part 4 study",
+    "median_comm_ms_per_step": {
+      "strips P=4 N=512": 344.5,
+      "blocks P=4 N=512": 1159.0,
+      "strips P=6 N=512": 1282.9,
+      "blocks P=6 N=512": 1492.2,
+      "strips P=4 N=2048": 2304.9,
+      "blocks P=4 N=2048": 2629.9,
+      "strips P=6 N=2048": 2793.2,
+      "blocks P=6 N=2048": 2959.3,
+      "strips P=4 N=8192": 5739.5,
+      "blocks P=4 N=8192": 2484.8,
+      "strips P=6 N=8192": 8580.3,
+      "blocks P=6 N=8192": 5610.7
+    },
+    "paired_wins": {
+      "N=512": "strips 5/6",
+      "N=2048": "strips 5/6",
+      "N=8192": "blocks 6/6"
+    },
+    "min_comm_share": 0.981
+  },
+  "privacy": "published files contain no network addresses, device hostnames or account identifiers (paths under the generic user mpi remain, as in Part 2)",
+  "console_sha256": {
+    "console/check-blocks.txt": "5febd348eee9c8eef66875f0e39528fcfdfb8aa026df9ab2658bd218ae9d14ad",
+    "console/run-cluster.txt": "51fda3840f50b5ee8365c01c82766680e784ebb08ab3176daca778c362aba7ec",
+    "console/verify-results.txt": "13878ad9988020faaea3fbd7daa96db0d3aa2c8bd6d85ad0f72eb9252625aca2"
+  }
+}
