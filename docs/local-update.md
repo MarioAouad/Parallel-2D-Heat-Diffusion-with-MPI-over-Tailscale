@@ -1,8 +1,12 @@
-# Receive the published Parts 0/1 delivery on Ubuntu
+# Git and VM workflow
 
-The preferred handoff is Git. The published delivery includes the reviewed
-Ubuntu Part 1 results, numerical analysis, delivery checklist and written
-background solutions. On heat-1 as mpi:
+A commit saves a version locally, a push publishes it to GitHub, and a pull
+receives it in another checkout. The published Parts 0/1 delivery includes the
+reviewed Ubuntu study, analysis, checklist and written background solutions.
+
+## Receive updates on Ubuntu
+
+On heat-1 as `mpi`:
 
 ```bash
 cd /home/mpi/heat-project-repo
@@ -14,16 +18,38 @@ make verify-results
 make verify-part1-results
 ```
 
-The three verification targets inspect preserved evidence without collecting
-new measurements. `make check-serial` runs the solver correctness checks;
-`make verify-part1` creates a fresh timestamped numerical study if needed.
+If local changes block the pull, preserve them and resolve the conflict before
+continuing. Do not discard work to force an update. The three verification
+targets inspect archived evidence without collecting new measurements.
 
-The [Part 1 delivery checklist](../part1/DELIVERY.md) and
-[analysis](../part1/ANALYSIS.md) explain what has been verified. Parts 0/1 are
-technically complete. The next implementation stage is Part 2 strips.
+`make check-serial` runs solver correctness checks. `make verify-part1` creates
+a fresh timestamped study if needed. The completed study is already in Git;
+rerunning it is optional.
 
-Earlier source tarballs are retained locally as historical handoff artifacts.
-Use Git for the current delivery, including the newly archived Ubuntu files.
-Private cluster configuration, full original archives and private course
-transcripts remain outside public GitHub publication. Retain complete private
-records for the course hand-in.
+For cluster work, update every VM to the same commit and run `make` on each.
+Keep the checkout at `/home/mpi/heat-project-repo` on all three.
+Git transfers source; each VM compiles its own executables.
+
+## Save and publish later changes
+
+In the repository on the computer where you edited the files:
+
+```bash
+git status --short
+git diff
+git add <reviewed-file-or-folder>
+git diff --cached --stat
+git diff --cached
+git commit -m "Describe the completed change"
+git push origin main
+```
+
+Replace the angle-bracket placeholder with the paths you reviewed. Include the
+corresponding interaction-log entry. Keep private configuration, original transfer
+archives, full private conversations and generated binaries out of public commits;
+the ignore rules cover their documented locations.
+
+Wait for a successful push before pulling on the VMs. Current source and delivery
+files come from Git; old local transfer bundles are historical artifacts.
+The next implementation stage is Part 2 strips, using the
+[serial reference](../part1/README.md) for comparisons.

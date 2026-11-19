@@ -55,3 +55,26 @@ id_rsa
 *.zip
 .DS_Store
 Thumbs.db
+
+# Local editor state and transient files.
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# LaTeX build intermediates; retain delivered PDFs, source, tables and figures.
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+/docs/background-solutions/experiments/heat_serial
+/docs/background-solutions/**/*.log

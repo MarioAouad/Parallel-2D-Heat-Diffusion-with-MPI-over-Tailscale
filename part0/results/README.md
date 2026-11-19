@@ -12,7 +12,7 @@ The folder was exported from heat-1 using the existing Windows-to-VM SSH forward
 
 Each [case folder](2026-11-17/) has a timestamped `.csv`, `.log`, `.meta.txt`, `.route-before.txt` and `.route-after.txt`. Filenames give run-start UTC timestamps, not measured durations. Metadata records placement and the launching VM's MPI version. Before/after pings are separate observations outside the C++ measured loop.
 
-The full-study folder does not include the earlier standalone SSH/Tailscale checks, hostname output, hello output, source/executable files, or smoke CSVs. Those are distinct evidence. Their historical success is documented in the guide/chat observations; do not invent missing raw terminal transcripts.
+The 17 November full-study folder contains benchmark evidence. Later inventory, SSH, hostname and hello captures are separate under [setup/](setup/); their current assessment is in the [Part 0 closeout](../../docs/part0-closeout.md). Some earlier standalone smoke transcripts were not archived; no missing transcript has been invented.
 
 ## Measured and derived numbers
 
@@ -55,8 +55,8 @@ The [derived summary](analysis/summary.csv) and six plots are reproducible from 
 - We have **one complete sweep per case**, with adaptive repeated exchanges inside it. Large messages used three timed trips; those are not three independent full experiments.
 - There are no per-exchange timing samples or independent-sweep confidence intervals. Small-message min/max in the summary describe four per-size averages, not packet jitter distributions.
 - Route snapshots are not continuous traces. The changing heat2-heat3 condition limits a single-condition model; prioritize a separately recorded stable-route repeat if stronger claims are needed.
-- Complete all-machine hardware/software inventories and earlier setup/logging evidence remain separate tasks.
-- This communication benchmark does not compute a temperature field, validate a numerical scheme, or complete C1/Parts 1-4.
+- All-machine inventories and current setup checks are complete; see the [closeout](../../docs/part0-closeout.md). Earlier missing private AI history remains a separate submission item.
+- Heat-field verification is in the completed [Part 1 delivery](../../part1/DELIVERY.md); later parallel solver correctness and scaling require their own evidence.
 
 ## Why this matters later
 

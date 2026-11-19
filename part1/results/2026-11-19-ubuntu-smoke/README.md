@@ -17,5 +17,7 @@ It reports 64 steps, err_inf=0.0016633705032857438 and
 err_l2=0.00083168525164289075, matching the expected discretization errors.
 The original output is in `stdout.txt`, with parsed string fields and provenance
 in `metadata.json`. This single successful point is a smoke verification, not
-the full Ubuntu correctness suite or five-grid convergence study. Those remain
-the next steps. Loop timing here is incidental, not a Part 4 performance result.
+the full Ubuntu correctness suite or five-grid convergence study. Those were
+subsequently completed; use the [primary Ubuntu study](../2026-11-19-ubuntu/)
+and [results index](../README.md). Loop timing here is incidental, not a Part 4
+performance result.

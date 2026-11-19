@@ -589,3 +589,66 @@ make verify-part1-results
 ```
 
 This append occupies LOG.md lines 557-592; the private session record occupies lines 1-138.
+
+
+# Repository cleanup - 2026-11-19T18:55:37.911921+02:00
+
+Team member unknown; Codex desktop; instructions identify GPT-6, exact served snapshot unavailable. Manual visible-message record, not an original raw export.
+
+## User request
+
+if there is some stuff that are not needed in my repo clean it and delete them and make it more organised and updated everything like readme and stuff like this. 
+
+## Progress responses
+
+I’ll check for duplicate files, generated clutter and outdated instructions, then clean up the layout and documentation while preserving the code and evidence needed for your submission.
+
+The main clutter is repeated setup guidance and old “next step” text that still says Part 1 is unfinished. I’ll consolidate the Git/VM instructions, shorten the main README, and add clear documentation and results indexes. I’ll keep both dated studies and the earlier failed checks because they document what was tested and fixed.
+
+The guides now show the completed Part 0/1 status consistently. I removed two superseded instruction pages and added navigation for the docs and results. All three archive checks pass, every documentation link resolves, and the measured data, solver code and written-solution files are unchanged. I’m checking the final changes before publishing the cleanup.
+
+## Changes and checks
+
+Consolidated current guides, removed two superseded instruction pages, added docs/results indexes, ignored editor/LaTeX clutter, and deleted two local Python cache directories. All three archive verifiers, relative documentation links and ignore-policy checks pass. Original data, provenance, solver/scripts and background assets are unchanged. Historical log entries and private originals remain untouched. Publication continues under the user's existing GitHub-delivery authorization.
+
+- .gitignore: current lines 1-80
+- README.md: current lines 1-106
+- docs/README.md: current lines 1-21
+- docs/cluster-inventory.md: current lines 1-58
+- docs/git-and-part1.md: deleted; former lines 1-74
+- docs/history/README.md: current lines 1-26
+- docs/local-update.md: current lines 1-55
+- docs/part0-closeout.md: current lines 1-64
+- docs/reports/README.md: deleted; former lines 1-7
+- docs/validation.md: current lines 1-72
+- llm_log/README.md: current lines 1-11
+- part0/results/README.md: current lines 1-65
+- part1/README.md: current lines 1-118
+- part1/results/2026-11-19-ubuntu-smoke/README.md: current lines 1-23
+- part1/results/README.md: current lines 1-19
+
+Full visible record: llm_log/private/2026-11-19-cleanup/visible-session.md, lines 1-57.
+
+## Final response (sent after successful publication)
+
+Cleaned and pushed the repository to [GitHub](https://github.com/MarioAouad/Parallel-2D-Heat-Diffusion-with-MPI-over-Tailscale).
+
+- Removed two outdated instruction pages and temporary Python caches.
+- Simplified the main README and updated the Part 0/1 status throughout the guides.
+- Added documentation and results indexes.
+- Expanded `.gitignore` for editor files and LaTeX build clutter.
+
+Kept the solver, all three Part 1 Python scripts, measured results, PDFs, provenance and required logs.
+
+All archive checks and documentation links pass. **Parts 0 and 1 remain technically complete; Part 2 is next.**
+
+On each VM, receive the cleanup with:
+
+```bash
+cd /home/mpi/heat-project-repo
+git pull --ff-only origin main
+```
+
+This append occupies LOG.md lines 593-653.
+
+Verification note: The verbatim user request retains its original final space. Staged whitespace validation therefore keeps normal checks for all other files and disables only end-of-line-space checking for LOG.md. No prompt bytes or prior entries are edited.

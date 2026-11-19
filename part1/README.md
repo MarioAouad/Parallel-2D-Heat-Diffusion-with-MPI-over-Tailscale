@@ -1,8 +1,9 @@
 # Part 1: the serial reference
 
 Run this on one VM as one ordinary process. MPI decomposition starts in Part 2.
-The pre-existing task solver was adapted into the required project interface;
-the earlier numerical-methods solution folder remains unchanged.
+The earlier task solver was adapted into this project interface. Its separate
+[written-task reproduction code](../docs/background-solutions/README.md) is
+retained with the background deliverable.
 
 **Status: Part 1 technical work and Ubuntu evidence review complete.** Start with
 the [delivery checklist](DELIVERY.md) and [numerical analysis](ANALYSIS.md). The
@@ -11,7 +12,7 @@ CSV tables, figures, raw commands and source/provenance metadata.
 
 ## Build and run on Ubuntu
 
-From the repository root, after receiving these local source updates:
+From the repository root:
 
 ```bash
 make serial
@@ -86,37 +87,32 @@ The default destination is a new UTC timestamped folder under `part1/results/run
 Existing output directories are refused to preserve evidence. Every run stores
 CSV tables, plots, raw command output, binary snapshots and source/platform metadata.
 
-Keep both Python files in Git. The C++ file performs the simulation;
-`verify_serial.py` checks correctness, and `run_experiments.py` reproduces the
-required convergence/instability tables and plots. They are supporting project
-code, even though the numerical solver itself is C++. Reviewed CSVs, figures,
-metadata and raw command JSON are submission evidence. Generated `.bin` field
-snapshots remain available locally but are ignored by Git; the scripts recreate
-them when needed. Fresh timestamped run folders stay ignored until reviewed.
+All three Python scripts belong in Git:
 
-The reviewed [Windows study](results/2026-11-19-windows/) gives observed orders
-2.00577, 2.00144, 2.00036 and 2.00009. Six correctness test groups passed.
-This is local numerical verification, not a Linux VM or cluster scaling run.
-Timings inside the raw output are incidental; use controlled runs for Part 4.
+| Script | Purpose |
+| --- | --- |
+| `verify_serial.py` | Runs correctness checks against the executable |
+| `run_experiments.py` | Reproduces convergence, instability and field studies |
+| `verify_results.py` | Checks the primary archived Ubuntu results without running the solver |
 
-The [Part 0 technical checklist](../docs/part0-closeout.md) is complete. The next
-step is to reproduce this serial study on Ubuntu and understand the solver.
-C1 also needs the written numerical-method task solutions.
+The C++ file performs the simulation. These scripts support verification and
+delivery. Reviewed CSVs, figures, source metadata and raw command JSON are
+submission evidence. Binary fields and fresh unreviewed run folders stay ignored.
 
-## Ubuntu progress
+## Completed evidence and next stage
 
-The [first Ubuntu verification record](results/2026-11-19-ubuntu-smoke/) confirms
-the successful Git update, native build and expected V/N=16 errors. The user has
-now also supplied successful output from `make check-serial` (six test groups,
-OK) and `make verify-part1` (orders 2.00577, 2.00144, 2.00036, 2.00009; isolated
-instability and stable Cases 1/2 pass). The generated VM folder is
-`part1/results/runs/20261119T161615613935Z`.
+The [primary Ubuntu study](results/2026-11-19-ubuntu/) has been received,
+numerically cross-checked and visually reviewed. Six correctness test groups
+passed; the five-grid observed orders are 2.00577, 2.00144, 2.00036 and 2.00009.
+All five binary snapshots passed format/boundary checks; stable fields passed
+bounds/symmetry checks.
 
-That folder has now been received and archived as the reviewed Ubuntu study.
-Tables match raw outputs and independent sine-mode predictions. All five binary
-snapshots passed size/boundary checks; stable fields passed bounds/symmetry
-checks, and the three figures were visually reviewed. See ANALYSIS.md for the
-interpretation and DELIVERY.md for the requirement-by-requirement handoff.
-The earlier Windows study remains separate evidence. Use
-`make verify-part1-results` for an offline integrity/numerical check of the
-primary Ubuntu archive. The serial reference is ready for Part 2 comparisons.
+See [ANALYSIS.md](ANALYSIS.md) for interpretation and
+[DELIVERY.md](DELIVERY.md) for the handoff. The
+[results index](results/README.md) distinguishes the completed Ubuntu study from
+earlier Windows and Ubuntu smoke evidence. Use `make verify-part1-results`
+for an offline integrity/numerical check.
+
+The serial reference is ready for Part 2 comparisons. Keep it and its arithmetic
+order intact while implementing strips. Timings in the existing raw output are
+incidental; controlled repeated measurements belong to Part 4.

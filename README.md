@@ -1,80 +1,29 @@
 # Parallel 2D Heat Diffusion with MPI over Tailscale
 
-A three-student project connecting Ubuntu virtual machines on three Windows computers in different homes. **This repository contains Part 0 setup/network measurements and the Part 1 serial heat solver.**
+A C++17 heat-diffusion project using three Ubuntu VMs on Windows laptops in
+different homes. Tailscale connects the VMs, SSH launches remote processes, and
+MPI carries messages between them.
 
-**Status on 19 November: Parts 0 and 1 technical work and evidence review are complete.** The cluster/network records and the actual Ubuntu serial study are verified. [Part 1 analysis](part1/ANALYSIS.md) contains the numerical method, convergence table, instability discussion and heat maps. The [delivery checklist](part1/DELIVERY.md) links all sources/results; [written background solutions](docs/background-solutions/README.md) include the PDF and editable sources. Complete earlier AI histories remain a private course-submission item.
+**Status, 19 November 2026:** Parts 0 and 1 technical work and evidence review
+are complete. Part 2 strip decomposition is next; blocks and performance studies
+follow. See the [assignment status](docs/deliverables.md) for the full hand-in.
 
-The purpose of this first stage is to understand how programs start on different machines, how MPI processes exchange data, and how expensive that communication is. Slow Internet communication is a result to explain, not automatically a failed program.
+## Start here
 
-## Start here, slowly
+| Goal | Guide |
+| --- | --- |
+| Understand the cluster and communication measurements | [Part 0 overview](part0/README.md) |
+| Build and use the serial heat solver | [Part 1 guide](part1/README.md) |
+| Read the convergence and instability analysis | [Part 1 analysis](part1/ANALYSIS.md) |
+| Find completed Part 1 deliverables | [Delivery checklist](part1/DELIVERY.md) |
+| Read the written numerical-method solutions | [PDF and editable source](docs/background-solutions/README.md) |
+| Receive GitHub updates on the VMs | [Git and VM workflow](docs/local-update.md) |
+| Find hardware, requirements and verification details | [Documentation index](docs/README.md) |
 
-Read one folder at a time. You do not need to rerun every experiment while reading.
+## Build and check on Ubuntu
 
-| Order | Folder | Question it answers |
-| --- | --- | --- |
-| 0 | [Cluster setup](part0/00-cluster-setup/README.md) | What are VirtualBox, Ubuntu, Tailscale and SSH doing? |
-| 1 | [Connectivity](part0/01-connectivity/README.md) | Can the VMs reach each other and log in without a prompt? |
-| 2 | [Hostname launch](part0/02-hostname/README.md) | Can one coordinator start processes on all three VMs? |
-| 3 | [MPI hello](part0/03-mpi-hello/README.md) | Can the processes actually exchange MPI data? |
-| 4 | [Ping-pong benchmark](part0/04-pingpong/README.md) | How much time does a message and its reply take? |
-| 5 | [Offline analysis](part0/05-analysis/README.md) | How do we turn recorded times into plots and model parameters? |
-| 6 | [Our measured results](part0/results/README.md) | What happened in the six completed runs, and what are their limits? |
-
-[Part 0 overview](part0/README.md) ties these steps together. The code is heavily commented: read the explanation beside the relevant statements, then use each folder's README to see the whole execution sequence.
-
-## The machines and the processes
-
-| Short label | Public node alias | Private configuration field | Linux project user |
-| --- | --- | --- | --- |
-| heat1 | heat-1 | HEAT1_IP (local only) | mpi |
-| heat2 | heat-2 | HEAT2_IP (local only) | mpi |
-| heat3 | heat-3 | HEAT3_IP (local only) | mpi |
-
-Node names in this public copy are generic aliases. Actual hostnames/addresses remain in the private originals. Each Windows computer hosts one Ubuntu VM. Tailscale runs **inside Ubuntu** and joins the VMs into the same private network. SSH lets the coordinator start remote programs. MPI lets the running processes communicate. A rank identifies a process; it does not identify a physical computer.
-
-The initial six-rank test uses two processes per VM. A ping-pong measurement always uses exactly **two ranks**: either both in one VM or one at each endpoint of a VM pair. The third VM keeps its existing real hostname; the public alias does not require renaming it.
-
-## Repository layout
-
-```text
-Makefile                         one command builds MPI programs and serial heat
-AGENTS.md                        prospective course logging instructions
-part0/
-  00-cluster-setup/               setup explanation and troubleshooting
-  01-connectivity/                SSH/Tailscale checks and inventory helper
-  02-hostname/                    launch-only test
-  03-mpi-hello/                   annotated C++ program and cluster launcher
-  04-pingpong/                    annotated C++ benchmark and case launcher
-  05-analysis/                    plotting, verification and numerical tests
-  config/                        local-configuration loader and example hostfile
-  results/
-    2026-11-17/<case>/            six archived runs, five files per run
-    analysis/                    reproducible summary and six plots
-    README.md                    measured findings, units and limitations
-part1/                           serial solver, correctness checks and required studies
-  results/2026-11-19-windows/     reviewed local convergence and instability evidence
-docs/
-  assignment/                    the two supplied professor PDFs
-  deliverables.md                requirement-by-requirement status and next work
-  cluster-inventory.md            known configuration and missing evidence
-  validation.md                  what was checked during organization
-  history/                       source provenance and old/new path mapping
-  reports/                       public-guide index; the detailed PDF remains private
-llm_log/                         this organization session and logging status
-```
-
-## Build on Ubuntu
-
-The three VMs use Ubuntu Server 24.04 LTS. The archived coordinator metadata records Open MPI 4.1.6. Check the same release and MPI version on **every VM**; the coordinator's version alone does not prove that.
-
-Packages used during setup:
-
-```bash
-sudo apt update
-sudo apt install -y build-essential cmake git openmpi-bin libopenmpi-dev python3-numpy python3-matplotlib openssh-server curl
-```
-
-For a fresh checkout, run the following **on every VM as `mpi`**. The common path matters because SSH-based MPI starts the remote executable at that path.
+For a fresh checkout, run as `mpi` on each VM. Use the same path on all three
+because MPI starts remote programs at that path.
 
 ```bash
 git clone https://github.com/MarioAouad/Parallel-2D-Heat-Diffusion-with-MPI-over-Tailscale.git ~/heat-project-repo
@@ -82,67 +31,76 @@ cd ~/heat-project-repo
 make
 ```
 
-Before running the launchers, follow [private configuration](part0/config/README.md) to enter your real addresses in the ignored local file. The loader renders the local hostfile from those values.
+The VMs use Ubuntu 24.04.5 LTS and Open MPI 4.1.6. Build dependencies are
+`build-essential`, `openmpi-bin` and `libopenmpi-dev`; the studies use Python 3,
+NumPy and Matplotlib. SSH, Tailscale and local addresses are covered in
+[cluster setup](part0/00-cluster-setup/README.md) and
+[private configuration](part0/config/README.md).
+For an existing checkout, use the [update instructions](docs/local-update.md).
 
-This checkout is separate from the existing `~/heat-project` used for the original runs. Keep that original directory and its measurements. `make` creates `build/mpi_hello`, `build/mpi_pingpong` and `build/heat` locally on each VM after receiving the corresponding source updates; Git does not distribute a compiled binary automatically. Use the [commit, push and pull workflow](docs/git-and-part1.md) to transfer your source changes to Ubuntu after publishing them. The source bundle is an alternative for changes not yet published.
-
-The build uses C++17, `-O2`, `-ffp-contract=off` and compiler warnings. `OMPI_SKIP_MPICXX` skips unused legacy MPI C++ wrapper classes; we use the MPI C API from C++. [Build and run validation limits](docs/validation.md) are recorded honestly.
-
-## Run one step at a time
-
-From the repository root on Ubuntu, use the relevant command only after reading its folder:
-
-```bash
-# Run on each VM; checks both directions when every member runs it.
-bash part0/01-connectivity/check_cluster.sh
-
-# Run on ONE coordinator. Do not launch concurrently from all three VMs.
-bash part0/02-hostname/run_hostname.sh
-bash part0/03-mpi-hello/run_hello.sh
-
-# Two quick functional tests before deciding to collect new measurements.
-bash part0/04-pingpong/run_pingpong.sh heat1-local smoke
-bash part0/04-pingpong/run_pingpong.sh heat1-heat2 smoke
-```
-
-You can inspect the existing results without any cluster access or new MPI run:
+`make` builds `build/mpi_hello`, `build/mpi_pingpong` and `build/heat`.
+`make serial` builds only the serial solver with an ordinary C++ compiler.
+All use C++17, optimization, warnings and `-ffp-contract=off`.
 
 ```bash
+# Check the archived evidence; no cluster access or new experiment required.
+make verify-setup
 make verify-results
-make analyze
-make test-analysis
-```
-
-On Windows with Python, call the Python scripts directly; `make` and the shell launchers target Ubuntu. NumPy and Matplotlib are required for analysis; the archive verifier uses only Python's standard library.
-
-All benchmark command-line options, cases, profiles, MCA flags, communication counts and timer boundaries are documented in [the benchmark README](part0/04-pingpong/README.md). The [serial solver guide](part1/README.md) documents its options and verification. From this updated source tree:
-
-```bash
-make serial
-make check-serial
-make verify-part1
 make verify-part1-results
+
+# Run the serial correctness checks and an example simulation.
+make check-serial
 ./build/heat --decomp serial --case V --N 64 --r 0.2 --T 0.05
 ```
 
-## What we have measured
+`make verify-part1` creates a new timestamped convergence/instability study.
+It does not overwrite the reviewed archive. Windows build instructions are in
+the [Part 1 guide](part1/README.md).
 
-Six complete sweeps contain 22 sizes each, from 8 bytes through 16 MiB: **132 measurement rows**. All match the earlier pasted terminal records. Same-VM cases use shared memory; cross-VM cases use TCP over Tailscale. The startup/transfer estimates and route observations are in [the results README](part0/results/README.md).
+## Repository layout
 
-The full archive does not contain every earlier SSH, hostname, hello or smoke-test terminal transcript. Those were earlier functional checks, not additional full sweeps. Its route snapshots observe before/after conditions and cannot establish an unchanged path throughout a long run.
+```text
+Makefile                 builds and verification commands
+part0/
+  00-cluster-setup/      VM, Tailscale and SSH explanation
+  01-connectivity/       inventory and directed connectivity checks
+  02-hostname/           six-process launch test
+  03-mpi-hello/          MPI rank/host/collective test
+  04-pingpong/           two-rank communication benchmark
+  05-analysis/           analysis, evidence checks and tests
+  config/                examples and ignored local configuration
+  results/               measured runs, setup evidence and analysis
+part1/                   serial solver, checks and experiment scripts
+  ANALYSIS.md            numerical method and reviewed findings
+  DELIVERY.md            requirement-by-requirement evidence
+  results/               primary Ubuntu study and supporting records
+docs/                    documentation index, assignment PDFs and solutions
+llm_log/                 append-only interaction index and record status
+AGENTS.md                course logging instructions
+```
 
-## What the professor ultimately requires
+## Results and their scope
 
-The [complete deliverable map](docs/deliverables.md) covers assignment sections 10 and 12: repository, written solutions, correctness evidence, final report, complete LLM logs, and live demo. C1's cluster, serial convergence and written-task materials are now available. The team must understand them and retain the required private interaction history.
+Part 0 has six complete ping-pong sweeps, 22 payload sizes each:
+**132 measurement rows**. The [results guide](part0/results/README.md) explains
+latency, bandwidth and route observations. Before/after probes do not establish
+the route throughout a measurement. Six SSH directions, three inventories and
+the six-rank hello are verified in the [Part 0 closeout](docs/part0-closeout.md).
 
-The next implementation stage is Part 2 strip decomposition, using the verified serial solver as its reference. Block decomposition and the performance study remain future work. The existing [study guide](docs/reports/README.md) is a learning document; the new Part 1 analysis is material for the final report, which must still cover the later parts within ten pages plus appendices.
+The [primary Ubuntu Part 1 study](part1/results/2026-11-19-ubuntu/) recovers
+second-order convergence, demonstrates the isolated unstable case, and verifies
+stable Cases 1 and 2. The [results index](part1/results/README.md) distinguishes
+it from the earlier Windows study and Ubuntu smoke test. Timings in these serial
+records are incidental; controlled scaling measurements belong to Part 4.
 
-## Public copy and original evidence
+## Submission and private records
 
-All 132 numeric measurement records are unchanged. Public evidence copies anonymize node identities and remove actual overlay/public addresses and account handles. CSV host fields use generic aliases; their sizes, counts and timing/throughput fields are unchanged. Metadata and routes are marked as public copies. A [manifest](part0/results/file-manifest.json) records both original and published hashes. Original files remain in the local Windows project/private archive. No passwords, login links or SSH keys are part of this repository.
+Reviewed code, CSVs, figures, PDFs and provenance belong in Git. Build products,
+new unreviewed runs, binary snapshots, private archives and local configuration
+are ignored. Public cluster records use generic aliases; exact originals remain
+private. Keep every measured dataset and its manifest intact.
 
-`llm_log/` records this organization interaction and explicitly identifies the incomplete earlier transcript archive. Full earlier conversations containing credentials belong in a private course hand-in; a public redacted copy or this README does not satisfy the professor's complete-log requirement by itself.
-
-## References
-
-The two [supplied course PDFs](docs/assignment/README.md) define requirements. The MPI programs were prepared in the team's recorded AI-assisted project workflow; see `llm_log/`. External API references: [Open MPI 4.1](https://www.open-mpi.org/doc/v4.1/), [Tailscale CLI](https://tailscale.com/docs/reference/tailscale-cli), [VirtualBox networking](https://www.virtualbox.org/manual/ch06.html), and [Ubuntu OpenSSH](https://ubuntu.com/server/docs/how-to/security/openssh-server/).
+The [deliverable map](docs/deliverables.md) tracks the later MPI solvers, final
+report, live demo and actual team contributions. Complete earlier AI conversations
+are still required in the private course hand-in; the public
+[interaction index](llm_log/README.md) does not replace them.
