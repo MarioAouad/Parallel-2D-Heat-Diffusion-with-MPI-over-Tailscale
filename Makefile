@@ -8,8 +8,8 @@ CPPFLAGS += -DOMPI_SKIP_MPICXX=1
 # ffp-contract=off prepares consistent arithmetic for the later heat solver.
 CXXFLAGS := -std=c++17 -O2 -ffp-contract=off -Wall -Wextra -Wpedantic
 
-.PHONY: all serial strips verify-results verify-setup analyze test-analysis check-serial verify-part1 verify-part1-results check-strips verify-part2 verify-part2-results
-all: build/mpi_hello build/mpi_pingpong build/heat build/heat_mpi
+.PHONY: all serial strips verify-results verify-setup analyze test-analysis check-serial verify-part1 verify-part1-results check-strips verify-part2 verify-part2-results blocks check-blocks verify-part3 verify-part3-results
+all: build/mpi_hello build/mpi_pingpong build/heat build/heat_mpi build/heat_blocks
 
 serial: build/heat
 
@@ -33,6 +33,22 @@ verify-part2: build/heat build/heat_mpi
 
 verify-part2-results:
 	python3 part2/verify_results.py
+
+# Part 3: block-decomposed solver, same flags (bit-for-bit with serial), and its checks.
+blocks: build/heat_blocks
+
+build/heat_blocks: part3/heat_blocks.cpp | build
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
+
+check-blocks: build/heat build/heat_blocks
+	python3 part3/verify_blocks.py --exe build/heat_blocks --serial build/heat
+
+# Add --cluster to span the VMs (also runs the strips-vs-blocks timing check).
+verify-part3: build/heat build/heat_mpi build/heat_blocks
+	python3 part3/run_experiments.py
+
+verify-part3-results:
+	python3 part3/verify_results.py
 
 # Order-only prerequisite: create the directory without rebuilding merely
 # because another file changes the directory's modification time.

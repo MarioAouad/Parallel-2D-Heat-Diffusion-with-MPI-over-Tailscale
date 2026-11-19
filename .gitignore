@@ -22,6 +22,7 @@ __pycache__/
 /part0/results/analysis-local/
 /part1/results/runs/
 /part2/results/runs/
+/part3/results/runs/
 *.partial
 
 # Reproducible full-grid snapshots; retain reviewed CSVs, plots, JSON and logs.

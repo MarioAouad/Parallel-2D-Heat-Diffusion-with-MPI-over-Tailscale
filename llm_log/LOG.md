@@ -746,3 +746,54 @@ Agent actions:
 - The user ran everything on the VMs. Results: six correctness groups OK; cluster study 20261119T184915639127Z with 84/84 byte-identical comparisons (P=1-4, N=8,9,10,16,17,64,101, Cases 1/2/V; nodes 2 for P=2 and 3 for P=3/4); verify_results PASS.
 - Review on Windows: source hashes in metadata equal the committed heat_mpi.cpp and heat_serial.cpp; manifest re-verified; 111 raw runs all rc 0 with empty stderr; debug transcripts and both figures inspected; privacy scan clean.
 - On new branch part2-results, from main 1c2b5e6: archived the run without .bin fields as part2/results/2026-11-19-cluster/ with console/ transcripts, review.json and README.md. Added .gitattributes rule part2/results/** -text. Wrote the Results section of part2/ANALYSIS.md (C2 table; incidental timing: median comm per step 107/138/214 ms for P=2/3/4, comm share >= 99.98%, P=4 N=64 500 steps 68.0 s). Rewrote part2/DELIVERY.md with evidence links. Updated part2/README.md, part2/results/README.md, README.md and docs/deliverables.md status. The timings are labelled incidental, not Part 4 data.
+
+
+# Part 3 block decomposition implemented - 2026-11-19T21:28:06+02:00
+
+Team member: operator of node heat-3. Tool: Claude Code, VS Code extension. Model: Claude Opus 5.5 (claude-opus-5-5). Manual visible-message record, not a raw export.
+
+User requests (verbatim):
+
+now commit
+
+now do the part 3
+
+Agent actions:
+
+- "now commit": nothing was pending. Commit adf8e85 was already pushed on part2-results. A team member later merged it into main as PR #2 (833e589).
+- On new branch part3-blocks from origin/main 833e589:
+  - Created part3/heat_blocks.cpp (lines 1-427). It uses MPI_Dims_create, MPI_Cart_create (non-periodic, reorder=0) and MPI_Cart_shift; splits rows and columns with the Part 2 rule; exchanges contiguous rows and MPI_Type_vector columns over four MPI_Sendrecv shifts; never exchanges corner ghosts; gathers with MPI_Type_create_subarray; reduces timers with MAX; supports --debug-print. Stencil, initial data and time-step code are copied from the serial reference. part2/heat_mpi.cpp is unchanged, so the archived Part 2 evidence still verifies.
+  - Created part3/verify_blocks.py (lines 1-174, six correctness groups), part3/run_experiments.py (lines 1-328: comparisons, debug transcripts, figures, strips-vs-blocks timing for P=4,6 and N=512,2048,8192 with 3 interleaved repetitions) and part3/verify_results.py (lines 1-116).
+  - Created part3/README.md (1-117), part3/ANALYSIS.md (1-146: corner-ghost answer, Task 8.2 strips-vs-blocks prediction from Part 0 ts/tw, P=8 model-only because there are 6 slots), part3/DELIVERY.md (1-49) and part3/results/README.md (1-18).
+  - Updated the Makefile (blocks, check-blocks, verify-part3, verify-part3-results; heat_blocks added to all), .gitignore (/part3/results/runs/), .gitattributes (part3/results/** -text), README.md and docs/deliverables.md.
+
+Checks: a Python emulation of the block logic gave 102/102 fields bit-identical to the emulated serial loop (P = 1, 2, 3, 4, 6, 8, 9). All Part 3 scripts byte-compile, and the decomposition figure renders and was inspected. Links resolve, Makefile recipes use tabs, and part2/verify_results.py still passes. heat_blocks.cpp has NOT been compiled or run (no compiler/MPI on the Windows host). Cluster evidence is pending.
+
+
+# Part 3 single-machine pre-check, figure fix, commit - 2026-11-19T21:57:00+02:00
+
+Team member: operator of node heat-3. Tool: Claude Code, VS Code extension. Model: Claude Opus 5.5 (claude-opus-5-5). Manual visible-message record, not a raw export.
+
+User requests (verbatim):
+
+did you finish the part 3 ?
+
+continue working on part 3 until it finish
+
+ok continue
+
+did we finish part 3 tottaly ?
+
+ok continue and commit and push when done
+
+Agent actions:
+
+- Installed build-essential, openmpi-bin, libopenmpi-dev, python3-numpy and python3-matplotlib in the operator's local WSL Ubuntu 26.04 (as root through wsl -u root).
+- Copied the working tree to ~/p3test in WSL and ran `make serial strips blocks`. heat_blocks.cpp compiled with no warnings.
+- `make check-blocks`: 6/6 groups OK.
+- `run_experiments.py --timing` (local): 90/90 byte-identical, 36 timing runs. `verify_results.py --allow-local`: PASS. Inspected debug_halo.txt (ghosts equal the neighbours' values; corners "-") and all three figures.
+- The timing figure hid N=512 on a linear axis. Changed part3/run_experiments.py (plot block, now lines 281-307) to a 2xP grid: halo exchange per step with min-max error bars, and total per step, both on a log scale. A short local rerun rendered it correctly.
+- part3/DELIVERY.md: status line changed, and a "Single-machine pre-check (not evidence)" section added (lines 19-33). The local run is not archived because all ranks shared one machine.
+- Committed and pushed branch part3-blocks.
+
+Cluster evidence is still pending.

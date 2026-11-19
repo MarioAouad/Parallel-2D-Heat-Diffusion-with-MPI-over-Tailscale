@@ -6,8 +6,9 @@ MPI carries messages between them.
 
 **Status, 19 November 2026:** Parts 0 and 1 technical work and evidence review
 are complete. Part 2 strip decomposition is complete: checkpoint C2 was reached with
-84/84 byte-identical comparisons across the VMs. Blocks (Part 3) and performance
-studies follow. See the [assignment status](docs/deliverables.md) for the full hand-in.
+84/84 byte-identical comparisons across the VMs. Part 3 block decomposition is
+implemented; its compilation and cluster study are pending. The Part 4 performance
+study follows. See the [assignment status](docs/deliverables.md) for the full hand-in.
 
 ## Start here
 
@@ -20,6 +21,9 @@ studies follow. See the [assignment status](docs/deliverables.md) for the full h
 | Build and run the strip-decomposed MPI solver | [Part 2 guide](part2/README.md) |
 | Read the strips correctness argument and cost model | [Part 2 analysis](part2/ANALYSIS.md) |
 | Track Part 2 deliverables and C2 evidence | [Part 2 delivery checklist](part2/DELIVERY.md) |
+| Build and run the 2D block-decomposed solver | [Part 3 guide](part3/README.md) |
+| Read the corner-ghost and strips-vs-blocks answers | [Part 3 analysis](part3/ANALYSIS.md) |
+| Track Part 3 deliverables | [Part 3 delivery checklist](part3/DELIVERY.md) |
 | Read the written numerical-method solutions | [PDF and editable source](docs/background-solutions/README.md) |
 | Receive GitHub updates on the VMs | [Git and VM workflow](docs/local-update.md) |
 | Find hardware, requirements and verification details | [Documentation index](docs/README.md) |
@@ -43,7 +47,7 @@ NumPy and Matplotlib. SSH, Tailscale and local addresses are covered in
 For an existing checkout, use the [update instructions](docs/local-update.md).
 
 `make` builds `build/mpi_hello`, `build/mpi_pingpong`, `build/heat` and `build/heat_mpi`.
-`make strips` builds only the Part 2 strips solver.
+`make strips` and `make blocks` build only the Part 2 and Part 3 MPI solvers.
 `make serial` builds only the serial solver with an ordinary C++ compiler.
 All use C++17, optimization, warnings and `-ffp-contract=off`.
 
@@ -57,7 +61,8 @@ make verify-part1-results
 make check-serial
 ./build/heat --decomp serial --case V --N 64 --r 0.2 --T 0.05
 
-# Part 2: strips correctness groups and a strips run on this VM.
+# Parts 2 and 3: correctness groups for strips and blocks on this VM.
+make check-blocks
 make check-strips
 mpirun -np 2 ./build/heat_mpi --decomp strips --case V --N 64 --r 0.2 --T 0.05
 ```
@@ -87,6 +92,10 @@ part2/                   strip-decomposed MPI solver, checks and C2 study script
   ANALYSIS.md            correctness argument and communication cost model
   DELIVERY.md            section 6 / C2 requirement-by-requirement evidence
   results/               reviewed C2 cluster study and index
+part3/                   2D block-decomposed MPI solver, checks, study and timing script
+  ANALYSIS.md            corner ghosts, strips-vs-blocks prediction and check
+  DELIVERY.md            section 7 requirement-by-requirement evidence
+  results/               study index (cluster evidence pending)
 docs/                    documentation index, assignment PDFs and solutions
 llm_log/                 append-only interaction index and record status
 AGENTS.md                course logging instructions
