@@ -1,0 +1,64 @@
+{
+  "utc": "2026-11-19T20:07:47.311497+00:00",
+  "mode": "cluster",
+  "mpirun_args": [
+    "--hostfile",
+    "/home/mpi/heat-project-repo/part0/config/hosts",
+    "--map-by",
+    "node",
+    "--mca",
+    "plm_rsh_args",
+    "-o BatchMode=yes -o ConnectTimeout=15",
+    "--mca",
+    "oob_tcp_if_include",
+    "tailscale0",
+    "--mca",
+    "btl_tcp_if_include",
+    "tailscale0",
+    "--mca",
+    "btl",
+    "tcp,self"
+  ],
+  "platform": "Linux",
+  "architecture": "x86_64",
+  "mpirun_version": "mpirun (Open MPI) 4.1.6",
+  "serial_source_sha256": "bc24bfb7a3aa4afadd1f0e8d44feef1d5b479f917440bf6835fa73d77d9a11c4",
+  "strips_source_sha256": "a110ee704dfb52c9b146b9344237fd496f3498290fef1f362a5b8526b19c3151",
+  "blocks_source_sha256": "169347424a0ac168f556b6746a1a2bcddba2f623dd9bb9d9d9c0e5d8fc96ef8d",
+  "parameters": {
+    "np": [
+      1,
+      2,
+      3,
+      4,
+      6
+    ],
+    "N": [
+      8,
+      9,
+      10,
+      17,
+      64,
+      101
+    ],
+    "cases": "1,2,V",
+    "steps": 20,
+    "T": 0.002,
+    "r": 0.2,
+    "figure_N": 64,
+    "figure_steps": 500,
+    "timing": true,
+    "timing_np": [
+      4,
+      6
+    ],
+    "timing_N": [
+      512,
+      2048,
+      8192
+    ],
+    "timing_steps": 10,
+    "timing_reps": 3
+  },
+  "scope": "Correctness comparison plus a small strips-vs-blocks timing check; full scaling study belongs to Part 4"
+}

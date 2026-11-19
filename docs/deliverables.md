@@ -14,7 +14,7 @@ This maps the supplied `heat_mpi_project.pdf` to actual repository contents. A d
 | C1 | Part 0 plus serial convergence and background tasks | Technical materials ready: verified cluster, reviewed Ubuntu convergence evidence, and written-task PDF/source. Team explanation and private course-record obligations remain |
 | 5 / Part 1 | Serial heat solver and verification | COMPLETE: actual Ubuntu results archived, numerically cross-checked and visually reviewed; six correctness groups pass; analysis and delivery checklist included |
 | 6 / Part 2 | 1D strips, correct halos, identical final output | Complete: [part2/](../part2/DELIVERY.md); C2 reached, 84/84 byte-identical across 2–3 VMs ([study](../part2/results/2026-11-19-cluster/)) |
-| 7 / Part 3 | 2D Cartesian blocks and column communication | Implemented in [part3/](../part3/DELIVERY.md); compilation and cluster study on the VMs pending |
+| 7 / Part 3 | 2D Cartesian blocks and column communication | Complete: [part3/](../part3/DELIVERY.md); 90/90 byte-identical on 2×2 and 3×2 grids across 2–3 VMs; strips-vs-blocks prediction checked ([study](../part3/results/2026-11-19-cluster/)) |
 | 8 / Part 4 | Repeated performance study, model and scaling | Future work |
 | 9 / Part 5 | Optional GPU extension | Not attempted here; optional |
 
@@ -22,9 +22,9 @@ This maps the supplied `heat_mpi_project.pdf` to actual repository contents. A d
 
 | Deliverable | Included now | Remaining work |
 | --- | --- | --- |
-| 1. Code repository | Parts 0/1 sources, one-command build, option documentation, hostfile, launchers, verified evidence and plotting/offline-check scripts | Add later MPI decompositions |
+| 1. Code repository | Parts 0–3 sources (serial, strips, blocks), one-command build, option documentation, hostfile, launchers, verified evidence and plotting/offline-check scripts | Part 4 performance scripts |
 | 2. Background-task solutions PDF | PDF covering 25 required tasks plus optional 6.5, editable LaTeX, figures/tables and reproduction files under docs/background-solutions | Add actual team identification where required and include complete private AI records in the course hand-in |
-| 3. Correctness evidence | Reviewed Ubuntu serial table/plots, raw output, source/archive hashes, instability and stable-case checks | Later add serial/strips/blocks file comparisons over several N and P |
+| 3. Correctness evidence | Reviewed Ubuntu serial table/plots, raw output, source/archive hashes, instability and stable-case checks; serial-vs-strips (84/84) and serial-vs-blocks (90/90) byte comparisons over several N and P across the VMs | — |
 | 4. Report, at most 10 pages plus appendices | Part 0 learning guide and report-ready Part 1 numerical analysis with figures | Integrate later decomposition/performance results and actual team contributions into the final concise report |
 | 5. Complete llm_log folder and instructions | Root AGENTS rules, this session record and honest missing-history status | Preserve every earlier full interaction, actual member/model/tool/date metadata, and full private exports in the course hand-in |
 | 6. Ten-minute live demo | Cluster can launch programs and communicate | Run heat Cases 1 and 2 across at least three VMs with heat map/animation; change N or P and explain any code |
@@ -44,7 +44,7 @@ The [Part 1 delivery index](../part1/DELIVERY.md) and [analysis](../part1/ANALYS
 identify completed material. The full project hand-in still requires Parts 2-4,
 the live heat-solver demo, final report and complete private interaction records.
 
-## Solver contract: serial implemented; strips and blocks are future work
+## Solver contract: serial, strips and blocks implemented
 
 The professor requires a C++17-or-later executable `heat` with documented equivalents of:
 
@@ -66,7 +66,7 @@ fixed-step experiment. Do not treat local Windows timings as cluster performance
 The [Part 0 closeout](part0-closeout.md) records the completed repairs and preserves
 both the failed and successful captures. The technical checklist is complete.
 
-The later same-architecture parallel fields must match the serial output bit for bit for identical inputs. Merely producing similar plots or no MPI error is insufficient. File comparisons and error/convergence evidence are future tests, separate from ping-pong.
+The same-architecture parallel fields must match the serial output bit for bit for identical inputs. Merely producing similar plots or no MPI error is insufficient. `--decomp strips` is `build/heat_mpi` ([Part 2](../part2/README.md)) and `--decomp blocks` is `build/heat_blocks` ([Part 3](../part3/README.md)); `heat_blocks` rejects `serial` and `strips` with a pointer to the right executable. `heat_mpi` still prints "--decomp blocks is Part 3 and is not implemented yet": its source is left unchanged so that the archived Part 2 evidence hash stays valid. Their byte-for-byte file comparisons against serial are archived in the Part 2 and Part 3 cluster studies.
 
 ## Performance and resource constraints to keep visible
 

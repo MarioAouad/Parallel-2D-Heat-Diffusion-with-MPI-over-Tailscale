@@ -958,3 +958,35 @@ I also kept a safety stash (`stash@{0}`) and a verified backup under `llm_log/pr
 - The pull updated 14 files exactly as recorded by upstream commit 9c7e6e7. Those are upstream changes, not new assistant-authored implementation work.
 - llm_log/LOG.md: restored additions at lines 800-895; this session record at lines 897-960 (verified after writing).
 - Private backup files created: llm_log/private/pull-backup-20261119-220840/LOG.before-pull.md (lines 1-844), LOG.base.md (lines 1-749), local-additions.md (lines 1-95), head-before.txt (line 1). Line counts are verified below; these private files are ignored by Git.
+
+
+# Part 3 cluster results reviewed and deliverables finalized - 2026-11-19T23:10:00+02:00
+
+Team member: operator of node heat-3. Tool: Claude Code, VS Code extension. Model: Claude Opus 5.5 (claude-opus-5-5). Manual visible-message record, not a raw export.
+
+User requests (verbatim):
+
+[screenshot of the heat-3 terminal: end of run_experiments.py --cluster and verify_results.py output] all good ?
+
+done, files are copied
+
+Agent actions:
+
+- Confirmed from the screenshot: 90/90 byte-identical, 72 multi-machine runs, verify_results PASS. Asked for the evidence folder to be copied to Windows.
+- Reviewed part3-evidence/20261119T200747311497Z:
+  - metadata source hashes equal the committed heat_serial.cpp, heat_mpi.cpp and heat_blocks.cpp;
+  - all 11 manifest hashes re-verified;
+  - all 150 raw runs have returncode 0. Two stderr entries hold only Open MPI's "plm:rsh setpgid ... Permission denied" launcher warning;
+  - inspected debug_halo.txt (2x2, 3x2), cases.png, decomposition.png and timing.png;
+  - computed the per-repetition paired comparison: blocks win 6/6 at N=8192, strips win 10/12 at N<=2048. Confirmed that strips use 2 Sendrecv phases and blocks 4.
+- On new branch part3-results from origin/main f654fa8:
+  - archived the run without fields/ as part3/results/2026-11-19-cluster/, with console/ transcripts;
+  - replaced the launching VM's device hostname by heat3 in 2 places in raw_runs.json and updated only that manifest entry. The original sha256 d81158f9... and size 135693 are recorded in review.json;
+  - added README.md (lines 1-55) and review.json (lines 1-110).
+- part3/ANALYSIS.md: changed the status, and wrote "Then check: measured strips vs blocks" (from line 133: table, phase-count explanation, aggregate-volume explanation, report answer, P=8 reasoning) and "Correctness results" (from line 206).
+- part3/DELIVERY.md (lines 1-17): marked complete; every evidence cell links the archive.
+- part3/results/README.md: added the study row.
+- README.md: status, layout and a Part 3 results paragraph.
+- docs/deliverables.md: Part 3 row, checklist rows 1 and 3, and solver contract section. Noted that heat_mpi still calls blocks "not implemented yet" and is left unchanged so the Part 2 hash stays valid.
+- Checks: part3/verify_results.py PASS on the archive; part2/verify_results.py still PASS; all markdown links resolve.
+- Committed and pushed branch part3-results.

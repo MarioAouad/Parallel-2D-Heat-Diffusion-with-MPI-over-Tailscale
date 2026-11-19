@@ -1,19 +1,19 @@
 # Part 3 delivery checklist
 
-This maps assignment section 7 to the code and evidence. **Code is complete and passed a
-single-machine pre-check; the cluster study is still pending.** A requirement counts as delivered only
-once its evidence column points at a reviewed result. Checkpoint C3 also includes the
-Part 4 performance runs, which are not part of this checklist.
+This maps assignment section 7 to the code and evidence. **Complete:** every row's
+evidence points at the reviewed [cluster study](results/2026-11-19-cluster/) of 19 November 2026
+(90/90 byte-identical across 2–3 VMs). Checkpoint C3 also includes the Part 4
+performance runs, which are not part of this checklist.
 
 | Requirement (assignment section 7) | Where it is implemented | Evidence |
 | --- | --- | --- |
-| Arrange P processes in a Px×Py grid; each owns a rectangular block of interior nodes with ghost layers on all four sides | Local (rows+2)×(cols+2) storage in [heat_blocks.cpp](heat_blocks.cpp) | Grid/size test; `decomposition.png` — pending |
-| Choose the grid with `MPI_Dims_create`; build it with `MPI_Cart_create` (non-periodic); neighbours with `MPI_Cart_shift`; plate edges are `MPI_PROC_NULL` | Process-grid block in `run()` | Grid/neighbour test (2×1, 3×1, 2×2, 3×2); `Py`/`Px` in every summary — pending |
-| Split rows and columns as evenly as possible, as in Part 2 | `split()` applied to y and x | Size test (e.g. N=10, P=6: rows 3/3/3, columns 5/4) — pending |
-| Rows sent contiguously; **columns with an `MPI_Type_vector` derived datatype**, not by copying into a buffer by hand | `exchange` lambda, `column` type | Code; ghost-column test after 1, 2, 5 steps (P = 4, 6) — pending |
-| Output identical to serial, as in Part 2 | Unchanged stencil, data and time-step code; subarray gather | Byte-for-byte comparisons for P = 1, 2, 3, 4, 6 on 2–3 VMs — pending |
-| Report: why corner ghosts are not needed, and which stencil would need them | — | [ANALYSIS, question 1](ANALYSIS.md#question-1-why-are-corner-ghosts-not-needed); debug transcripts print corners as `-` — pending |
-| Report: predict strips vs blocks for P = 4, 8 and N = 512, 2048, 8192 from Task 8.2 with the measured t<sub>s</sub>, t<sub>w</sub>, then check | Model in ANALYSIS; timing stage of `run_experiments.py` | [Prediction table](ANALYSIS.md#question-2-strips-or-blocks-prediction-from-task-82-with-the-measured-ts-tw) written; measured check for P = 4, 6 — pending. P = 8 is model-only (6 slots) |
+| Arrange P processes in a Px×Py grid; each owns a rectangular block of interior nodes with ghost layers on all four sides | Local (rows+2)×(cols+2) storage in [heat_blocks.cpp](heat_blocks.cpp) | Grid/size test ([console/check-blocks.txt](results/2026-11-19-cluster/console/check-blocks.txt)); [decomposition.png](results/2026-11-19-cluster/decomposition.png) |
+| Choose the grid with `MPI_Dims_create`; build it with `MPI_Cart_create` (non-periodic); neighbours with `MPI_Cart_shift`; plate edges are `MPI_PROC_NULL` | Process-grid block in `run()` | Grid/neighbour test; [debug_halo.txt](results/2026-11-19-cluster/debug_halo.txt) lists coords and `down/up/left/right` (`none` at plate edges) for 2×2 and 3×2; `Py`/`Px` in every row of [compare.csv](results/2026-11-19-cluster/compare.csv) |
+| Split rows and columns as evenly as possible, as in Part 2 | `split()` applied to y and x | Size test; 48 uneven rows in `compare.csv`; 3×2 transcript shows rows 3/2/2 and columns 4/3 for N = 8 |
+| Rows sent contiguously; **columns with an `MPI_Type_vector` derived datatype**, not by copying into a buffer by hand | `exchange` lambda, `column` type | Code; ghost-column test (P = 4, 6) OK; every ghost column in `debug_halo.txt` equals the neighbour's owned column |
+| Output identical to serial, as in Part 2 | Unchanged stencil, data and time-step code; subarray gather | **90/90 byte-identical** for P = 1, 2, 3, 4, 6 (grids up to 3×2), Cases 1, 2, V, six N; P ≥ 2 on 2–3 VMs ([ANALYSIS](ANALYSIS.md#correctness-results)); [cases.png](results/2026-11-19-cluster/cases.png) |
+| Report: why corner ghosts are not needed, and which stencil would need them | — | [ANALYSIS, question 1](ANALYSIS.md#question-1-why-are-corner-ghosts-not-needed); corners print as `-` in `debug_halo.txt` and results still match serial |
+| Report: predict strips vs blocks for P = 4, 8 and N = 512, 2048, 8192 from Task 8.2 with the measured t<sub>s</sub>, t<sub>w</sub>, then check | Model in ANALYSIS; timing stage of `run_experiments.py` | [Prediction table](ANALYSIS.md#question-2-strips-or-blocks-prediction-from-task-82-with-the-measured-ts-tw) and [measured check](ANALYSIS.md#then-check-measured-strips-vs-blocks) for P = 4, 6 ([timing_summary.csv](results/2026-11-19-cluster/timing_summary.csv), [timing.png](results/2026-11-19-cluster/timing.png)): blocks win at N = 8192, strips at N ≤ 2048, explained. P = 8 is model-only (6 slots) |
 | Optional: overlap communication with computation (`MPI_Isend`/`MPI_Irecv`) | Not attempted | — |
 
 ## Single-machine pre-check (not evidence)

@@ -7,8 +7,8 @@ MPI carries messages between them.
 **Status, 19 November 2026:** Parts 0 and 1 technical work and evidence review
 are complete. Part 2 strip decomposition is complete: checkpoint C2 was reached with
 84/84 byte-identical comparisons across the VMs. Part 3 block decomposition is
-implemented; its compilation and cluster study are pending. The Part 4 performance
-study follows. See the [assignment status](docs/deliverables.md) for the full hand-in.
+complete: 90/90 byte-identical comparisons on 2×2 and 3×2 grids across the VMs, plus a
+measured strips-vs-blocks check. The Part 4 performance study follows. See the [assignment status](docs/deliverables.md) for the full hand-in.
 
 ## Start here
 
@@ -95,7 +95,7 @@ part2/                   strip-decomposed MPI solver, checks and C2 study script
 part3/                   2D block-decomposed MPI solver, checks, study and timing script
   ANALYSIS.md            corner ghosts, strips-vs-blocks prediction and check
   DELIVERY.md            section 7 requirement-by-requirement evidence
-  results/               study index (cluster evidence pending)
+  results/               reviewed cluster study and index
 docs/                    documentation index, assignment PDFs and solutions
 llm_log/                 append-only interaction index and record status
 AGENTS.md                course logging instructions
@@ -120,6 +120,13 @@ byte-identical to serial in 84/84 comparisons (P = 1–4, seven N, uneven strips
 three VMs). Its incidental timers already show halo latency taking at least 99.98 % of
 cross-VM run time. The [results index](part2/results/README.md) explains how studies are
 reviewed and archived.
+
+The [Part 3 cluster study](part3/results/2026-11-19-cluster/) shows the blocks output
+byte-identical to serial in 90/90 comparisons (P = 1, 2, 3, 4, 6; grids up to 3×2; two to
+three VMs). Its timing check answers the strips-vs-blocks question. Blocks win at N = 8192
+by 1.5–2.3×. Strips win at N ≤ 2048, because blocks need four sequential exchange
+phases per step instead of two. The [analysis](part3/ANALYSIS.md#then-check-measured-strips-vs-blocks)
+compares this with the Task 8.2 prediction.
 
 ## Submission and private records
 

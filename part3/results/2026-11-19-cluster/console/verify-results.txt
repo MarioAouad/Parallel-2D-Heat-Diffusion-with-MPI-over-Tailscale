@@ -1,0 +1,4 @@
+PASS 11 published hashes and unchanged serial/strips/blocks sources (cluster study)
+PASS 90 comparisons bit-for-bit identical; P = [1, 2, 3, 4, 6]; grids = ['1x1', '2x1', '2x2', '3x1', '3x2']; N = [8, 9, 10, 17, 64, 101]
+PASS every P >= 2 run used at least two machines
+PASS raw runs consistent with compare.csv; 2x2 and 3x2 halo transcripts present; 36 timing runs, 12 medians

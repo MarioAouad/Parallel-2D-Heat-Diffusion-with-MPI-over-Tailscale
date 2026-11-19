@@ -2,8 +2,11 @@
 
 ## Outcome and provenance
 
-**Status: implementation complete; cluster evidence pending.** No Part 3 measurement has
-been recorded yet. The [results index](results/README.md) will link the reviewed study.
+**Status: complete.** The [reviewed cluster study](results/2026-11-19-cluster/) of
+19 November 2026 gives 90/90 block fields byte-identical to serial on two or three VMs
+(P = 1, 2, 3, 4, 6; grids up to 3×2). It also gives a three-repetition strips-vs-blocks
+timing check. The results are in the last two sections.
+
 Before any MPI run, the block logic was checked by an exact Python emulation of:
 
 - `MPI_Dims_create`;
@@ -129,18 +132,96 @@ only; P = 6 (3×2) is measured instead, since it has the same 3-neighbour struct
 
 ## Then check: measured strips vs blocks
 
-*Pending the cluster study.* `run_experiments.py --cluster` will produce `timing_summary.csv`
-and `timing.png`. That stage runs Case 1, 10 steps, with no output file, for P = 4 and 6
-and N = 512, 2048, 8192, with three interleaved repetitions of strips and blocks. This
-section will compare the medians and spread with the table above and explain any
-disagreement.
+Setup: Case 1, 10 steps, no output file, P = 4 and 6, N = 512, 2048 and 8192. There were
+three repetitions. Within each repetition, strips and blocks ran back to back, so each
+pair saw similar network conditions. Every run used all three VMs. Placement was
+`--map-by node`, so in both layouts every neighbour pair is on different VMs. The data is
+in `timing_summary.csv`, `timing.csv` and `timing.png`.
+
+Halo exchange per step, as the median of 3 in ms, with min–max in brackets. The last
+column counts how many of the 3 paired repetitions each layout won:
+
+| P (grid) | N | strips | blocks | paired wins | predicted (heat1–heat2 / heat2–heat3) |
+| --- | ---: | ---: | ---: | --- | --- |
+| 4 (2×2) | 512 | 344 (165–771) | 1159 (186–1537) | strips 3/3 | blocks / blocks |
+| 4 (2×2) | 2048 | 2305 (600–3162) | 2630 (1051–3614) | strips 3/3 | blocks / blocks |
+| 4 (2×2) | 8192 | 5739 (3074–9243) | **2485** (2152–5731) | blocks 3/3 | blocks / blocks |
+| 6 (3×2) | 512 | 1283 (791–2678) | 1492 (964–1648) | strips 2/3 | tie / strips |
+| 6 (3×2) | 2048 | 2793 (2029–3911) | 2959 (2255–3859) | strips 2/3 | blocks / blocks |
+| 6 (3×2) | 8192 | 8580 (6707–10868) | **5611** (4932–9769) | blocks 3/3 | blocks / blocks |
+
+Computation took at most 0.35 s per step in any run. Communication was at least **98.1 %**
+of every run's time.
+
+**Where the prediction holds: N = 8192.** Blocks won all six paired repetitions. Their
+median exchange was 2.3× faster at P = 4 and 1.5× faster at P = 6. This is the
+bandwidth-dominated regime: blocks send N/P<sub>x</sub> or N/P<sub>y</sub> values per
+message, not N.
+
+**Where it fails: N = 512 and 2048.** Strips won 10 of 12 paired repetitions, including
+all six at P = 4, where the model said blocks win for every N. So the measured
+crossover sits between N = 2048 and N = 8192. The spread is wide: within one layout,
+repetitions differ by up to 4.7×. Three repetitions over home Wi-Fi cannot fix the
+crossover point. However, the direction at small N is consistent across the pairs, so
+it is not just noise.
+
+**Why the model is wrong at small N.** The Task 8.2 model counts *messages per rank*.
+That is 2 for a middle strip and 2 for a 2×2 block, hence "same latency, half the data".
+The code instead exchanges in blocking `MPI_Sendrecv` *phases*, which run in sequence:
+
+- strips: rows up, then rows down;
+- blocks: rows up, rows down, columns right, columns left.
+
+In a 2×2 grid, each rank's row neighbour is reached in two phases: one send-only, then
+one receive-only after the neighbour's own phase finishes. The column phases only start
+after the row phases finish. So the critical path holds about four latencies per step
+for blocks, against two for strips. The extra 2t<sub>s</sub> is 35–155 ms on these links.
+At N = 512 the payload term is tiny (2–4 KiB per message), so the extra latencies
+decide the result. At N = 8192 the halved payload outweighs them.
+
+**Why both layouts are slower than predicted.** At N = 8192, strips at P = 4 measured
+5.7 s per step against the model's worst-link 1.5 s. Part 0 measured one message at a
+time on an idle link. Here, every rank sends at once, and two ranks share each VM's home
+connection. The *total* bytes per step therefore matter as well. Blocks move fewer:
+(P<sub>y</sub>−1)+(P<sub>x</sub>−1) cut lines against P−1, which is 2 against 3 at
+P = 4 and 3 against 5 at P = 6. This also fits blocks winning at large N.
+
+The two explanations above are consistent with the data but were not tested separately.
+Two experiments would test the phase explanation:
+
+- an Isend/Irecv version that posts all four exchanges at once (the optional overlap);
+- the Part 4 study, with more repetitions.
+
+**Answer for the report.** On this cluster:
+
+- strips are better for small grids (N ≤ 2048 at P = 4 and 6);
+- blocks are better for large grids (N = 8192), by 1.5–2.3×.
+
+The busiest-rank model predicts the large-N winner. It misses the small-N winner because
+it ignores how the exchange phases are ordered. For P = 8 (4×2, model only), the same
+reasoning gives the same pattern. 4×2 blocks still have four sequential phases and three
+or four neighbours, so strips should win at small N and blocks at large N. Measuring the
+crossover would need eight real vCPUs.
 
 ## Correctness results
 
-*Pending the cluster study.* This section will report:
+From the [cluster study](results/2026-11-19-cluster/) (launched from heat-3, Open MPI 4.1.6):
 
-- byte-identical comparisons for P = 1, 2, 3, 4, 6, with the 2×2 and 3×2 grids;
-- uneven blocks;
-- the machines used;
-- the 2×2 and 3×2 debug transcripts;
-- the blocks-computed Case 1/2 fields.
+- **6 correctness groups OK** on heat-3 (`console/check-blocks.txt`).
+- **90/90 comparisons byte-identical to serial**, with matching steps, r, dt, T, minimum,
+  maximum and Case V error norms. They cover Cases 1, 2 and V, N = 8, 9, 10, 17, 64, 101,
+  and P = 1, 2, 3, 4, 6, i.e. grids 1×1, 2×1, 3×1, 2×2 and 3×2.
+- **Uneven blocks:** 48 rows have N−1 not divisible by P<sub>y</sub> or P<sub>x</sub>,
+  e.g. N = 8 on 3×2 gives rows 3/2/2 and columns 4/3.
+- **Machines:** every P = 2 run used 2 VMs and every P = 3, 4 or 6 run used all 3.
+  That makes 72 multi-machine runs, so every row and column ghost crossed the network.
+- **Halo transcripts** (`debug_halo.txt`, Case 1, N = 8, one step, 2×2 and 3×2):
+  - every ghost row and ghost column equals the neighbour's owned values;
+  - plate-edge ghosts hold the fixed boundary value 1;
+  - corners print as `-`.
+- **Fields** (`cases.png`, 3×2, N = 64, 500 steps): Case 1 and Case 2 computed by blocks
+  are byte-identical to serial, symmetric, within [0, 1], with no seam at block edges.
+- **Provenance:** the source hashes in `metadata.json` equal the committed
+  `heat_serial.cpp`, `heat_mpi.cpp` and `heat_blocks.cpp`.
+
+Checkpoint C3's correctness part is therefore met. The Part 4 performance runs remain.
