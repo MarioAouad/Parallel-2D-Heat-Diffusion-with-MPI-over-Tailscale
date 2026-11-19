@@ -8,13 +8,31 @@ CPPFLAGS += -DOMPI_SKIP_MPICXX=1
 # ffp-contract=off prepares consistent arithmetic for the later heat solver.
 CXXFLAGS := -std=c++17 -O2 -ffp-contract=off -Wall -Wextra -Wpedantic
 
-.PHONY: all serial verify-results verify-setup analyze test-analysis check-serial verify-part1 verify-part1-results
-all: build/mpi_hello build/mpi_pingpong build/heat
+.PHONY: all serial strips verify-results verify-setup analyze test-analysis check-serial verify-part1 verify-part1-results check-strips verify-part2 verify-part2-results
+all: build/mpi_hello build/mpi_pingpong build/heat build/heat_mpi
 
 serial: build/heat
 
 build/heat: part1/heat_serial.cpp | build
 	$(SERIAL_CXX) $(CXXFLAGS) $< -o $@
+
+# Part 2: strip-decomposed solver. Same flags as the serial reference, so the
+# stencil arithmetic is identical and the output can match bit for bit.
+strips: build/heat_mpi
+
+build/heat_mpi: part2/heat_mpi.cpp | build
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
+
+# Part 2 checks, mirroring Part 1: correctness groups on THIS VM (oversubscribed),
+# the C2 study (add --cluster to span the VMs), and the offline archive check.
+check-strips: build/heat build/heat_mpi
+	python3 part2/verify_strips.py --exe build/heat_mpi --serial build/heat
+
+verify-part2: build/heat build/heat_mpi
+	python3 part2/run_experiments.py
+
+verify-part2-results:
+	python3 part2/verify_results.py
 
 # Order-only prerequisite: create the directory without rebuilding merely
 # because another file changes the directory's modification time.

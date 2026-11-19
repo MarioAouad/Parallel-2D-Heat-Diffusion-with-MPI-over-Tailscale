@@ -5,7 +5,8 @@ different homes. Tailscale connects the VMs, SSH launches remote processes, and
 MPI carries messages between them.
 
 **Status, 19 November 2026:** Parts 0 and 1 technical work and evidence review
-are complete. Part 2 strip decomposition is next; blocks and performance studies
+are complete. Part 2 strip decomposition is implemented; its compilation and the
+C2 cluster comparison on the VMs are pending. Blocks and performance studies
 follow. See the [assignment status](docs/deliverables.md) for the full hand-in.
 
 ## Start here
@@ -16,6 +17,9 @@ follow. See the [assignment status](docs/deliverables.md) for the full hand-in.
 | Build and use the serial heat solver | [Part 1 guide](part1/README.md) |
 | Read the convergence and instability analysis | [Part 1 analysis](part1/ANALYSIS.md) |
 | Find completed Part 1 deliverables | [Delivery checklist](part1/DELIVERY.md) |
+| Build and run the strip-decomposed MPI solver | [Part 2 guide](part2/README.md) |
+| Read the strips correctness argument and cost model | [Part 2 analysis](part2/ANALYSIS.md) |
+| Track Part 2 deliverables and C2 evidence | [Part 2 delivery checklist](part2/DELIVERY.md) |
 | Read the written numerical-method solutions | [PDF and editable source](docs/background-solutions/README.md) |
 | Receive GitHub updates on the VMs | [Git and VM workflow](docs/local-update.md) |
 | Find hardware, requirements and verification details | [Documentation index](docs/README.md) |
@@ -38,7 +42,8 @@ NumPy and Matplotlib. SSH, Tailscale and local addresses are covered in
 [private configuration](part0/config/README.md).
 For an existing checkout, use the [update instructions](docs/local-update.md).
 
-`make` builds `build/mpi_hello`, `build/mpi_pingpong` and `build/heat`.
+`make` builds `build/mpi_hello`, `build/mpi_pingpong`, `build/heat` and `build/heat_mpi`.
+`make strips` builds only the Part 2 strips solver.
 `make serial` builds only the serial solver with an ordinary C++ compiler.
 All use C++17, optimization, warnings and `-ffp-contract=off`.
 
@@ -51,6 +56,10 @@ make verify-part1-results
 # Run the serial correctness checks and an example simulation.
 make check-serial
 ./build/heat --decomp serial --case V --N 64 --r 0.2 --T 0.05
+
+# Part 2: strips correctness groups and a strips run on this VM.
+make check-strips
+mpirun -np 2 ./build/heat_mpi --decomp strips --case V --N 64 --r 0.2 --T 0.05
 ```
 
 `make verify-part1` creates a new timestamped convergence/instability study.
@@ -74,6 +83,10 @@ part1/                   serial solver, checks and experiment scripts
   ANALYSIS.md            numerical method and reviewed findings
   DELIVERY.md            requirement-by-requirement evidence
   results/               primary Ubuntu study and supporting records
+part2/                   strip-decomposed MPI solver, checks and C2 study script
+  ANALYSIS.md            correctness argument and communication cost model
+  DELIVERY.md            section 6 / C2 requirement-by-requirement evidence
+  results/               C2 study index (cluster evidence pending)
 docs/                    documentation index, assignment PDFs and solutions
 llm_log/                 append-only interaction index and record status
 AGENTS.md                course logging instructions
@@ -92,6 +105,9 @@ second-order convergence, demonstrates the isolated unstable case, and verifies
 stable Cases 1 and 2. The [results index](part1/results/README.md) distinguishes
 it from the earlier Windows study and Ubuntu smoke test. Timings in these serial
 records are incidental; controlled scaling measurements belong to Part 4.
+
+Part 2 has no measured results yet. Its [results index](part2/results/README.md)
+explains how the cluster C2 study is produced, reviewed and archived.
 
 ## Submission and private records
 
