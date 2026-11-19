@@ -1,11 +1,9 @@
 # Part 2: 1D strip decomposition
 
-**Status: implemented; awaiting compilation and C2 evidence on the Ubuntu VMs.**
-Start with the [delivery checklist](DELIVERY.md) and the [analysis](ANALYSIS.md).
-The code has not yet been compiled or run on the cluster. The decomposition logic
-(row split, ghost layout, two-shift exchange, gather) was checked by an exact
-Python emulation, which gave 96/96 bit-identical fields against the serial loop. That is
-not a substitute for the real MPI runs below.
+**Status: complete; checkpoint C2 reached.** Start with the [delivery checklist](DELIVERY.md)
+and the [analysis](ANALYSIS.md). The [cluster study](results/2026-11-19-cluster/) shows
+84/84 strips fields byte-identical to the serial reference for P = 1–4 across two and
+three VMs, including uneven strips.
 
 | File | Purpose |
 | --- | --- |

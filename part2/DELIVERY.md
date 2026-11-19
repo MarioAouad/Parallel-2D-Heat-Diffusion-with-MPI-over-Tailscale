@@ -1,23 +1,37 @@
 # Part 2 delivery checklist
 
-This maps assignment section 6 and checkpoint C2 to the code and evidence. **Code is
-complete. Compilation on Ubuntu and the cluster C2 study are still pending.** A
-requirement counts as delivered only once its evidence column points at a reviewed result.
+Part 2 technical work and evidence review are complete, and **checkpoint C2 is reached**.
+The primary evidence is the reviewed [cluster study of 19 November 2026](results/2026-11-19-cluster/),
+launched from heat-3 across all three VMs. This checklist is the Part 2 handoff. It does
+not claim that Part 3 (blocks), Part 4 (performance) or the final report are complete.
+
+Evidence links point to files in [`results/2026-11-19-cluster/`](results/2026-11-19-cluster/).
 
 | Requirement (assignment section 6) | Where it is implemented | Evidence |
 | --- | --- | --- |
-| Split the N−1 interior rows into contiguous strips; the first (N−1) mod P ranks get one extra row; rank 0 is the bottom strip | `strip_of()` in [heat_mpi.cpp](heat_mpi.cpp) | `verify_strips.py` row-size test; `decomposition.png` — pending |
-| Local array of n<sub>local</sub>+2 rows of N+1 values; plate boundary acts as the edge ranks' ghost row | `old`/`next` allocation and `initial_value()` | debug test: boundary rows stay hot (Case 2) — pending |
-| Halo exchange with `MPI_Sendrecv`; `MPI_PROC_NULL` at the outer edges; no special cases | `exchange` lambda | debug test: every ghost row equals the neighbour's row after 1, 2, 5 steps, P = 2, 3, 4 — pending |
-| Each row sent as one message of N+1 doubles, directly from the array | `exchange` (`count = N+1`, pointer to the row) | code inspection |
-| Exchange and computation timed separately; maximum over ranks with `MPI_Reduce(MPI_MAX)` | `t_comm`, `t_comp`, `t_total` | summary-field test — pending |
-| Explain the blocking-Send deadlock and why `MPI_Sendrecv` avoids it | [README](README.md#why-a-blocking-send-then-recv-exchange-can-deadlock-report-question), [ANALYSIS](ANALYSIS.md#halo-exchange-and-deadlock) | written |
-| Rank 0 assembles the full field (`MPI_Gatherv`) and writes the Part 1 file format | gather block and `write_field()` | byte-identical comparisons — pending |
-| Field file bit-for-bit identical to serial for the same N, r and steps (`cmp`) | unchanged stencil, data and time-step code | `verify_strips.py` (one VM) and `run_experiments.py --cluster` — pending |
-| Debugging aid: N=8, P=2 and P=3, one step, print arrays including ghost rows | `--debug-print` | `debug_halo.txt` in the study — pending |
-| **C2:** identical output for P = 1, 2, 3, 4 and several N, including N−1 not divisible by P, **across at least two VMs** | `run_experiments.py --cluster` (`--map-by node`) | `compare.csv`, with a `nodes` column ≥ 2 for every P ≥ 2 — pending |
+| Split the N−1 interior rows into contiguous strips; the first (N−1) mod P ranks get one extra row; rank 0 is the bottom strip | `strip_of()` in [heat_mpi.cpp](heat_mpi.cpp) | Row-size test OK ([check-strips](results/2026-11-19-cluster/console/check-strips.txt)); [decomposition figure](results/2026-11-19-cluster/decomposition.png); [debug transcripts](results/2026-11-19-cluster/debug_halo.txt) show 4/3 and 3/2/2 rows |
+| Local array of n<sub>local</sub>+2 rows of N+1 values; plate boundary acts as the edge ranks' ghost row | `old`/`next` allocation and `initial_value()` | [debug transcripts](results/2026-11-19-cluster/debug_halo.txt): hot `boundary` rows on ranks 0 and P−1 |
+| Halo exchange with `MPI_Sendrecv`; `MPI_PROC_NULL` at the outer edges; no special cases | `exchange` lambda | Ghost-equals-neighbour test OK for P = 2, 3, 4 after 1, 2, 5 steps; [debug transcripts](results/2026-11-19-cluster/debug_halo.txt) |
+| Each row sent as one message of N+1 doubles, directly from the array | `exchange` (`count = N+1`, pointer to the row) | Code; byte-identical results |
+| Exchange and computation timed separately; maximum over ranks with `MPI_Reduce(MPI_MAX)` | `t_comm`, `t_comp`, `t_total` | Summary-field test OK; timers in [compare.csv](results/2026-11-19-cluster/compare.csv), interpreted in [ANALYSIS](ANALYSIS.md#incidental-timing-what-one-correctness-run-already-shows) |
+| Explain the blocking-Send deadlock and why `MPI_Sendrecv` avoids it | — | [README](README.md#why-a-blocking-send-then-recv-exchange-can-deadlock-report-question), [ANALYSIS](ANALYSIS.md#halo-exchange-and-deadlock) |
+| Rank 0 assembles the full field (`MPI_Gatherv`) and writes the Part 1 file format | Gather block and `write_field()` | 84 field files byte-identical to serial |
+| Field file bit-for-bit identical to serial for the same N, r and steps (`cmp`) | Unchanged stencil, data and time-step code | **84/84 identical** in [compare.csv](results/2026-11-19-cluster/compare.csv); Case 1/2 [figure](results/2026-11-19-cluster/cases.png) also byte-identical |
+| Debugging aid: N=8, P=2 and P=3, one step, print arrays including ghost rows | `--debug-print` | [debug_halo.txt](results/2026-11-19-cluster/debug_halo.txt) |
+| **C2:** identical output for P = 1, 2, 3, 4 and several N, including N−1 not divisible by P, **across at least two VMs** | `run_experiments.py --cluster` (`--map-by node`) | P = 1–4; N = 8, 9, 10, 16, 17, 64, 101; 36 uneven rows; `nodes` = 2 for P=2 and 3 for P=3, 4 — [verified](results/2026-11-19-cluster/console/verify-results.txt) |
 
-## How to produce the evidence (Ubuntu, repository root)
+## Verified checks
+
+- `make check-strips` on heat-3: six groups OK
+  ([transcript](results/2026-11-19-cluster/console/check-strips.txt)).
+- Cluster run: 111 commands, all return codes zero, all stderr empty; 84/84 comparisons PASS
+  ([transcript](results/2026-11-19-cluster/console/run-cluster.txt), [raw runs](results/2026-11-19-cluster/raw_runs.json)).
+- `verify_results.py`: manifest hashes, unchanged sources, coverage, multi-machine spread and
+  raw/CSV consistency all PASS, on heat-3 and again on the archived copy.
+- Both figures were visually inspected. Published files contain no addresses or hostnames
+  ([review](results/2026-11-19-cluster/review.json)).
+
+## Reproduce (Ubuntu, repository root)
 
 All three VMs need the same commit, built at the same path:
 
@@ -25,19 +39,17 @@ All three VMs need the same commit, built at the same path:
 cd ~/heat-project-repo && git pull --ff-only origin main && make serial strips
 ```
 
-Then, on one VM only:
+Then, on one VM:
 
 ```bash
-make check-strips                                   # 1. correctness groups on this VM (oversubscribed)
-python3 part2/run_experiments.py --cluster          # 2. C2 study across the VMs (new runs/ folder)
-python3 part2/verify_results.py --data part2/results/runs/<stamp>   # 3. offline check of that folder
+make check-strips                                   # six correctness groups (this VM)
+python3 part2/run_experiments.py --cluster          # new C2 study across the VMs (runs/ folder)
+make verify-part2-results                           # offline check of the archived study
 ```
 
-Before step 2, check that every VM pair is `direct` in `tailscale ping`; Part 0 showed
-that the first packets often go through a relay. After review, copy the run folder to
-`part2/results/<date>-cluster/`, update the [results index](results/README.md) and the
-Results section of [ANALYSIS.md](ANALYSIS.md), then commit. `make verify-part2-results`
-then checks the archived study.
+Before running across the VMs, check that every pair is `direct` in `tailscale ping`. Part 0
+showed that the first packets often go through a relay. The Python scripts need
+`python3-numpy` and `python3-matplotlib` on the launching VM.
 
 ## Scripts
 
@@ -47,8 +59,12 @@ then checks the archived study.
 | [run_experiments.py](run_experiments.py) | C2 comparisons, halo-debug transcripts, figures, manifest | `run_experiments.py` |
 | [verify_results.py](verify_results.py) | Offline verification of an archived study | `verify_results.py` |
 
-## Not in Part 2
+## Public repository and private hand-in
 
-The 2D block decomposition (Part 3) is not started. Speed-up and scaling are not measured
-here: timings in C2 runs are incidental, and controlled repeated runs belong to Part 4.
-The complete AI-interaction record still needs the full session export (see `llm_log/`).
+GitHub holds the reviewed CSV, figures, raw command JSON, metadata, manifest, console
+transcripts and review. The regenerable `.bin` reference fields and the original transfer
+folder stay outside the commit. The complete AI-interaction record for this work still needs
+the full session export (see `llm_log/`).
+
+Next implementation stage: Part 3 (2D blocks). It will reuse the strips gather/compare
+machinery, and its output must match the same serial reference.

@@ -2,16 +2,21 @@
 
 ## Outcome and provenance
 
-**Status: implementation complete; cluster evidence pending.** No Part 2 result has
-been recorded yet. The [results index](results/README.md) will link the reviewed C2
-study once it has been run on the VMs. Until then, this document gives only the design,
-the correctness argument and a *model prediction* built from the archived Part 0 and
-Part 1 measurements. It contains no measured Part 2 numbers.
+**Status: complete; checkpoint C2 reached.** The [primary cluster study](results/2026-11-19-cluster/)
+was launched from heat-3 at 2026-11-19 18:49:15 UTC. It ran the executables built from commit 1c2b5e6
+on all three VMs, and the source hashes in its metadata match the committed files. In it:
 
-Before any MPI run, the decomposition logic was checked by an exact Python emulation
+- the six correctness groups passed;
+- **84 of 84** serial-vs-strips comparisons were byte-identical, covering P = 1–4, seven
+  values of N and uneven strips;
+- every multi-process run spanned two or three VMs.
+
+The archive was re-verified after transfer and reviewed (`review.json`).
+
+Before any MPI run, the decomposition logic had been checked by an exact Python emulation
 of the row split, ghost layout, two-shift exchange and gather. It produced 96/96 fields
-byte-identical to an emulated serial loop (Cases 1, 2, V; N = 3–24; P = 1–7, including
-uneven strips). This emulation is not evidence about the C++ or the MPI library.
+byte-identical to an emulated serial loop. That emulation was a design check only. The
+evidence is the cluster study.
 
 ## Decomposition
 
@@ -124,9 +129,63 @@ needs only enough steps for information to cross several strip boundaries.
 
 ## Results
 
-*Pending.* After the reviewed cluster study, this section will report:
+Source: [2026-11-19 cluster study](results/2026-11-19-cluster/), checked offline by
+`make verify-part2-results`.
 
-- the number of identical comparisons and the P and N covered;
-- the number of machines used per run;
-- the halo-debug transcripts for P=2 and P=3;
-- the strips-computed Case 1/2 fields.
+### Correctness: checkpoint C2
+
+| | P = 1 | P = 2 | P = 3 | P = 4 |
+| --- | ---: | ---: | ---: | ---: |
+| Comparisons (Cases 1, 2, V × 7 values of N) | 21 | 21 | 21 | 21 |
+| Byte-identical field file and summary values | 21 | 21 | 21 | 21 |
+| Of which uneven strips, (N−1) mod P ≠ 0 | 0 | 12 | 12 | 12 |
+| Machines used (`nodes`) | 1 | 2 | 3 | 3 |
+
+N = 8, 9, 10, 16, 17, 64, 101. Cases 1/2 ran 20 steps and V ran to T = 0.002, all at r = 0.2.
+Across all 84 comparisons, `cmp` would report no difference. Steps, r, dt, T, minimum,
+maximum and the V error norms err_inf and err_l2 are also identical strings. This meets
+C2: identical output for P = 1–4 and several N, including N−1 not divisible by P, across
+at least two VMs. The six-group correctness suite, which includes ghost-row equality after
+1, 2 and 5 steps and the unstable demo at r = 0.2625, passed on heat-3.
+
+![Strip decomposition](results/2026-11-19-cluster/decomposition.png)
+
+The halo-debug runs in `debug_halo.txt` (Case 2, N=8, one step) show the expected layout.
+With P=2 the strips have 4 and 3 rows; with P=3 they have 3, 2 and 2. Each ghost row equals
+the neighbour's owned row with the same j. Ranks 0 and P−1 hold the hot plate rows as
+`boundary`. After one step the first interior row next to each hot edge equals r = 0.2,
+the stencil value for a cold node with one hot neighbour.
+
+![Case 1 and 2 computed by strips](results/2026-11-19-cluster/cases.png)
+
+The P=4, N=64, 500-step fields are byte-identical to the serial Part 1 fields. Those Part 1
+fields were themselves checked for symmetry and bounds. No seam is visible at the strip
+boundaries (dashed).
+
+### Incidental timing: what one correctness run already shows
+
+Each configuration ran once, to check correctness. These timers are therefore indicative,
+not Part 4 measurements. Each value is the maximum over ranks, divided by the step count.
+
+| P | machines | median t<sub>comm</sub> per step | range | model, latency only |
+| ---: | ---: | ---: | ---: | ---: |
+| 1 | 1 | 0.000 ms | ≤ 0.001 ms | 0 |
+| 2 | 2 | 107 ms | 72–288 ms | ≈ 120 ms |
+| 3 | 3 | 138 ms | 64–537 ms | ≥ 120 ms |
+| 4 | 3 | 214 ms | 73–616 ms | ≈ 155 ms |
+
+The "model, latency only" column assumes `--map-by node` placement, which is not recorded
+per rank. Rank 0 sits on heat-3 (the launcher), rank 1 on heat-1, rank 2 on heat-2 and
+rank 3 on heat-3 again. With rows of at most 816 bytes the bandwidth term is negligible,
+so a step costs about two message latencies on the slowest link involved. The Part 0
+latencies are 60 ms for heat-3↔heat-1 and 77.6 ms for heat-2↔heat-3. The measured medians
+have the same order of magnitude as these Part 0 latencies. The wide spread (64–616 ms) is
+consistent with the variable Tailscale paths observed in Part 0, including relay periods.
+
+In every multi-machine run, communication took **at least 99.98 %** of t<sub>total</sub>.
+The figure runs make the cost concrete. Case 1 with P=4 and N=64 took **68.0 s** for
+500 steps, of which only 0.0035 s was computation; Case 2 took 77.1 s. The serial solver
+runs the same 500 steps in a few milliseconds. This confirms the model's main prediction:
+over this network, strips are far slower than one process at these grid sizes, and the halo
+latency alone dominates. Part 4 will measure this properly with repeated runs, larger N and
+both placements, and test where (if anywhere) the crossover lies.
