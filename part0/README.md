@@ -21,8 +21,16 @@ The coordinator is whichever VM runs the launcher. It asks SSH to start remote p
 
 ## What is already demonstrated?
 
-Earlier screenshots showed the six-process hostname test and the MPI hello sum 15. The original full-run export contains successful ping-pong logs and correct host fields for all six configurations. The repository retains those observations without claiming that the reorganized checkout has already been installed and rerun on all VMs.
+Part 0 technical work is complete. Three timestamped inventories, all six directed
+SSH connections, six-process hostname placement, and a successful six-rank MPI
+hello are verified. The fresh hello on 19 November at 15:34:24 UTC confirms the
+organized checkout can run across the three VMs. The original full-run export
+contains successful ping-pong logs and correct hosts for all six configurations.
+The [closeout record](../docs/part0-closeout.md) keeps the earlier failed checks
+and the subsequent successful recheck, rather than replacing the history.
 
-The archived CSVs are sufficient to reproduce analysis. They do not replace full hardware/version inventories, earlier terminal evidence, or the complete AI transcript required for the hand-in.
+The archived CSVs reproduce the communication analysis. Hardware/version and
+terminal evidence are now also recorded. Complete earlier AI transcripts remain
+a separate private course-submission requirement.
 
 Continue with [setup](00-cluster-setup/README.md), then follow the numbered folders. For the assignment status, use [deliverables](../docs/deliverables.md).

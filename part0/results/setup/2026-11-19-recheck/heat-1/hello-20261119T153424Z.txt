@@ -1,0 +1,6 @@
+rank=0 size=6 host=heat-1 rank_sum=15
+rank=1 size=6 host=heat-1 rank_sum=15
+rank=4 size=6 host=heat-3 rank_sum=15
+rank=2 size=6 host=heat-2 rank_sum=15
+rank=3 size=6 host=heat-2 rank_sum=15
+rank=5 size=6 host=heat-3 rank_sum=15

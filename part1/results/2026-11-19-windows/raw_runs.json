@@ -1,0 +1,195 @@
+[
+  {
+    "command": [
+      "heat.exe",
+      "--decomp",
+      "serial",
+      "--case",
+      "V",
+      "--N",
+      "16",
+      "--r",
+      "0.2",
+      "--T",
+      "0.05"
+    ],
+    "returncode": 0,
+    "stdout": "decomp=serial P=1 case=V N=16 steps=64 r=0.20000000000000001 dt=0.00078125000000000004 T=0.050000000000000003 t_total=9.0000000000000002e-06 t_comp=9.0000000000000002e-06 t_comm=0 minimum=0 maximum=0.3710444683501522 err_inf=0.0016633705032857438 err_l2=0.00083168525164288901",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "heat.exe",
+      "--decomp",
+      "serial",
+      "--case",
+      "V",
+      "--N",
+      "32",
+      "--r",
+      "0.2",
+      "--T",
+      "0.05"
+    ],
+    "returncode": 0,
+    "stdout": "decomp=serial P=1 case=V N=32 steps=256 r=0.20000000000000001 dt=0.00019531250000000001 T=0.050000000000000003 t_total=0.0001471 t_comp=0.0001471 t_comm=0 minimum=0 maximum=0.3722936564267284 err_inf=0.00041418242670954175 err_l2=0.00020709121335478353",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "heat.exe",
+      "--decomp",
+      "serial",
+      "--case",
+      "V",
+      "--N",
+      "64",
+      "--r",
+      "0.2",
+      "--T",
+      "0.05"
+    ],
+    "returncode": 0,
+    "stdout": "decomp=serial P=1 case=V N=64 steps=1024 r=0.20000000000000001 dt=4.8828125000000003e-05 T=0.050000000000000003 t_total=0.0022617000000000002 t_comp=0.0022617000000000002 t_comm=0 minimum=0 maximum=0.37260439636562442 err_inf=0.00010344248781352094 err_l2=5.1721243906795282e-05",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "heat.exe",
+      "--decomp",
+      "serial",
+      "--case",
+      "V",
+      "--N",
+      "128",
+      "--r",
+      "0.2",
+      "--T",
+      "0.05"
+    ],
+    "returncode": 0,
+    "stdout": "decomp=serial P=1 case=V N=128 steps=4096 r=0.20000000000000001 dt=1.2207031250000001e-05 T=0.050000000000000003 t_total=0.0413853 t_comp=0.0413853 t_comm=0 minimum=0 maximum=0.37268198466643093 err_inf=2.5854187007012808e-05 err_l2=1.2927093503526677e-05",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "heat.exe",
+      "--decomp",
+      "serial",
+      "--case",
+      "V",
+      "--N",
+      "256",
+      "--r",
+      "0.2",
+      "--T",
+      "0.05"
+    ],
+    "returncode": 0,
+    "stdout": "decomp=serial P=1 case=V N=256 steps=16384 r=0.20000000000000001 dt=3.0517578125000002e-06 T=0.050000000000000003 t_total=0.6507771 t_comp=0.6507771 t_comm=0 minimum=0 maximum=0.37270137570871464 err_inf=6.4631447233010064e-06 err_l2=3.2315723616573938e-06",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "heat.exe",
+      "--decomp",
+      "serial",
+      "--case",
+      "1",
+      "--N",
+      "64",
+      "--r",
+      "0.2625",
+      "--steps",
+      "40",
+      "--allow-unstable-demo",
+      "--out",
+      "unstable_40.bin"
+    ],
+    "returncode": 0,
+    "stdout": "decomp=serial P=1 case=1 N=64 steps=40 r=0.26250000000000001 dt=6.4086914062500003e-05 T=0.0025634765625 t_total=9.2499999999999999e-05 t_comp=9.2499999999999999e-05 t_comm=0 minimum=4.1411692759791586e-13 maximum=1",
+    "stderr": "Task 6.7: deliberately exceeding r <= 1/4."
+  },
+  {
+    "command": [
+      "heat.exe",
+      "--decomp",
+      "serial",
+      "--case",
+      "1",
+      "--N",
+      "64",
+      "--r",
+      "0.2625",
+      "--steps",
+      "120",
+      "--allow-unstable-demo",
+      "--out",
+      "unstable_120.bin"
+    ],
+    "returncode": 0,
+    "stdout": "decomp=serial P=1 case=1 N=64 steps=120 r=0.26250000000000001 dt=6.4086914062500003e-05 T=0.0076904296875 t_total=0.00028140000000000001 t_comp=0.00028140000000000001 t_comm=0 minimum=0.00020680919980222472 maximum=1.0899719147313718",
+    "stderr": "Task 6.7: deliberately exceeding r <= 1/4."
+  },
+  {
+    "command": [
+      "heat.exe",
+      "--decomp",
+      "serial",
+      "--case",
+      "1",
+      "--N",
+      "64",
+      "--r",
+      "0.2625",
+      "--steps",
+      "200",
+      "--allow-unstable-demo",
+      "--out",
+      "unstable_200.bin"
+    ],
+    "returncode": 0,
+    "stdout": "decomp=serial P=1 case=1 N=64 steps=200 r=0.26250000000000001 dt=6.4086914062500003e-05 T=0.0128173828125 t_total=0.00048710000000000002 t_comp=0.00048710000000000002 t_comm=0 minimum=-303.12495212544331 maximum=302.30701490093679",
+    "stderr": "Task 6.7: deliberately exceeding r <= 1/4."
+  },
+  {
+    "command": [
+      "heat.exe",
+      "--decomp",
+      "serial",
+      "--case",
+      "1",
+      "--N",
+      "64",
+      "--r",
+      "0.2",
+      "--steps",
+      "500",
+      "--out",
+      "case1.bin"
+    ],
+    "returncode": 0,
+    "stdout": "decomp=serial P=1 case=1 N=64 steps=500 r=0.20000000000000001 dt=4.8828125000000003e-05 T=0.0244140625 t_total=0.0011335 t_comp=0.0011335 t_comm=0 minimum=0.09258250543260918 maximum=1",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "heat.exe",
+      "--decomp",
+      "serial",
+      "--case",
+      "2",
+      "--N",
+      "64",
+      "--r",
+      "0.2",
+      "--steps",
+      "500",
+      "--out",
+      "case2.bin"
+    ],
+    "returncode": 0,
+    "stdout": "decomp=serial P=1 case=2 N=64 steps=500 r=0.20000000000000001 dt=4.8828125000000003e-05 T=0.0244140625 t_total=0.0012143 t_comp=0.0012143 t_comm=0 minimum=0 maximum=1",
+    "stderr": ""
+  }
+]

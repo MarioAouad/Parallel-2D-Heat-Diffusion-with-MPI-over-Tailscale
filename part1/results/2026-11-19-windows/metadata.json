@@ -1,0 +1,7 @@
+{
+  "utc": "2026-11-19T15:07:11.812510+00:00",
+  "platform": "Windows",
+  "architecture": "AMD64",
+  "scope": "Local serial correctness study; timings are not cluster performance results",
+  "source_sha256": "bc24bfb7a3aa4afadd1f0e8d44feef1d5b479f917440bf6835fa73d77d9a11c4"
+}

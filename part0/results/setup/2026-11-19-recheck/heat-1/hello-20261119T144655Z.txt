@@ -1,0 +1,10 @@
+--------------------------------------------------------------------------
+mpirun was unable to launch the specified application as it could not
+change to the specified working directory:
+
+Working directory: /home/mpi/heat-project-repo
+Node: HEAT3_TAILSCALE_IP
+
+while attempting to start process rank 4.
+--------------------------------------------------------------------------
+2 total processes failed to start

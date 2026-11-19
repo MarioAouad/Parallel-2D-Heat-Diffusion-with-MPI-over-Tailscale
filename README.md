@@ -1,6 +1,8 @@
 # Parallel 2D Heat Diffusion with MPI over Tailscale
 
-A three-student project connecting Ubuntu virtual machines on three Windows computers in different homes. **This repository currently contains Part 0: the cluster setup, communication checks and network measurements. The heat solver has not been implemented here yet.**
+A three-student project connecting Ubuntu virtual machines on three Windows computers in different homes. **This repository contains Part 0 setup/network measurements and the Part 1 serial heat solver.**
+
+**Status on 19 November: Part 0 technical work is complete.** The successful recheck closes both earlier issues: all six SSH directions pass and MPI hello shows ranks 0-5, size=6, rank_sum=15, with two ranks on each VM. All three inventories, hostname placement and the original six ping-pong sweeps are verified. [Closeout details and evidence](docs/part0-closeout.md) preserve the earlier failures as well. [Part 1](part1/README.md) is implemented and verified locally on Windows; the next step is its Ubuntu verification. Complete earlier AI histories remain a private course-submission item.
 
 The purpose of this first stage is to understand how programs start on different machines, how MPI processes exchange data, and how expensive that communication is. Slow Internet communication is a result to explain, not automatically a failed program.
 
@@ -35,7 +37,7 @@ The initial six-rank test uses two processes per VM. A ping-pong measurement alw
 ## Repository layout
 
 ```text
-Makefile                         one command builds the current MPI programs
+Makefile                         one command builds MPI programs and serial heat
 AGENTS.md                        prospective course logging instructions
 part0/
   00-cluster-setup/               setup explanation and troubleshooting
@@ -49,6 +51,8 @@ part0/
     2026-11-17/<case>/            six archived runs, five files per run
     analysis/                    reproducible summary and six plots
     README.md                    measured findings, units and limitations
+part1/                           serial solver, correctness checks and required studies
+  results/2026-11-19-windows/     reviewed local convergence and instability evidence
 docs/
   assignment/                    the two supplied professor PDFs
   deliverables.md                requirement-by-requirement status and next work
@@ -80,7 +84,7 @@ make
 
 Before running the launchers, follow [private configuration](part0/config/README.md) to enter your real addresses in the ignored local file. The loader renders the local hostfile from those values.
 
-This new checkout is separate from the existing `~/heat-project` used for the original runs. Keep that original directory and its measurements. `make` creates `build/mpi_hello` and `build/mpi_pingpong` locally on each VM; Git does not distribute a compiled binary automatically.
+This checkout is separate from the existing `~/heat-project` used for the original runs. Keep that original directory and its measurements. `make` creates `build/mpi_hello`, `build/mpi_pingpong` and `build/heat` locally on each VM after receiving the corresponding source updates; Git does not distribute a compiled binary automatically. Use the [commit, push and pull workflow](docs/git-and-part1.md) to transfer your source changes to Ubuntu after publishing them. The source bundle is an alternative for changes not yet published.
 
 The build uses C++17, `-O2`, `-ffp-contract=off` and compiler warnings. `OMPI_SKIP_MPICXX` skips unused legacy MPI C++ wrapper classes; we use the MPI C API from C++. [Build and run validation limits](docs/validation.md) are recorded honestly.
 
@@ -111,7 +115,14 @@ make test-analysis
 
 On Windows with Python, call the Python scripts directly; `make` and the shell launchers target Ubuntu. NumPy and Matplotlib are required for analysis; the archive verifier uses only Python's standard library.
 
-All benchmark command-line options, cases, profiles, MCA flags, communication counts and timer boundaries are documented in [the benchmark README](part0/04-pingpong/README.md). The future solver's proposed interface is listed in [the deliverable map](docs/deliverables.md); it is not currently a runnable program.
+All benchmark command-line options, cases, profiles, MCA flags, communication counts and timer boundaries are documented in [the benchmark README](part0/04-pingpong/README.md). The [serial solver guide](part1/README.md) documents its options and verification. From this updated source tree:
+
+```bash
+make serial
+make check-serial
+make verify-part1
+./build/heat --decomp serial --case V --N 64 --r 0.2 --T 0.05
+```
 
 ## What we have measured
 
@@ -123,7 +134,7 @@ The full archive does not contain every earlier SSH, hostname, hello or smoke-te
 
 The [complete deliverable map](docs/deliverables.md) covers assignment sections 10 and 12: repository, background-task solutions, correctness evidence, final report, complete LLM logs, and live demo. Current Part 0 success does **not** complete checkpoint C1: C1 also needs the serial convergence study and background tasks.
 
-Next stages are the serial reference solver, strip decomposition, block decomposition and the performance study. We are deliberately keeping those as future work while the team understands Part 0. The existing [study guide](docs/reports/README.md) is a learning document, not the final course report limited to ten pages plus appendices.
+The next step is to run and understand the Part 1 serial reference on Ubuntu. Strip decomposition, block decomposition and the performance study remain future work. The existing [study guide](docs/reports/README.md) is a learning document, not the final course report limited to ten pages plus appendices.
 
 ## Public copy and original evidence
 

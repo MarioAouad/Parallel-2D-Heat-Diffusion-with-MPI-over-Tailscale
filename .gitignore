@@ -1,5 +1,16 @@
 # Rebuild these locally on each VM; do not transfer platform-specific binaries.
 /build/
+*.exe
+*.o
+*.obj
+*.a
+*.so
+*.dll
+*.pdb
+/heat
+/mpi_hello
+/mpi_pingpong
+/part1/heat_serial
 __pycache__/
 *.py[cod]
 .pytest_cache/
@@ -9,7 +20,20 @@ __pycache__/
 # Inspect a new run and deliberately add its completed evidence when ready.
 /part0/results/runs/
 /part0/results/analysis-local/
+/part1/results/runs/
 *.partial
+
+# Reproducible full-grid snapshots; retain reviewed CSVs, plots, JSON and logs.
+*.bin
+
+# Local transfers and scratch exports; original evidence stays private.
+/heat-evidence/
+/heat-recheck-*/
+/output/
+/tmp/
+*.tar
+*.tar.gz
+*.tgz
 
 # Keep full private exports and credentials out of this PUBLIC repository.
 /private/
@@ -18,6 +42,9 @@ __pycache__/
 /part0/config/cluster.local.sh
 /part0/config/hosts
 .env
+.env.*
+!.env.example
+!.env.sample
 id_ed25519
 id_ed25519.pub
 id_rsa

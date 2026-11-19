@@ -1,0 +1,61 @@
+{
+  "source_archive_sha256": "13ad24afd0be28e7ad53d111eb01c94fcd12666b817b9113f4e5021ded9f2fef",
+  "files": [
+    {
+      "file": "hostname-20261119T144655Z.txt",
+      "source_sha256": "5dcc5119a6453442b520a88de549502b697e62f5fac2b6205b0cb522797b05f6",
+      "published_sha256": "764f3ded945e85c80325e414a78250e611954687d003479709dd0b7c94a717ad",
+      "published_bytes": 42,
+      "public_copy_sanitized": true
+    },
+    {
+      "file": "inventory-heat-1-20261119T144554Z.txt",
+      "source_sha256": "e85efd03e58a382af39027429634152ceadc9eebc737d0c0794bf7529328f6bd",
+      "published_sha256": "f79b36057fa5a439acf1f4827c48c2985a41892e5c06e66d50dbb40394562919",
+      "published_bytes": 3828,
+      "public_copy_sanitized": true
+    },
+    {
+      "file": "heat-3/connectivity-heat-3-20261119T145147Z.txt",
+      "source_sha256": "f4013f0be0b156479a4ae5c3d222b8833fea75b5d493af51eee1393a6c18b3e2",
+      "published_sha256": "24a8d9308faa12ac140667835b5ad2a9d1a14ea4df421363c7ba36a16a8afffe",
+      "published_bytes": 692,
+      "public_copy_sanitized": true
+    },
+    {
+      "file": "heat-3/inventory-heat-3-20261119T145147Z.txt",
+      "source_sha256": "20c49445542119f04c0968e69c2ccfc81dfb2d5be923f90de01ed3077a17ad22",
+      "published_sha256": "30f04869d2c45b6049ba1578a9dd193294240d1a41ccb6a07c021e6c9f6daf8f",
+      "published_bytes": 3836,
+      "public_copy_sanitized": true
+    },
+    {
+      "file": "hello-20261119T144655Z.txt",
+      "source_sha256": "74545d4356ad7a02639eac788bf28bcddd79262d3f68c9deee97f46665c8e1e1",
+      "published_sha256": "6702e005aa0e4d1a0b7171b9b349fc252943aec323357c0de2d22829d5578370",
+      "published_bytes": 413,
+      "public_copy_sanitized": true
+    },
+    {
+      "file": "connectivity-heat-1-20261119T144554Z.txt",
+      "source_sha256": "3aecd7bfce428e75520cbad5f7e42a03855738f208b3e1aed3d83dd264b1065f",
+      "published_sha256": "b7d132008e044babe4ab980c9868bdc2814f0eb8882439bd1869fe1fa6759470",
+      "published_bytes": 481,
+      "public_copy_sanitized": true
+    },
+    {
+      "file": "heat-2/inventory-heat-2-20261119T144537Z.txt",
+      "source_sha256": "41a8f4ac05f57a94946b65be056fe66afe3339cbd7d60c16e5cdfbfd606cd7d3",
+      "published_sha256": "436361a1b69dfcfcbedebaf6867828e6a58c4e9ef440c48abc250f3933eeb348",
+      "published_bytes": 3812,
+      "public_copy_sanitized": true
+    },
+    {
+      "file": "heat-2/connectivity-heat-2-20261119T144537Z.txt",
+      "source_sha256": "0c8531a4a1e88f9fd7d51ca4e78ee75e19407b20a782dc7e27544930e67f6416",
+      "published_sha256": "f98a0a64c7a104a0e3256a4f38e588183cbd3c14f0494aec70f30c20c092e84d",
+      "published_bytes": 1016,
+      "public_copy_sanitized": true
+    }
+  ]
+}

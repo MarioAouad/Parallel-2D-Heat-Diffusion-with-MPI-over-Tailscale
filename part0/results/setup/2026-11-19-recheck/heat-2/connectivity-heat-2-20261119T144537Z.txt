@@ -1,0 +1,21 @@
+source_host=heat-2 source_ip=HEAT2_TAILSCALE_IP
+
+Checking peer=HEAT1_TAILSCALE_IP
+pong from heat-1 (HEAT1_TAILSCALE_IP) via DERP(par) in 131ms
+pong from heat-1 (HEAT1_TAILSCALE_IP) via DERP(par) in 119ms
+pong from heat-1 (HEAT1_TAILSCALE_IP) via DERP(par) in 134ms
+direct connection not established
+Read the ping output: relay replies differ from no replies.
+No ED25519 host key is known for HEAT1_TAILSCALE_IP and you have requested strict checking.
+Host key verification failed.
+Noninteractive SSH failed for HEAT1_TAILSCALE_IP
+
+Checking peer=HEAT3_TAILSCALE_IP
+pong from heat-3 (HEAT3_TAILSCALE_IP) via DERP(fra) in 402ms
+pong from heat-3 (HEAT3_TAILSCALE_IP) via DERP(fra) in 180ms
+pong from heat-3 (HEAT3_TAILSCALE_IP) via DERP(fra) in 229ms
+direct connection not established
+Read the ping output: relay replies differ from no replies.
+No ED25519 host key is known for HEAT3_TAILSCALE_IP and you have requested strict checking.
+Host key verification failed.
+Noninteractive SSH failed for HEAT3_TAILSCALE_IP

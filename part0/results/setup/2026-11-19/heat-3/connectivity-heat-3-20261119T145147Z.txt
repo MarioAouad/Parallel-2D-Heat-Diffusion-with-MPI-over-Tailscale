@@ -1,0 +1,19 @@
+source_host=heat-3 source_ip=HEAT3_TAILSCALE_IP
+
+Checking peer=HEAT1_TAILSCALE_IP
+pong from heat-1 (HEAT1_TAILSCALE_IP) via DERP(par) in 374ms
+pong from heat-1 (HEAT1_TAILSCALE_IP) via DERP(par) in 161ms
+pong from heat-1 (HEAT1_TAILSCALE_IP) via DERP(par) in 155ms
+direct connection not established
+Read the ping output: relay replies differ from no replies.
+heat-1
+mpi
+
+Checking peer=HEAT2_TAILSCALE_IP
+pong from heat-2 (HEAT2_TAILSCALE_IP) via DERP(par) in 158ms
+pong from heat-2 (HEAT2_TAILSCALE_IP) via DERP(par) in 152ms
+pong from heat-2 (HEAT2_TAILSCALE_IP) via DERP(par) in 162ms
+direct connection not established
+Read the ping output: relay replies differ from no replies.
+heat-2
+mpi
