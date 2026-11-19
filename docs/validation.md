@@ -71,3 +71,60 @@ Part 0 technical work is complete. The new data are user-collected terminal
 evidence, not a new assistant-operated cluster experiment. Ubuntu Part 1
 verification, later MPI solvers, the final report and complete earlier AI history
 remain separate work.
+
+## First native Ubuntu serial run
+
+The user's pasted terminal output shows a successful fast-forward pull to
+`8acc213`, native C++17/O2/ffp-contract=off compilation, and the V/N=16 run at
+r=0.2, T=0.05. It reports 64 steps, err_inf=0.0016633705032857438 and
+err_l2=0.00083168525164289075, matching the expected errors. Exact pasted bytes
+are preserved privately, with a public solver-output/provenance record under
+`part1/results/2026-11-19-ubuntu-smoke/`. The run timestamp was not supplied.
+This confirms the Ubuntu smoke test; the full automated suite and five-grid
+Ubuntu study are still pending. No broader numerical/performance claim is made.
+
+## Ubuntu automated suite and study: user-supplied output
+
+The next pasted terminal record reports six passing correctness groups, ending
+with `OK`, and a successful five-grid convergence/modal check with orders
+2.00577, 2.00144, 2.00036, 2.00009. The same study reports successful isolated
+instability and stable Cases 1/2. Its output folder is
+`/home/mpi/heat-project-repo/part1/results/runs/20261119T161615613935Z`.
+
+These observations close the pending Ubuntu automated execution checks from
+the earlier status. The precise CSVs, plots and metadata still need transfer
+for local archive/visual review; the assistant has reviewed the user's console
+output, not those VM-generated files. No new experiment is required merely
+to collect them, and the suite's displayed runtime is not a Part 4 benchmark.
+
+## Final Ubuntu artifact review and Part 1 delivery
+
+Received the exact 252164-byte study archive, SHA-256
+`babe3d4f0730f4f017a4b69a0de87e43677642a2d6c06295a2b028626233269b`.
+All fourteen original members are retained privately; nine original report/data
+files are published byte-for-byte with a manifest. Five reproducible binary
+snapshots remain private and hashed. The run metadata source hash matches the
+current C++ solver.
+
+- All ten raw solver invocations have return code zero. Five convergence rows
+  match their raw summaries, the independent discrete sine-mode errors and
+  properly weighted L2 norms; reported orders recompute correctly near two.
+- Three instability CSV extrema match their binary snapshots, with the expected
+  overshoot/growing alternating pattern and fixed hot boundaries.
+- Case 1/2 binary fields are finite, within [0,1], obey the exact edge/corner
+  values and preserve horizontal/vertical reflection symmetry. All five binary
+  snapshots have the 33800-byte format and equal the earlier corresponding
+  Windows boundary-heated snapshots byte-for-byte; this is not MPI validation.
+- All three Ubuntu PNG figures were visually inspected. The nine original public
+  hashes and source provenance pass `part1/verify_results.py`; a corrupted
+  temporary CSV copy is rejected by its hash check.
+- Existing written task solutions were copied with provenance: 32-page PDF,
+  all 25 required task numbers plus optional 6.5, editable LaTeX and supporting
+  reproduction files. Sample PDF pages were rendered/inspected; the existing AI
+  acknowledgement remains. A single absolute workspace prefix in raw commands
+  is redacted and disclosed, with original/public hashes and private originals.
+
+Part 1 analysis and the delivery checklist now link the report material. The
+technical Parts 0/1 and C1 materials are ready. Complete earlier AI transcripts,
+actual team details, later MPI work and the final full-project report/demo remain
+course-submission responsibilities; no missing records or contributions were invented.

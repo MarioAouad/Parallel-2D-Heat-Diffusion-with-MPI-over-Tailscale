@@ -1,0 +1,57 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,bm}
+\usepackage{graphicx,booktabs,array}
+\usepackage{needspace,float}
+\usepackage{listings,xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Numerical Methods for the Heat Equation}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\setlength{\emergencystretch}{2em}
+\makeatletter
+\let\tableinput\@@input
+\makeatother
+\newcommand{\task}[2]{\Needspace{6\baselineskip}\section*{Task #1: #2}\addcontentsline{toc}{section}{Task #1: #2}}
+\newcommand{\partsol}[1]{\Needspace{4\baselineskip}\subsection*{(#1)}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\lap}{\nabla^2}
+\newcommand{\norminf}[1]{\left\|#1\right\|_\infty}
+\newcommand{\normh}[1]{\left\|#1\right\|_{2,h}}
+\lstset{basicstyle=\ttfamily\footnotesize,breaklines=true,columns=fullflexible,
+  keepspaces=true,frame=single,rulecolor=\color{black!25},showstringspaces=false,
+  tabsize=4}
+\graphicspath{{figures/}}
+\begin{document}
+\begin{center}
+{\LARGE\bfseries Numerical Methods for the Heat Equation}\par
+\vspace{5pt}
+{\large Detailed solutions to the background-notes tasks}
+\end{center}
+\vspace{4pt}
+This document follows the task numbering in \emph{Numerical Methods for the Heat Equation}.
+All 26 tasks are answered, including the optional Task 6.5. Numerical tables and plots are
+computed results; the supporting programs and raw data are supplied with the LaTeX source.
+
+\textbf{Notation.} The temperature is $u$, thermal diffusivity is $\alpha>0$, and grid nodes are
+$x_i=i\Delta x$, $y_j=j\Delta y$, $t_n=n\Delta t$.
+The superscript in $u^n_{i,j}$ denotes a time level, not a power.
+For a square uniform grid, $\Delta x=\Delta y=h$ and
+$r=\alpha\Delta t/h^2$. All Taylor expansions below assume the function has the bounded
+derivatives required by the stated remainder.
+
+\input{solutions_1_3}
+\input{solutions_4_5}
+\input{solutions_6}
+\input{solutions_7_8}
+\input{reproducibility}
+\end{document}

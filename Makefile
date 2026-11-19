@@ -8,7 +8,7 @@ CPPFLAGS += -DOMPI_SKIP_MPICXX=1
 # ffp-contract=off prepares consistent arithmetic for the later heat solver.
 CXXFLAGS := -std=c++17 -O2 -ffp-contract=off -Wall -Wextra -Wpedantic
 
-.PHONY: all serial verify-results verify-setup analyze test-analysis check-serial verify-part1
+.PHONY: all serial verify-results verify-setup analyze test-analysis check-serial verify-part1 verify-part1-results
 all: build/mpi_hello build/mpi_pingpong build/heat
 
 serial: build/heat
@@ -39,6 +39,9 @@ check-serial: build/heat
 
 verify-part1: build/heat
 	python3 part1/run_experiments.py --exe build/heat
+
+verify-part1-results:
+	python3 part1/verify_results.py
 
 analyze:
 	python3 part0/05-analysis/analyze_pingpong.py part0/results/2026-11-17/*/*.csv --out part0/results/analysis

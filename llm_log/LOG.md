@@ -523,3 +523,33 @@ Team member unknown; Codex desktop; instructions identify GPT-6, exact served sn
 Created docs/git-and-part1.md (lines 1-74), updated README.md (current extent 1-147) and docs/local-update.md (current extent 1-40). Explained that the planned commit includes completed Part 0 and the current serial solver; then push, pull and build on heat-1. Read-only prospective file/ignore checks passed and no staged changes were present. The assistant did not stage, commit or push; the user was given commands. No numerical source or evidence changed.
 
 Private session itself: lines 1-90. This log entry appends lines 518-526, preserving previous bytes.
+
+
+# Git checkpoint error diagnosis - 2026-11-19T18:04:51.990040+02:00
+
+Team member unknown; Codex desktop; instructions identify GPT-6, exact served snapshot unavailable. Full visible prompt/progress/final response and diagnostic details preserved privately in llm_log/private/2026-11-19-closeout/git-checkpoint-error/visible-session.md, lines 1-59. Exact screenshot copy (26907 bytes) and hash retained there. Manual record, not a raw export.
+
+User commit 8acc213 start part 1 exists locally and on GitHub. Full Git integrity and dry-run fetch checks pass; the reported Codex checkpoint object currently exists as a tree. Error not currently reproducible; no object/ref removal or repair performed. No assistant commit, push or source changes. This index appends lines 527-533, preserving earlier bytes.
+
+
+# First Ubuntu serial verification - 2026-11-19T18:12:49.692643+02:00
+
+Team member unknown; Codex desktop; instructions identify GPT-6, exact served snapshot unavailable. Full visible prompt/progress/final responses and file extents are in llm_log/private/2026-11-19-closeout/ubuntu-first-run/visible-session.md, lines 1-97. Exact original pasted terminal transcript preserved there as Pasted text.txt. This manual record is not an original raw export.
+
+Successful Git update, native build and V/N=16 smoke verification observed from user output. Public exact stdout/metadata and progress docs updated; full Ubuntu suite and studies remain pending. Hash, Git byte-preservation and documentation checks passed. No solver change, remote execution, staging, commit or push. Session itself is lines 1-97. This index appends lines 534-540, preserving prior bytes.
+
+
+# Ubuntu suite and study console success - 2026-11-19T18:20:08.329335+02:00
+
+Team member unknown; Codex desktop; instructions identify GPT-6, exact served snapshot unavailable. Full user prompt and assistant progress/final responses are in llm_log/private/2026-11-19-closeout/ubuntu-study-console/visible-session.md, lines 1-83. Manual visible-message record, not an original raw export.
+
+User reports six passing serial groups, expected five-grid convergence orders, isolated instability and stable Cases 1/2. Updated progress notes; actual generated CSVs/figures/metadata still await transfer and local review. Current extents: README.md 1-147, docs/deliverables.md 1-77, docs/validation.md 1-98, part1/README.md 1-113. No solver changes, test rerun, remote execution, staging, commit or push. Session itself is lines 1-83. This index appends lines 541-547, preserving earlier bytes.
+
+
+# Part 1 delivery preparation and authorized publication - 2026-11-19T18:39:10.189544+02:00
+
+Team member unknown; Codex desktop; instructions identify GPT-6, exact served snapshot unavailable. Full visible prompt and all progress responses, validation, provenance and file extents are in llm_log/private/2026-11-19-part1-delivery/publication-session.md, lines 1-108. This manual record is not a raw export; the final response and publication outcome will be appended after verification.
+
+User explicitly requested GitHub publication. Part 1 artifact review passes: original Ubuntu results/figures, independent numerical checks, stable boundaries/symmetry and isolated instability. Added analysis, delivery checklist, offline archive verifier and written background PDF/source. Originals remain private; public original data hashes match; a disclosed command-path redaction affects only the earlier background raw text. Final-course report/later MPI work and complete earlier private AI histories remain separate. Public scan/links and offline checks pass. No commit or push has yet occurred at this preparation record.
+
+Full file extents are in the private record (itself lines 1-108). This LOG.md entry appends lines 548-556 with all earlier bytes preserved.

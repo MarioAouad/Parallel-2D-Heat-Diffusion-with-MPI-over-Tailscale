@@ -2,7 +2,7 @@
 
 A three-student project connecting Ubuntu virtual machines on three Windows computers in different homes. **This repository contains Part 0 setup/network measurements and the Part 1 serial heat solver.**
 
-**Status on 19 November: Part 0 technical work is complete.** The successful recheck closes both earlier issues: all six SSH directions pass and MPI hello shows ranks 0-5, size=6, rank_sum=15, with two ranks on each VM. All three inventories, hostname placement and the original six ping-pong sweeps are verified. [Closeout details and evidence](docs/part0-closeout.md) preserve the earlier failures as well. [Part 1](part1/README.md) is implemented and verified locally on Windows; the next step is its Ubuntu verification. Complete earlier AI histories remain a private course-submission item.
+**Status on 19 November: Parts 0 and 1 technical work and evidence review are complete.** The cluster/network records and the actual Ubuntu serial study are verified. [Part 1 analysis](part1/ANALYSIS.md) contains the numerical method, convergence table, instability discussion and heat maps. The [delivery checklist](part1/DELIVERY.md) links all sources/results; [written background solutions](docs/background-solutions/README.md) include the PDF and editable sources. Complete earlier AI histories remain a private course-submission item.
 
 The purpose of this first stage is to understand how programs start on different machines, how MPI processes exchange data, and how expensive that communication is. Slow Internet communication is a result to explain, not automatically a failed program.
 
@@ -121,6 +121,7 @@ All benchmark command-line options, cases, profiles, MCA flags, communication co
 make serial
 make check-serial
 make verify-part1
+make verify-part1-results
 ./build/heat --decomp serial --case V --N 64 --r 0.2 --T 0.05
 ```
 
@@ -132,9 +133,9 @@ The full archive does not contain every earlier SSH, hostname, hello or smoke-te
 
 ## What the professor ultimately requires
 
-The [complete deliverable map](docs/deliverables.md) covers assignment sections 10 and 12: repository, background-task solutions, correctness evidence, final report, complete LLM logs, and live demo. Current Part 0 success does **not** complete checkpoint C1: C1 also needs the serial convergence study and background tasks.
+The [complete deliverable map](docs/deliverables.md) covers assignment sections 10 and 12: repository, written solutions, correctness evidence, final report, complete LLM logs, and live demo. C1's cluster, serial convergence and written-task materials are now available. The team must understand them and retain the required private interaction history.
 
-The next step is to run and understand the Part 1 serial reference on Ubuntu. Strip decomposition, block decomposition and the performance study remain future work. The existing [study guide](docs/reports/README.md) is a learning document, not the final course report limited to ten pages plus appendices.
+The next implementation stage is Part 2 strip decomposition, using the verified serial solver as its reference. Block decomposition and the performance study remain future work. The existing [study guide](docs/reports/README.md) is a learning document; the new Part 1 analysis is material for the final report, which must still cover the later parts within ten pages plus appendices.
 
 ## Public copy and original evidence
 

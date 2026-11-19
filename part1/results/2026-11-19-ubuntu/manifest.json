@@ -1,0 +1,78 @@
+{
+  "source_archive_sha256": "babe3d4f0730f4f017a4b69a0de87e43677642a2d6c06295a2b028626233269b",
+  "source_run": "20261119T161615613935Z",
+  "published_files": [
+    {
+      "file": "instability.pdf",
+      "bytes": 25970,
+      "sha256": "38865b5a5bf7b764fdb8598a7f597fba72ba6528715ddf7c5ff719f508850ec8"
+    },
+    {
+      "file": "instability.png",
+      "bytes": 75684,
+      "sha256": "995a2fa113a59baaca8d83676cabdd5d4be4444bc7cf3b03eac9488f18425410"
+    },
+    {
+      "file": "convergence.csv",
+      "bytes": 546,
+      "sha256": "ca532d8a330dd1bfce8204ea9e44ed22cb39342e36d0f1aac36fc415f178d65d"
+    },
+    {
+      "file": "convergence.png",
+      "bytes": 56488,
+      "sha256": "1babbbabae9585eb0a3ee21c2e070cb27d9c5392a59b7897ab3a4d6086f33b95"
+    },
+    {
+      "file": "raw_runs.json",
+      "bytes": 5280,
+      "sha256": "6f0c3cca1ae7ca2a3e9e3c84c9749654d53340a14ca075f879f2fb23736eb255"
+    },
+    {
+      "file": "cases.png",
+      "bytes": 46633,
+      "sha256": "88a5375aca4dbd9ec65ecc31a1862230f2119e6b9bc460762504f5a779b607c8"
+    },
+    {
+      "file": "instability.csv",
+      "bytes": 193,
+      "sha256": "6c9299f01ec4abe8586d28ef03e17f99d91cd923dab18915834d34b57e33b74a"
+    },
+    {
+      "file": "convergence.pdf",
+      "bytes": 15110,
+      "sha256": "aac33764b492fe70711dfdc81c59e66255543da718979b1584a66260243783b0"
+    },
+    {
+      "file": "metadata.json",
+      "bytes": 276,
+      "sha256": "0d50dd640f5a4e31f34c65d5fdbcc1305d64680710aee730fed481954cdcc508"
+    }
+  ],
+  "private_binary_files": [
+    {
+      "file": "unstable_200.bin",
+      "bytes": 33800,
+      "sha256": "52e5799fd85aa195b3ccf7ed13cfdfb88bfd6695e574b99c18120e696027b16e"
+    },
+    {
+      "file": "unstable_40.bin",
+      "bytes": 33800,
+      "sha256": "17311bf1b15f964fedb73d54a2db42e50add2b17d4e097d4f66867ace2aa366e"
+    },
+    {
+      "file": "unstable_120.bin",
+      "bytes": 33800,
+      "sha256": "d9e07249ce7d6ab1ef20dea7940d4c5b879e3fba5f0a3558d396c24b9f2d8d1c"
+    },
+    {
+      "file": "case1.bin",
+      "bytes": 33800,
+      "sha256": "4214140363263c7c1e47975c404d94349083d5ed992261eea904d0ef4c083604"
+    },
+    {
+      "file": "case2.bin",
+      "bytes": 33800,
+      "sha256": "964d897eafd408a7296b1c9d89cc4cb3d92c03b18053c7ca4fa8f33b8ed28c1e"
+    }
+  ]
+}

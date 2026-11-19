@@ -1,0 +1,36 @@
+\clearpage
+\section*{Reproducibility and sources}
+\textbf{Supplied computational files.}
+The folder \texttt{experiments/} contains the serial C++17 heat solver
+\texttt{heat\_serial.cpp} and the Python script \texttt{run\_experiments.py}.
+The script generates the numerical tables and figures for Tasks 3.2, 3.5, 4.1, 6.7, and 7.2.
+The directory \texttt{results/} contains CSV tables, raw heat-solver output, and binary snapshot fields.
+The directories \texttt{tables/} and \texttt{figures/} contain the files included by this document.
+
+On a system with a C++17 compiler, Python, NumPy, and Matplotlib, run from the document folder:
+\begin{lstlisting}
+g++ -std=c++17 -O3 -ffp-contract=off experiments/heat_serial.cpp -o experiments/heat_serial
+python experiments/run_experiments.py
+pdflatex -interaction=nonstopmode -halt-on-error Methode_Numerique_Tasks_Solutions.tex
+\end{lstlisting}
+On Windows, use \texttt{experiments/heat\_serial.exe} as the executable output name; the Python
+script selects the corresponding executable automatically. For a compiler with a different
+output location, pass its path as the script's first argument.
+
+All reported numerical experiments use double precision. Timings recorded in the raw output
+are incidental and are not used as project cluster-performance results. The seven-operation
+counts in Task 6.6 are theoretical estimates under the stated sustained-rate assumption.
+The instability experiment is deliberately isolated from the ordinary stability checks.
+
+\textbf{Primary sources.}
+\begin{enumerate}
+\item \emph{Numerical Methods for the Heat Equation}, supplied course background notes,
+Chapters 1--8. Task numbers, notation, input data, and requested experiments follow this document.
+\item \emph{Parallel 2D Heat Diffusion with MPI over Tailscale}, supplied project specification,
+Section 3 and Part 1. The boundary-heated initial data used in Task 6.7 and the serial-reference
+implementation conventions follow this specification.
+\end{enumerate}
+
+\textbf{Assistance acknowledgement.}
+OpenAI Codex assisted with the mathematical exposition, experimental C++/Python programs,
+and LaTeX preparation.

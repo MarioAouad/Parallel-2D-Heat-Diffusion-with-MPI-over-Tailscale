@@ -11,8 +11,8 @@ This maps the supplied `heat_mpi_project.pdf` to actual repository contents. A d
 | 4.5 | Every VM can SSH to every other without prompts | COMPLETE: all six directions verified across original captures and the successful heat-2 recheck at 15:30:12 UTC |
 | 4.6 | Cluster hostname and MPI hello | COMPLETE: hostname placement passes; fresh six-rank hello at 15:34:24 UTC shows size=6 and rank_sum=15, two ranks per VM |
 | 4.7 | Same-VM and every-pair ping-pong, 8 B to 16 MiB; model | Six complete sweeps / 132 measured rows; analysis, plots, route qualifications included |
-| C1 | Part 0 plus serial convergence and background tasks | Part 0 technical work complete; Ubuntu serial verification and preparation of the written-task submission remain |
-| 5 / Part 1 | Serial heat solver and verification | Implemented: Cases 1/2/V, full interface, six correctness test groups and five-grid convergence pass locally on Windows; repeat on Ubuntu |
+| C1 | Part 0 plus serial convergence and background tasks | Technical materials ready: verified cluster, reviewed Ubuntu convergence evidence, and written-task PDF/source. Team explanation and private course-record obligations remain |
+| 5 / Part 1 | Serial heat solver and verification | COMPLETE: actual Ubuntu results archived, numerically cross-checked and visually reviewed; six correctness groups pass; analysis and delivery checklist included |
 | 6 / Part 2 | 1D strips, correct halos, identical final output | Future work |
 | 7 / Part 3 | 2D Cartesian blocks and column communication | Future work |
 | 8 / Part 4 | Repeated performance study, model and scaling | Future work |
@@ -22,10 +22,10 @@ This maps the supplied `heat_mpi_project.pdf` to actual repository contents. A d
 
 | Deliverable | Included now | Remaining work |
 | --- | --- | --- |
-| 1. Code repository | Parts 0/1 sources, one-command build, solver option documentation, hostfile, launchers, verified Part 0 evidence and plotting scripts | Verify Part 1 on Ubuntu; add later MPI decompositions |
-| 2. Background-task solutions PDF | Background notes are supplied as assignment reference | Submit all nonoptional written task solutions; existing separate local drafts were not audited or published by this Part 0 organization |
-| 3. Correctness evidence | Benchmark consistency checks; serial convergence table/plot, instability snapshots and independent serial checks | Repeat serial study on Ubuntu; later add serial/strips/blocks file comparisons over several N and P |
-| 4. Report, at most 10 pages plus appendices | Detailed Part 0 learning guide, results explanation and figures | Prepare the final concise course report covering all required items below |
+| 1. Code repository | Parts 0/1 sources, one-command build, option documentation, hostfile, launchers, verified evidence and plotting/offline-check scripts | Add later MPI decompositions |
+| 2. Background-task solutions PDF | PDF covering 25 required tasks plus optional 6.5, editable LaTeX, figures/tables and reproduction files under docs/background-solutions | Add actual team identification where required and include complete private AI records in the course hand-in |
+| 3. Correctness evidence | Reviewed Ubuntu serial table/plots, raw output, source/archive hashes, instability and stable-case checks | Later add serial/strips/blocks file comparisons over several N and P |
+| 4. Report, at most 10 pages plus appendices | Part 0 learning guide and report-ready Part 1 numerical analysis with figures | Integrate later decomposition/performance results and actual team contributions into the final concise report |
 | 5. Complete llm_log folder and instructions | Root AGENTS rules, this session record and honest missing-history status | Preserve every earlier full interaction, actual member/model/tool/date metadata, and full private exports in the course hand-in |
 | 6. Ten-minute live demo | Cluster can launch programs and communicate | Run heat Cases 1 and 2 across at least three VMs with heat map/animation; change N or P and explain any code |
 
@@ -39,6 +39,10 @@ This maps the supplied `heat_mpi_project.pdf` to actual repository contents. A d
 6. A short paragraph describing each team member's contribution; do not invent assignments or authorship.
 
 The 39-page Part 0 guide is intentionally explanatory. It is **not** the required final ten-page report.
+
+The [Part 1 delivery index](../part1/DELIVERY.md) and [analysis](../part1/ANALYSIS.md)
+identify completed material. The full project hand-in still requires Parts 2-4,
+the live heat-solver demo, final report and complete private interaction records.
 
 ## Solver contract: serial implemented; strips and blocks are future work
 

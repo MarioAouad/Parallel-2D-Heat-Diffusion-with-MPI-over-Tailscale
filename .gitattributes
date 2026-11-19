@@ -5,7 +5,10 @@
 *.py text eol=lf
 Makefile text eol=lf
 # Preserve the exact byte representation of archived measurement files.
-part0/results/2026-11-17/** -text
-part0/results/setup/** -text
+part0/results/2026-11-17/** -text whitespace=cr-at-eol
+part0/results/setup/** -text whitespace=cr-at-eol
+part1/results/** -text whitespace=cr-at-eol
+docs/background-solutions/** -text whitespace=cr-at-eol
+llm_log/** -text whitespace=cr-at-eol
 *.pdf binary
 *.png binary

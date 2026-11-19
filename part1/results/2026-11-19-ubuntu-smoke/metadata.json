@@ -1,0 +1,28 @@
+{
+  "scope": "First user-collected Ubuntu smoke verification; full Ubuntu correctness suite and convergence study pending",
+  "received_date": "2026-11-19",
+  "run_timestamp_utc": null,
+  "host_alias": "heat-1",
+  "source_commit": "8acc21395260eeb583791df5b5a87548451e3c0c",
+  "build_command": "g++ -std=c++17 -O2 -ffp-contract=off -Wall -Wextra -Wpedantic part1/heat_serial.cpp -o build/heat",
+  "command": "./build/heat --decomp serial --case V --N 16 --r 0.2 --T 0.05",
+  "original_transcript_sha256": "c1a3d3be30b1af7869bd3fb1b806a06ecbe5fb511ef18f00109fff477ccb979f",
+  "stdout_sha256": "d3ae1ebaa4543f8f90b579e60f61c6a24331ee4b99b60faa9b74a8a11d73a9ed",
+  "fields": {
+    "decomp": "serial",
+    "P": "1",
+    "case": "V",
+    "N": "16",
+    "steps": "64",
+    "r": "0.20000000000000001",
+    "dt": "0.00078125000000000004",
+    "T": "0.050000000000000003",
+    "t_total": "1.7209000000000001e-05",
+    "t_comp": "1.7209000000000001e-05",
+    "t_comm": "0",
+    "minimum": "0",
+    "maximum": "0.3710444683501522",
+    "err_inf": "0.0016633705032857438",
+    "err_l2": "0.00083168525164289075"
+  }
+}

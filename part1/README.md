@@ -4,6 +4,11 @@ Run this on one VM as one ordinary process. MPI decomposition starts in Part 2.
 The pre-existing task solver was adapted into the required project interface;
 the earlier numerical-methods solution folder remains unchanged.
 
+**Status: Part 1 technical work and Ubuntu evidence review complete.** Start with
+the [delivery checklist](DELIVERY.md) and [numerical analysis](ANALYSIS.md). The
+primary [Ubuntu result archive](results/2026-11-19-ubuntu/) includes the actual
+CSV tables, figures, raw commands and source/provenance metadata.
+
 ## Build and run on Ubuntu
 
 From the repository root, after receiving these local source updates:
@@ -14,6 +19,7 @@ make serial
 ./build/heat --decomp serial --case 2 --N 64 --r 0.2 --steps 500 --out case2.bin
 make check-serial
 make verify-part1
+make verify-part1-results
 ```
 
 `make` builds the two Part 0 MPI programs and this solver. `make serial` needs
@@ -96,3 +102,21 @@ Timings inside the raw output are incidental; use controlled runs for Part 4.
 The [Part 0 technical checklist](../docs/part0-closeout.md) is complete. The next
 step is to reproduce this serial study on Ubuntu and understand the solver.
 C1 also needs the written numerical-method task solutions.
+
+## Ubuntu progress
+
+The [first Ubuntu verification record](results/2026-11-19-ubuntu-smoke/) confirms
+the successful Git update, native build and expected V/N=16 errors. The user has
+now also supplied successful output from `make check-serial` (six test groups,
+OK) and `make verify-part1` (orders 2.00577, 2.00144, 2.00036, 2.00009; isolated
+instability and stable Cases 1/2 pass). The generated VM folder is
+`part1/results/runs/20261119T161615613935Z`.
+
+That folder has now been received and archived as the reviewed Ubuntu study.
+Tables match raw outputs and independent sine-mode predictions. All five binary
+snapshots passed size/boundary checks; stable fields passed bounds/symmetry
+checks, and the three figures were visually reviewed. See ANALYSIS.md for the
+interpretation and DELIVERY.md for the requirement-by-requirement handoff.
+The earlier Windows study remains separate evidence. Use
+`make verify-part1-results` for an offline integrity/numerical check of the
+primary Ubuntu archive. The serial reference is ready for Part 2 comparisons.

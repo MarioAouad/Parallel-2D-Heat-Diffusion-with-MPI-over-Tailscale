@@ -1,0 +1,74 @@
+{
+  "reviewed_utc": "2026-11-19T16:36:35.723037+00:00",
+  "status": "PASS",
+  "correctness_suite": {
+    "provenance": "User-pasted Ubuntu console retained privately",
+    "groups": 6,
+    "result": "OK"
+  },
+  "archived_solver_runs": 10,
+  "convergence_rows": 5,
+  "maximum_absolute_modal_check_difference": 3.209099652679015e-13,
+  "modal_check_tolerance": 5e-13,
+  "stable_field_checks": [
+    "finite",
+    "0<=u<=1",
+    "fixed boundaries including Case 2 hot corners",
+    "horizontal and vertical reflection symmetry"
+  ],
+  "binary_snapshots": [
+    {
+      "file": "case1.bin",
+      "bytes": 33800,
+      "sha256": "4214140363263c7c1e47975c404d94349083d5ed992261eea904d0ef4c083604",
+      "finite": true,
+      "minimum": 0.09258250543260918,
+      "maximum": 1.0,
+      "byte_equal_windows_reference": true
+    },
+    {
+      "file": "case2.bin",
+      "bytes": 33800,
+      "sha256": "964d897eafd408a7296b1c9d89cc4cb3d92c03b18053c7ca4fa8f33b8ed28c1e",
+      "finite": true,
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "byte_equal_windows_reference": true
+    },
+    {
+      "file": "unstable_40.bin",
+      "bytes": 33800,
+      "sha256": "17311bf1b15f964fedb73d54a2db42e50add2b17d4e097d4f66867ace2aa366e",
+      "finite": true,
+      "minimum": 4.1411692759791586e-13,
+      "maximum": 1.0,
+      "byte_equal_windows_reference": true
+    },
+    {
+      "file": "unstable_120.bin",
+      "bytes": 33800,
+      "sha256": "d9e07249ce7d6ab1ef20dea7940d4c5b879e3fba5f0a3558d396c24b9f2d8d1c",
+      "finite": true,
+      "minimum": 0.00020680919980222472,
+      "maximum": 1.0899719147313718,
+      "byte_equal_windows_reference": true
+    },
+    {
+      "file": "unstable_200.bin",
+      "bytes": 33800,
+      "sha256": "52e5799fd85aa195b3ccf7ed13cfdfb88bfd6695e574b99c18120e696027b16e",
+      "finite": true,
+      "minimum": -303.1249521254433,
+      "maximum": 302.3070149009368,
+      "byte_equal_windows_reference": true
+    }
+  ],
+  "visually_reviewed": [
+    "convergence.png",
+    "instability.png",
+    "cases.png",
+    "convergence.pdf",
+    "instability.pdf"
+  ],
+  "scope": "Serial numerical verification; no MPI equality/scaling claim; timings incidental"
+}
