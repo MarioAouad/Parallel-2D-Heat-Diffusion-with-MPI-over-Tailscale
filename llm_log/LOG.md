@@ -652,3 +652,28 @@ git pull --ff-only origin main
 This append occupies LOG.md lines 593-653.
 
 Verification note: The verbatim user request retains its original final space. Staged whitespace validation therefore keeps normal checks for all other files and disables only end-of-line-space checking for LOG.md. No prompt bytes or prior entries are edited.
+
+
+# Ignore-policy clarification - 2026-11-19T18:59:42.989399+02:00
+
+Team member unknown; Codex desktop; instructions identify GPT-6, exact served snapshot unavailable. Manual visible-message record, not an original raw export.
+
+User request:
+
+did you remove the stuff from github that you added them to the .gitignore?
+
+Progress response:
+
+I’ll check whether any files covered by `.gitignore` are still tracked on GitHub. Adding a rule alone doesn’t remove a file that was already committed.
+
+Check: git ls-files -ci --exclude-standard produced no tracked paths; working tree was clean at cleanup commit 0e9cf69. The listed build/editor/private paths are absent from its tree. No removal or history rewrite was needed. This follow-up changes only the interaction record.
+
+Final response (sent after verification):
+
+The newly ignored files were **already absent from GitHub**, so no extra removals were needed. I checked: **zero tracked files match `.gitignore`**.
+
+The two outdated documentation pages were deleted from GitHub in the cleanup. Your code, results and required deliverables remain.
+
+Full visible private record: llm_log/private/2026-11-19-cleanup/ignore-clarification.md, lines 1-19.
+
+This LOG.md append occupies lines 656-680.
