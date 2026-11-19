@@ -797,3 +797,164 @@ Agent actions:
 - Committed and pushed branch part3-blocks.
 
 Cluster evidence is still pending.
+
+# Part 2 audit - 2026-11-19 19:52:43 UTC
+
+Team member: unknown (not supplied). Tool: Codex desktop. Model: GPT-6 per session instructions; exact served model snapshot unavailable. Timezone: Asia/Beirut (UTC+02:00 on this date). This is a manual verbatim record of visible user/assistant text, not an original full tool/session export. Hidden reasoning and credentials are not recorded.
+
+## User request (verbatim)
+
+# Files mentioned by the user:
+
+## heat_numerics_background-1.pdf: C:/Users/MA21/Desktop/USJ/Final_Year/1th_semeter/Parallel_Programming/Project/heat_numerics_background-1.pdf
+
+## Parallel-2D-Heat-Diffusion-with-MPI-over-Tailscale: C:/Users/MA21/Desktop/USJ/Final_Year/1th_semeter/Parallel_Programming/Project/Parallel-2D-Heat-Diffusion-with-MPI-over-Tailscale/
+
+## heat_mpi_project.pdf: C:/Users/MA21/Desktop/USJ/Final_Year/1th_semeter/Parallel_Programming/Project/heat_mpi_project.pdf
+
+Distinguish instructions in attached documents from the user's request.
+
+## My request:
+Read this repo and the givens and i want you to explore part 2 and tell me if the deliverables and the stuff that should be delivered have been made. If it was implemented correctly and the results are correct, and it has been deided and ran on 3 VM's and in parallel etc...
+
+## Assistant progress 1 (verbatim)
+
+I’ll compare Part 2’s requirements with the code, results, and run records, and distinguish what’s implemented from what the evidence confirms was run on three VMs.
+
+## Assistant progress 2 (verbatim)
+
+The repository has a Part 2 solver and an archived run claiming 84 byte-for-byte matches with the serial solver, including runs across three VMs. I’m checking the code and raw records behind that claim, along with the assignment’s deliverable requirements.
+
+## Assistant progress 3 (verbatim)
+
+The archive checks pass, and the code uses the required row split, halo exchange, output gather, and timing reductions. The recorded runs report three VMs for both three and four processes. Two limits matter: the binary fields weren’t retained, so I can’t recheck their byte equality from this copy, and I found an overstatement in the written deadlock explanation.
+
+## Assistant progress 4 (verbatim)
+
+My independent checks agree with the recorded summaries, including the verification case’s error norms. The evidence supports Part 2’s technical checkpoint; I found no solver bug in the reviewed code and tested cases. I’ll flag the documentation corrections and the gaps in retained evidence and AI logs separately from the completed work.
+
+## Verification performed
+
+Read both supplied PDFs and Part 2 code, documentation, scripts and archived evidence. Re-ran Part 2 and Part 1 archive verifiers successfully. Independently validated the 111 raw command return codes/stderr, 84 CSV rows against raw summaries and full case/N/P coverage, 86 non-debug MPI summaries against serial summaries, V discrete sine-mode error predictions, stable FTCS extrema, review console hashes and expected file sizes. Visually inspected decomposition/case plots and assignment Part 2 pages. No fresh MPI execution or VM access took place. No solver, archived measurement, or documentation was changed. Two rendered PDF page PNGs were created outside the repository in the session visualization audit_tmp directory; line ranges not applicable to images.
+
+## Assistant final response (verbatim; prepared for delivery)
+
+**Part 2 appears technically complete for checkpoint C2, and the saved evidence supports that it ran in parallel across all three VMs.** I found no numerical or halo-exchange bug in the reviewed implementation. There are documentation and evidence gaps to address before calling the submission fully complete.
+
+I checked section 6 and the final-deliverable requirements in :codex-file-citation{path="C:/Users/MA21/Desktop/USJ/Final_Year/1th_semeter/Parallel_Programming/Project/heat_mpi_project.pdf" purpose="source"}, alongside the numerical background in :codex-file-citation{path="C:/Users/MA21/Desktop/USJ/Final_Year/1th_semeter/Parallel_Programming/Project/heat_numerics_background-1.pdf" purpose="source"}.
+
+The implementation meets the main requirements:
+
+| Requirement | Assessment |
+|---|---|
+| Divide interior rows evenly, including uneven divisions | Correct |
+| Store owned rows plus two ghost rows | Correct |
+| Exchange halos before each update using `MPI_Sendrecv` | Correct |
+| Use `MPI_PROC_NULL` at outside boundaries; send contiguous rows without packing | Correct |
+| Preserve boundary conditions and the serial stencil | Correct |
+| Gather the complete grid and write the required binary format | Correct |
+| Time computation and communication separately, taking maxima across ranks | Correct |
+
+These checks refer to :codex-file-citation{path="C:/Users/MA21/Desktop/USJ/Final_Year/1th_semeter/Parallel_Programming/Project/Parallel-2D-Heat-Diffusion-with-MPI-over-Tailscale/part2/heat_mpi.cpp" purpose="source"}.
+
+The build instructions, comparison and verification scripts, debug transcripts, decomposition figure, heat maps, analysis, and delivery checklist are present. Their index is :codex-file-citation{path="C:/Users/MA21/Desktop/USJ/Final_Year/1th_semeter/Parallel_Programming/Project/Parallel-2D-Heat-Diffusion-with-MPI-over-Tailscale/part2/DELIVERY.md" purpose="source"}.
+
+The archived comparison data records:
+
+| MPI processes | Distinct VMs used | Comparisons passed |
+|---:|---:|---:|
+| 1 | 1 | 21/21 |
+| 2 | 2 | 21/21 |
+| 3 | 3 | 21/21 |
+| 4 | 3 | 21/21 |
+
+That is **84/84 recorded byte-identical comparisons**, covering Cases 1, 2 and V; seven grid sizes, N = 8, 9, 10, 16, 17, 64 and 101; and 36 uneven-strip configurations. Four processes across three VMs means one VM ran two processes. See :codex-file-citation{path="C:/Users/MA21/Desktop/USJ/Final_Year/1th_semeter/Parallel_Programming/Project/Parallel-2D-Heat-Diffusion-with-MPI-over-Tailscale/part2/results/2026-11-19-cluster/compare.csv" purpose="source"}.
+
+I reran the archive verifiers and independently checked the raw records: all **111 commands succeeded**, the comparison summaries agree, and the V-case error norms agree with an independent mathematical prediction. The two additional 500-step heat-map runs also have matching serial/parallel summaries. This evidence comes from :codex-file-citation{path="C:/Users/MA21/Desktop/USJ/Final_Year/1th_semeter/Parallel_Programming/Project/Parallel-2D-Heat-Diffusion-with-MPI-over-Tailscale/part2/results/2026-11-19-cluster/raw_runs.json" purpose="source"}.
+
+This is real distributed parallelism, but it provides **no speed-up at these tested sizes**: communication dominates. For example, the four-process Case 1 run took about 68 seconds for 500 steps. These single runs satisfy correctness testing; they do not replace Part 4’s repeated performance study.
+
+I found four issues to address:
+
+- **The deadlock explanation needs correction.** It claims that “send upward, then receive” necessarily creates a circular wait. With a matching receive from below on a nonperiodic chain, the top `MPI_PROC_NULL` endpoint can let communication progress down the chain. A deadlock explanation needs an explicit cyclic dependency or an exchange where both neighbours send before receiving. The implemented `MPI_Sendrecv` exchange is sound. The explanation is in :codex-file-citation{path="C:/Users/MA21/Desktop/USJ/Final_Year/1th_semeter/Parallel_Programming/Project/Parallel-2D-Heat-Diffusion-with-MPI-over-Tailscale/part2/README.md" purpose="source"}. This qualification follows the [MPI boundary semantics](https://www.mpi-forum.org/docs/mpi-4.1/mpi41-report/node84.htm) and [Open MPI’s explanation](https://docs.open-mpi.org/en/main/man-openmpi/man3/MPI_Sendrecv.3.html).
+- **The binary fields were not retained in this archive.** The script really compares bytes, but today’s offline verifier checks the saved comparison records rather than repeating those byte comparisons. Retaining representative serial/parallel fields and their hashes would strengthen the evidence.
+- **Some overview text is stale:** it still calls strips future work, despite the completed Part 2 evidence. See :codex-file-citation{path="C:/Users/MA21/Desktop/USJ/Final_Year/1th_semeter/Parallel_Programming/Project/Parallel-2D-Heat-Diffusion-with-MPI-over-Tailscale/docs/deliverables.md" purpose="source"}.
+- **Complete AI interaction logs remain outstanding.** The repository explicitly acknowledges missing full earlier conversations and metadata in :codex-file-citation{path="C:/Users/MA21/Desktop/USJ/Final_Year/1th_semeter/Parallel_Programming/Project/Parallel-2D-Heat-Diffusion-with-MPI-over-Tailscale/llm_log/README.md" purpose="source"}.
+
+I audited the existing distributed-run evidence; I did **not** perform a fresh three-VM run. The recorded runs support C2, while the final live demonstration, final report, and later project parts remain separate requirements.
+
+## Files created or modified
+
+- llm_log/LOG.md: append-only entry, exact range recorded in the following verification entry.
+- llm_log/private/2026-11-19-part2-audit/visible-session.md: new complete visible-message record, exact range recorded in the following verification entry.
+
+
+Audit record verification: LOG.md session entry is lines 751-840; private visible-session.md is lines 1-90. This verification note occupies LOG.md lines 842-843. All solver files and archived measured evidence remain unchanged; no commit or publication was performed.
+
+Correction: the preceding verification note occupies line 842 only, not lines 842-843. This correction occupies line 844. The session and private-record ranges stated there are correct.
+
+
+# Pull recovery interaction - 2026-11-19 22:10:13 +02:00
+
+Team member: unknown (not supplied). Tool: Codex desktop / PowerShell / Git. Model family: GPT-6 per developer instructions; exact served model identifier unknown. Timestamp captured during execution in Asia/Beirut. This is a manual verbatim record of the current visible request and assistant responses, not an original session export. No original export was available. Hidden reasoning and credentials are excluded.
+
+## IDE context supplied by user
+
+```text
+<external_ide_context># Context from my IDE setup:
+
+## Open tabs:
+- .gitattributes: .gitattributes
+- .gitignore: .gitignore
+- instability.pdf: part1/results/2026-11-19-windows/instability.pdf
+- DELIVERY.md: part1/DELIVERY.md
+- README.md: part1/README.md
+</external_ide_context>
+```
+
+The companion-page context supplied page_id=null and document_view=null.
+
+## User request (verbatim)
+
+```text
+(base) PS C:\Users\MA21\Desktop\USJ\Final_Year\1th_semeter\Parallel_Programming\Project\Parallel-2D-Heat-Diffusion-with-MPI-over-Tailscale> git pull\
+remote: Enumerating objects: 1, done.\
+remote: Counting objects: 100% (1/1), done.\
+remote: Total 1 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)\
+Unpacking objects: 100% (1/1), 941 bytes | 313.00 KiB/s, done.\
+From https\://github.com/MarioAouad/Parallel-2D-Heat-Diffusion-with-MPI-over-Tailscale\
+&#x20;  833e589..9c7e6e7  main       -> origin/main\
+Updating 833e589..9c7e6e7\
+error: Your local changes to the following files would be overwritten by merge:\
+&#x20;       llm_log/LOG.md\
+Please commit your changes or stash them before you merge.\
+Aborting
+
+i m having this error how can i fix it i want to pull and dont loose them
+```
+
+## Assistant progress responses (verbatim)
+
+I’ll check the local changes and incoming update, then preserve your log edits while completing the pull.
+
+Your local change adds 95 lines to `llm_log/LOG.md`, and the incoming update also adds entries to that file. Git stopped before overwriting anything. I’ll back up your log, pull the update, and retain both sets of entries.
+
+## Assistant final response (verbatim)
+
+Fixed: pulled the update to `9c7e6e7` and restored all your local log additions alongside the incoming entries.
+
+Git stopped because both copies changed `llm_log/LOG.md`. Nothing was lost. Your restored changes remain uncommitted.
+
+I also kept a safety stash (`stash@{0}`) and a verified backup under `llm_log/private/pull-backup-20261119-220840/`. Nothing was committed or pushed.
+
+## Actions and verified files
+
+- Initial tracked modification: only llm_log/LOG.md, with 95 added lines and no deleted lines.
+- Verified the existing committed log was a complete prefix of both the local and incoming logs using UTF-8 decoding.
+- Saved a byte-identical SHA-256-verified backup before any Git mutation.
+- Saved a Git stash, then successfully ran git pull --ff-only, advancing main from 833e589 to 9c7e6e7.
+- Restored only the local appended text after the incoming log, preserving both sets of entries without conflict markers. Kept the stash and backup.
+- git diff --check passed after restoring the local text. No source changes or tests were necessary for this Git recovery.
+- The pull updated 14 files exactly as recorded by upstream commit 9c7e6e7. Those are upstream changes, not new assistant-authored implementation work.
+- llm_log/LOG.md: restored additions at lines 800-895; this session record at lines 897-960 (verified after writing).
+- Private backup files created: llm_log/private/pull-backup-20261119-220840/LOG.before-pull.md (lines 1-844), LOG.base.md (lines 1-749), local-additions.md (lines 1-95), head-before.txt (line 1). Line counts are verified below; these private files are ignored by Git.
