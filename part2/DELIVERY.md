@@ -62,9 +62,18 @@ showed that the first packets often go through a relay. The Python scripts need
 ## Public repository and private hand-in
 
 GitHub holds the reviewed CSV, figures, raw command JSON, metadata, manifest, console
-transcripts and review. The regenerable `.bin` reference fields and the original transfer
-folder stay outside the commit. The complete AI-interaction record for this work still needs
-the full session export (see `llm_log/`).
+transcripts and review. The original transfer folder stays outside the commit.
+
+**Open evidence gap: field files.** The 19 November study deleted each strips field after
+comparing it, so its archive has no `.bin` files. Its byte equality rests on the
+`identical` column recorded during the run, and `verify_results.py` reports it as
+*record-only*. Since 20 November the runner keeps every field with its SHA-256, and the
+verifier repeats the comparison offline and recomputes each serial field independently.
+A new cluster run, archived **with** `fields/`, closes the gap. Until it is archived, the
+gap remains open.
+
+The complete AI-interaction record for this work still needs the full session exports
+(see `llm_log/`).
 
 Next implementation stage: Part 3 (2D blocks). It will reuse the strips gather/compare
 machinery, and its output must match the same serial reference.

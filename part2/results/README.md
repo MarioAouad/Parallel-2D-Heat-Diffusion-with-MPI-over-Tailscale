@@ -18,6 +18,11 @@ ignored `runs/` directory. Before publishing a new run:
 Then copy the folder unchanged to `part2/results/<date>-cluster/` and add a row above.
 Keep the dated original and its manifest unchanged afterwards.
 
-Binary fields (`fields/*.bin`) stay ignored. The experiment script regenerates them, and the
-byte comparison results are recorded in `compare.csv`. Timings in these runs are incidental
-correctness-run measurements, not Part 4 data.
+Since 20 November 2026 the runner keeps every field (`fields/*.bin`, about 2 MB) and lists
+each with its SHA-256 in `compare.csv` and `manifest.json`. Archive the folder **with**
+`fields/`: Git accepts `part2/results/*-cluster/fields/*.bin`. For such a study,
+`verify_results.py` repeats the byte comparison offline, ties each field to the run that
+printed its min/max and error norms, and recomputes every serial field independently.
+The 19 November study predates this change and has no fields, so it verifies as
+*record-only*: its byte equality is the `identical` column written during the run.
+Timings in these runs are incidental correctness-run measurements, not Part 4 data.

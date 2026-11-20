@@ -27,6 +27,9 @@ __pycache__/
 
 # Reproducible full-grid snapshots; retain reviewed CSVs, plots, JSON and logs.
 *.bin
+# Exception: archived Part 2 studies keep their fields, so the byte comparison can be
+# repeated offline (part2/verify_results.py). About 2 MB per study.
+!/part2/results/*-cluster/fields/*.bin
 
 # Local transfers and scratch exports; original evidence stays private.
 /heat-evidence/

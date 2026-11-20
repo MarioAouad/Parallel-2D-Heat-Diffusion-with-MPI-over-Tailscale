@@ -990,3 +990,31 @@ Agent actions:
 - docs/deliverables.md: Part 3 row, checklist rows 1 and 3, and solver contract section. Noted that heat_mpi still calls blocks "not implemented yet" and is left unchanged so the Part 2 hash stays valid.
 - Checks: part3/verify_results.py PASS on the archive; part2/verify_results.py still PASS; all markdown links resolve.
 - Committed and pushed branch part3-results.
+
+
+# Part 2 field evidence fix and session exports - 2026-11-20T18:12:05+02:00
+
+Team member: operator of node heat-3. Tool: Claude Code, VS Code extension. Model: Claude Opus 5.5 (claude-opus-5-5). Manual visible-message record. The full session transcript is in llm_log/sessions/2026-11-19-0cf186f8.md.
+
+User requests (verbatim):
+
+i want to fix those 2 point in part 2 :
+1. Missing binary fields: the runner and verifier are fixed, but the old files are still missing. A new cluster run with the updated scripts would close this evidence gap.
+2. Incomplete AI logs: 21 local sessions were recovered, but earlier Claude/teammate conversations still need their original exports.
+
+(Repeated once after an interruption.) Answers to the agent's questions: implement the fix here; export this project's sessions only.
+
+Agent findings: neither the claimed runner/verifier fix nor the 21 recovered sessions exist on GitHub (latest 0c66f96) or on the heat-3 PC. The teammate review in commit f654fa8 is the source of the field gap.
+
+Agent actions, on new branch part2-fields from origin/main 0c66f96:
+
+- part2/run_experiments.py: no longer deletes strips fields. compare.csv gains serial_field, serial_sha256, strips_field and strips_sha256, and manifest.json lists every fields/*.bin. heat_mpi.cpp is unchanged.
+- part2/verify_results.py: when fields are present it re-checks the manifest and CSV hashes and the byte equality of every strips field against serial, and recomputes min/max and Case V error norms against the printed run values. It also recomputes every serial field independently in Python (same loop order) and checks the figure field pairs. An old archive without fields is reported as record-only. Case V uses a 1e-12 field / 1e-8 relative norm tolerance only when the platform's sin() differs (Windows). It is exact on Ubuntu.
+- Tested in WSL Ubuntu: local study 84/84 with 109 fields (2.2 MB); verifier PASS (exact). Windows Python PASS (4 Case V fields within tolerance). Four tamper tests were all caught, including a hash-consistent edit of a serial field and all its strips copies. The 19 Nov archive still passes as record-only.
+- .gitignore: exception !/part2/results/*-cluster/fields/*.bin. .gitattributes: *.bin binary.
+- part2/results/README.md and part2/DELIVERY.md: the field gap is documented as open until a new cluster run is archived with fields.
+- llm_log/export_sessions.py (new): exports Claude Code JSONL as raw private copies plus redacted public transcripts.
+- Exported sessions bc7486c7 and 0cf186f8 (snapshot) to llm_log/sessions/. Raw copies are in the git-ignored llm_log/private/raw/. Redacted: emails, the device hostname, the WSL user, Tailscale IPs and Windows user paths. A scan found no remaining identifiers and no credentials.
+- llm_log/README.md: export status table and per-member export instructions.
+
+Still open: (1) the new Part 2 cluster run, then archiving it with fields; (2) teammates' exports and any earlier claude.ai conversations; (3) a re-export of session 0cf186f8 when it ends.
