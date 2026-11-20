@@ -36,6 +36,15 @@ without allocating the guest CPUs. With six real slots you can still produce
 retained-field studies, but P=8 remains open unless the instructor accepts a
 substitution. The strict sequence below requires eight.
 
+The CPU preflight identifies the launching guest with `tailscale ip -4` and runs
+`nproc` locally for that guest. It uses SSH with host-key verification only for
+the other two guests. The original helper unnecessarily used SSH to itself and
+could fail with `heat1 over SSH: Host key verification failed` even though all
+six cross-VM SSH checks passed. Pull the corrected helper and update all three
+checkouts before retrying; no host-key verification bypass is needed. A failure
+at that preflight occurs before the correctness and heat studies start. Preserve
+the partial bundle; retrying creates a separate new timestamped bundle.
+
 ## 2. Update and build all VMs from one terminal
 
 Yes: SSH from your VM can run `git pull` and `make` on your friends' VMs. Their

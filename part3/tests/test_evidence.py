@@ -305,7 +305,7 @@ class RetainedPipeline(unittest.TestCase):
     def test_preflight_rejects_slots_above_real_cpus(self):
         hostfile = self.base/'test-hosts'
         hostfile.write_text('host-a slots=4\nhost-b slots=2\nhost-c slots=2\n',encoding='utf-8')
-        with patch.object(RUNNER,'HOSTFILE',hostfile), patch.object(RUNNER.subprocess,'run',return_value=subprocess.CompletedProcess([],0,'2\n','')):
+        with patch.object(RUNNER._slot_module,'local_tailscale_address',return_value='not-a-test-peer'), patch.object(RUNNER,'HOSTFILE',hostfile), patch.object(RUNNER.subprocess,'run',return_value=subprocess.CompletedProcess([],0,'2\n','')):
             with self.assertRaisesRegex(SystemExit,'only 2 vCPUs'):
                 RUNNER.cluster_slots()
 
@@ -313,7 +313,7 @@ class RetainedPipeline(unittest.TestCase):
         hostfile = self.base/'test-eight-hosts'
         hostfile.write_text('host-a slots=4\nhost-b slots=2\nhost-c slots=2\n',encoding='utf-8')
         responses = [subprocess.CompletedProcess([],0,str(n)+'\n','') for n in (4,2,2)]
-        with patch.object(RUNNER,'HOSTFILE',hostfile), patch.object(RUNNER.subprocess,'run',side_effect=responses):
+        with patch.object(RUNNER._slot_module,'local_tailscale_address',return_value='not-a-test-peer'), patch.object(RUNNER,'HOSTFILE',hostfile), patch.object(RUNNER.subprocess,'run',side_effect=responses):
             hosts = RUNNER.cluster_slots()
         self.assertEqual(sum(h['slots'] for h in hosts),8)
         self.assertIn('--nooversubscribe',RUNNER.CLUSTER_ARGS)
@@ -321,7 +321,7 @@ class RetainedPipeline(unittest.TestCase):
     def test_preflight_rejects_duplicate_hosts(self):
         hostfile = self.base/'test-duplicate-hosts'
         hostfile.write_text('host-a slots=2\nhost-a slots=2\nhost-c slots=2\n',encoding='utf-8')
-        with patch.object(RUNNER,'HOSTFILE',hostfile), patch.object(RUNNER.subprocess,'run',return_value=subprocess.CompletedProcess([],0,'2\n','')):
+        with patch.object(RUNNER._slot_module,'local_tailscale_address',return_value='not-a-test-peer'), patch.object(RUNNER,'HOSTFILE',hostfile), patch.object(RUNNER.subprocess,'run',return_value=subprocess.CompletedProcess([],0,'2\n','')):
             with self.assertRaisesRegex(SystemExit,'Duplicate VM'):
                 RUNNER.cluster_slots()
 

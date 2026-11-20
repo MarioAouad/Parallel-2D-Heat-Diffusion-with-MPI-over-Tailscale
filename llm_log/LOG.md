@@ -1274,3 +1274,229 @@ Verified append range: llm_log/LOG.md lines 1224-1274, including this line.
 
 Pre-commit correction at 2026-11-20T21:28:02.151607+00:00: the staged whitespace check found one extra blank line at the end of the newly added part0/config/check_slots.py. Removed it; verified file range is now 1-34. No behavior change.
 Verified append range: llm_log/LOG.md lines 1275-1277.
+
+## 2026-11-20T22:34:27.646044+00:00 — CPU allocation and Part 4 sequencing clarification
+
+Client date: 21 November 2026, Asia/Beirut. Member: not provided. Tool: Codex desktop. Model: GPT-6 family; exact runtime model ID unavailable.
+
+Read the repository instructions, rerun guide and deliverable/resource constraints. Clarified that only the guest receiving extra CPUs needs shutdown; P=8 requires eight total allocated guest vCPUs, whereas Part 2 P=1–4 fits six. A stable 2+2+4 configuration can remain through Part 4; changed allocations need separate performance characterization. Part 4 code may be prepared before closing older evidence, but correctness checks and a fixed configuration should precede official measurements. No solver, script, configuration or measured evidence changed; no VM operations, commit or push performed in this turn.
+
+Full visible messages:
+
+```json
+[
+  {
+    "role": "user",
+    "content": "wait i need to close my VM add more Vcpu and do this run? and do i need to be more with more vcpu for the rest of the project or i will need to switch back?\nand like can we do part 4 and then come back and do these??"
+  },
+  {
+    "role": "assistant",
+    "channel": "commentary",
+    "content": "I’ll check which parts require eight vCPUs and whether changing the allocation would affect Part 4’s measurements."
+  },
+  {
+    "role": "assistant",
+    "channel": "final",
+    "content": "**You only need to shut down the VM whose CPU allocation you’re increasing.** The other two can stay running. You do not need to do this immediately—only before running P=8.\n\nFor example, change one VM from 2 to 4 vCPUs, giving **2+2+4 = 8** across the cluster. Fully shut it down, change VirtualBox’s processor setting, restart it, check `nproc`, and update that VM’s slot count in the launcher’s private configuration.\n\n**You can keep that allocation for the rest of the project.** There is no requirement to switch back. Keep the allocation consistent throughout Part 4’s official measurements. If you change it halfway through, affected performance comparisons need fresh measurements or must be reported as separate configurations.\n\nOne clarification: **Part 2 does not require eight vCPUs.** Its required P=1–4 runs fit your existing six-slot cluster. Eight are needed for Part 3’s required P=8 check; the combined rerun helper checks for eight because it includes that experiment.\n\n**Yes, we can implement Part 4 now and return to the missing Part 2/3 evidence afterward.** But I recommend this order for collecting results:\n\n1. Choose the final CPU allocation.\n2. Build and pass the MPI correctness checks on that configuration.\n3. Collect the missing Part 2/3 evidence.\n4. Collect Part 4’s official performance measurements.\n\nWe can prepare Part 4’s code before those VM runs finish. If you instead measure Part 4 with six slots and later increase to eight, those results remain valid for the six-slot configuration, but they do not describe the eight-slot configuration; additional measurements would be needed."
+  }
+]
+```
+
+Verified new visible record: llm_log/private/2026-11-21-cpu-allocation-sequence/visible-messages.json lines 1-25.
+Verified append range: llm_log/LOG.md lines 1278-1307, including this line.
+
+## 2026-11-20T22:44:48.288205+00:00 — VM shutdown, CPU allocation and experiment walkthrough
+
+Client date: 21 November 2026, Asia/Beirut. Member: not provided. Tool: Codex desktop. Model: GPT-6 family; exact runtime model ID unavailable.
+
+Read the current VM update/rerun helpers, private configuration example and project instructions. Verified HEAD remains the published 0f7d585; the only prior tracked local change is the append-only interaction log. Consulted the primary Oracle VirtualBox 7.2 manual processor settings (https://docs.oracle.com/en/virtualization/virtualbox/7.2/user/working-with-vms.html): CPU count, physical-core constraint and default 100% processing cap. Gave a manual shutdown/settings/restart walkthrough, guest nproc confirmation, SSH update/build commands, correct per-VM slot table, one-launch rerun command, expected return bundle and Part 4 sequencing. No VM operations or new solver/experiment implementation were performed; no source, configuration or measured evidence changed; no commit or push.
+
+Full visible messages:
+
+```json
+[
+  {
+    "role": "user",
+    "content": "ok guide me throught it and how to do it to add the vcpu and shit it down and all these and then run the command etc... and then to do part 4"
+  },
+  {
+    "role": "assistant",
+    "channel": "commentary",
+    "content": "I’ll lay out the steps from shutting down one VM through running the checks and saving the results. I’ll also check the current VM helpers so the commands match the version you’ll pull."
+  },
+  {
+    "role": "assistant",
+    "channel": "final",
+    "content": "Follow these steps in order. **Only one VM needs to increase from 2 to 4 vCPUs; the other two stay at 2.** If any step fails, stop and send me its output.\n\n**1. Shut down the VM you want to increase**\n\nInside that VM’s Ubuntu terminal, save your work and make sure no experiment is running. Then run:\n\n```bash\nhostname\nsudo shutdown -h now\n```\n\nEnter your Ubuntu password if requested. The VM will shut down; an SSH connection will disconnect normally.\n\nIn VirtualBox Manager on its Windows laptop, wait until that VM shows **Powered Off**. Use a full shutdown rather than “Save the machine state.”\n\n**2. Increase its CPU allocation in VirtualBox**\n\nOn the Windows laptop that owns that VM:\n\n1. Select the powered-off VM.\n2. Open **Settings → System → Processor**.\n3. Change **Processors / Number of CPUs** from **2 to 4**.\n4. Keep **Execution Cap / Processing Cap at 100%**.\n5. Click **OK**.\n\nUse a host with at least four physical CPU cores; Oracle advises against assigning more virtual CPUs than physical cores. If four is unavailable or VirtualBox shows an allocation warning, send me that screen before proceeding. [Oracle’s processor settings](https://docs.oracle.com/en/virtualization/virtualbox/7.2/user/working-with-vms.html)\n\n**3. Start it and confirm the change**\n\nClick **Start**, log in as `mpi`, open Ubuntu Terminal, and run:\n\n```bash\nhostname\nnproc\ntailscale ip -4\n```\n\n**`nproc` must print `4` on the changed VM.** Keep a screenshot of the VirtualBox processor setting. Your friends’ two VMs should remain running with two vCPUs each.\n\n**4. Pull the update and build all three VMs**\n\nOn the VM you will use to launch the experiments, run:\n\n```bash\ncd /home/mpi/heat-project-repo\ngit status --short\n```\n\nIf that prints local changes, send me the output before continuing. If it prints nothing:\n\n```bash\ngit pull --ff-only origin main\nbash scripts/update-vms.sh\n```\n\nThe helper updates your friends’ VMs through SSH and builds on all three. They do not need to type the pull commands separately. Wait for:\n\n```text\nAll three VMs updated and built successfully.\n```\n\n**5. Match the configured slots to the actual CPUs**\n\nOn the launching VM:\n\n```bash\nnano part0/config/cluster.local.sh\n```\n\nKeep the existing IP addresses. Add or update the three slot entries according to **which VM you increased**:\n\n| VM increased to 4 | HEAT1_SLOTS | HEAT2_SLOTS | HEAT3_SLOTS |\n|---|---:|---:|---:|\n| heat-1 | 4 | 2 | 2 |\n| heat-2 | 2 | 4 | 2 |\n| heat-3 | 2 | 2 | 4 |\n\nFor example, if you increased **heat-3**, use:\n\n```bash\nHEAT1_SLOTS=2\nHEAT2_SLOTS=2\nHEAT3_SLOTS=4\n```\n\nUpdate existing entries rather than leaving conflicting duplicates. In Nano, press **Ctrl+O**, **Enter**, then **Ctrl+X** to save and exit.\n\n**6. Launch the checks and both studies—once**\n\nStill on the launching VM:\n\n```bash\nbash scripts/rerun-parts23.sh\n```\n\nThis checks connectivity and actual CPU capacity, runs the MPI correctness checks, runs Parts 2 and 3, retains the fields, and verifies the required P=8 results.\n\nAllow **about 1–2 hours**, possibly longer with slow network conditions. Keep the launching terminal open and all three laptops/VMs awake. Do not launch a second copy.\n\nAt the end, it prints:\n\n```text\nReturn bundle: /home/mpi/heat-project-repo/output/parts23-<timestamp>.tar.gz\n```\n\nIf it stops with an error, keep the partial output folder and send the error first.\n\n**7. Send the results, then we move to Part 4**\n\nSend me:\n\n- The complete `.tar.gz` bundle printed above.\n- The `output/update-all-<timestamp>.log` file.\n- The changed VM’s VirtualBox CPU screenshot.\n\nShare these privately because the bundle contains machine and endpoint details.\n\nI’ll verify the new evidence and identify anything still open. Then we can implement Part 4’s serial baselines, strong/weak scaling and communication measurements using this same CPU allocation. **Keep the 2+2+4 allocation through those measurements; there is no need to switch back.**"
+  }
+]
+```
+
+Verified new visible record: llm_log/private/2026-11-21-vm-cpu-walkthrough/visible-messages.json lines 1-25.
+Verified append range: llm_log/LOG.md lines 1308-1337, including this line.
+
+## 2026-11-20T22:56:12.015342+00:00 — Ubuntu VM console login help
+
+Client date: 21 November 2026, Asia/Beirut. Member: not provided. Tool: Codex desktop. Model: GPT-6 family; exact runtime model ID unavailable. Observed the user-provided screenshot of the heat-1 Ubuntu tty login prompt. Explained mpi login, invisible password entry and nproc verification without requesting or recording a password. No VM actions, source edits, experiments, commit or push performed.
+
+Full visible messages, with attachment reference and observation (original image remains at the user-provided path):
+
+```json
+[
+  {
+    "role": "user",
+    "content": "# Files mentioned by the user:\n\nVirtualBox_heat-1_21_11_2026_00_55_24.png: C:/Users/MA21/Downloads/VirtualBox_heat-1_21_11_2026_00_55_24.png\nImage attachment: true\n\nMy request:\nwhat do i do here?",
+    "attachment_reference": "C:/Users/MA21/Downloads/VirtualBox_heat-1_21_11_2026_00_55_24.png",
+    "observed_image": "Ubuntu 24.04.5 LTS heat-1 tty1; heat-1 login prompt."
+  },
+  {
+    "role": "assistant",
+    "channel": "commentary",
+    "content": "That’s the normal Ubuntu login screen. Log in as `mpi`, then check the CPU count."
+  },
+  {
+    "role": "assistant",
+    "channel": "final",
+    "content": "1. Click inside the VM window, type **`mpi`**, and press **Enter**.\n2. At `Password:`, type the **Ubuntu password for the `mpi` account**, then press **Enter**. Nothing appears while you type—not even dots. That is normal.\n3. Once you see a prompt such as `mpi@heat-1:~$`, run:\n\n```bash\nnproc\n```\n\n**Send me the number it prints.** If you already increased this VM’s allocation, it should print **`4`**. If it prints **`2`**, we still need to shut it down and change its processor setting."
+  }
+]
+```
+
+Verified visible record: llm_log/private/2026-11-21-vm-login-help/visible-messages.json lines 1-26.
+Verified append range: llm_log/LOG.md lines 1338-1367.
+
+## 2026-11-20T23:02:10.840376+00:00 — Nano CPU slot configuration help
+
+Client date: 21 November 2026, Asia/Beirut. Member: not provided. Tool: Codex desktop. Model: GPT-6 family; exact runtime model ID unavailable. Observed the attached Nano configuration screen on heat-1; private endpoint values were not transcribed. Explained conditional 4+2+2 slots if heat-1 actually has four guest vCPUs, Nano save/exit, nproc confirmation, and launching the rerun helper only after successful all-VM update/build. No VM controls, private configuration edits, experiments, commit or push performed here.
+
+Full visible messages with attachment reference:
+
+```json
+[
+  {
+    "role": "user",
+    "content": "# Files mentioned by the user:\n\ncodex-clipboard-5dc8aa9b-f15e-4d06-b11a-1618b56f2635.png: C:/Users/MA21/AppData/Local/Temp/codex-clipboard-5dc8aa9b-f15e-4d06-b11a-1618b56f2635.png\nImage attachment: true\n\nMy request:\nWhart shoudl i do here?",
+    "attachment_reference": "C:/Users/MA21/AppData/Local/Temp/codex-clipboard-5dc8aa9b-f15e-4d06-b11a-1618b56f2635.png",
+    "observed_image": "Nano editing part0/config/cluster.local.sh on mpi@heat-1; three private endpoint assignments present, no slot entries shown. Endpoint values not transcribed."
+  },
+  {
+    "role": "assistant",
+    "channel": "commentary",
+    "content": "You’re editing the right file. Keep the three IP address lines and add the CPU slot entries below them."
+  },
+  {
+    "role": "assistant",
+    "channel": "final",
+    "content": "If **heat-1 is the VM you increased to 4 vCPUs**, move below the three existing lines and add:\n\n```bash\nHEAT1_SLOTS=4\nHEAT2_SLOTS=2\nHEAT3_SLOTS=2\n```\n\nKeep the existing IP address lines.\n\nSave and exit Nano:\n\n1. Press **Ctrl+O**.\n2. Press **Enter** to confirm the filename.\n3. Press **Ctrl+X**.\n\nThen run:\n\n```bash\nnproc\n```\n\nIt should print **`4`** on heat-1. If it does, and `scripts/update-vms.sh` finished successfully on all three VMs, start the studies:\n\n```bash\nbash scripts/rerun-parts23.sh\n```\n\nRun it **once**, and keep all three VMs awake. If you increased a different VM instead, the `4` must go on that VM’s `HEATn_SLOTS` entry."
+  }
+]
+```
+
+Verified private record: llm_log/private/2026-11-21-nano-slots-help/visible-messages.json lines 1-26.
+Verified append range: llm_log/LOG.md lines 1368-1397.
+
+## 2026-11-20T23:03:38.116452+00:00 — Confirm shown 4+2+2 slot entries
+
+Client date: 21 November 2026, Asia/Beirut. Member: not provided. Tool: Codex desktop. Model: GPT-6 family; exact runtime model ID unavailable. Screenshot confirms slot syntax 4+2+2; confirmation is conditional on actual guest CPU allocation. Repeated Nano save, nproc check and rerun command after successful all-VM update/build. No private endpoints copied; no VM action, source edit, experiment, commit or push.
+
+Full visible messages and attachment reference:
+
+```json
+[
+  {
+    "role": "user",
+    "content": "So like this?",
+    "attachment_reference": "C:/Users/MA21/AppData/Local/Temp/codex-clipboard-f54b3e53-931e-4328-8804-d9b3f8b45618.png",
+    "observed_image": "Nano on heat-1 shows HEAT1_SLOTS=4, HEAT2_SLOTS=2, HEAT3_SLOTS=2. Existing private endpoint assignments not transcribed."
+  },
+  {
+    "role": "assistant",
+    "channel": "commentary",
+    "content": "Those entries match a 4+2+2 allocation, with four vCPUs on heat-1."
+  },
+  {
+    "role": "assistant",
+    "channel": "final",
+    "content": "**Yes, that’s correct—provided heat-1 now has 4 vCPUs and the others have 2 each.**\n\nSave and exit:\n\n1. **Ctrl+O**\n2. **Enter**\n3. **Ctrl+X**\n\nThen check:\n\n```bash\nnproc\n```\n\nIf it prints **`4`**, and the update/build helper succeeded on all three VMs, run:\n\n```bash\nbash scripts/rerun-parts23.sh\n```\n\nKeep the terminal and all three VMs running. Send me any error, or the final `Return bundle:` message."
+  }
+]
+```
+
+Verified private visible record: llm_log/private/2026-11-21-confirm-slots/visible-messages.json lines 1-26.
+Verified append range: llm_log/LOG.md lines 1398-1427.
+
+## 2026-11-20T23:05:28.848915+00:00 — Explain all-VM update/build helper
+
+Client date: 21 November 2026, Asia/Beirut. Member: not provided. Tool: Codex desktop. Model: GPT-6 family; exact runtime model ID unavailable. Read the current scripts/update-vms.sh and explained saving/exiting Nano, checking the clean checkout, pulling, running the helper from heat-1, the exact success message, and launching studies only afterward. Addressed the user annotation explicitly. No VM actions, source/configuration edits, experiments, commit or push.
+
+Full visible messages:
+
+```json
+[
+  {
+    "role": "user",
+    "content": "# Response annotations:\nEach item contains text selected from an earlier Codex response and may include a user comment. Treat items as Annotation 1, Annotation 2, and so on in array order. Use every selection as context and address every comment. For every annotation you address, include `:codex-annotation{index=\"N\" id=\"ID\"}`, where N is its one-based array position and ID is its exact id (omit the id attribute if absent). Do not use unstructured annotation labels.\n<response-annotations>\n[{\"id\":\"978909a6-26da-4258-b474-8eb1ac58d231\",\"text\":\"and the update/build helper succeeded on all three VM\",\"annotation\":\"How do i do this?\",\"source\":{\"contentOffsets\":{\"startOffset\":148,\"endOffset\":201},\"messageId\":\"msg_0f7a3bbedd475e85016b00d1cf352c87d28b9ece9cdbdad2fc\",\"startOffset\":148,\"endOffset\":201}}]\n</response-annotations>\n\n## My request:"
+  },
+  {
+    "role": "assistant",
+    "channel": "commentary",
+    "content": "I’ll show you how to run the update/build helper from heat-1 so it updates all three VMs over SSH."
+  },
+  {
+    "role": "assistant",
+    "channel": "final",
+    "content": "Run this **from heat-1 only**. Your friends’ VMs must be running and connected; the helper will update and build them through SSH. :codex-annotation{index=\"1\" id=\"978909a6-26da-4258-b474-8eb1ac58d231\"}\n\n**1. Save and exit Nano first**, if it is still open: **Ctrl+O → Enter → Ctrl+X**.\n\n**2. Check the repository:**\n\n```bash\ncd /home/mpi/heat-project-repo\ngit status --short\n```\n\nIf it prints any changed files, send me that output. If it prints nothing, continue:\n\n```bash\ngit pull --ff-only origin main\n```\n\n**3. After the pull succeeds, run:**\n\n```bash\nbash scripts/update-vms.sh\n```\n\nIt will compile on heat-1, connect to the other two VMs, pull the same revision and compile there. Wait until you see:\n\n```text\nAll three VMs updated and built successfully.\n```\n\n**4. Only after that success message**, start the studies:\n\n```bash\nbash scripts/rerun-parts23.sh\n```\n\nIf any command fails, **stop and send me the output** instead of continuing."
+  }
+]
+```
+
+Verified private visible record: llm_log/private/2026-11-21-update-helper-help/visible-messages.json lines 1-24.
+Verified append range: llm_log/LOG.md lines 1428-1455.
+
+## 2026-11-20T23:11:59.291748+00:00 — Fix CPU preflight SSH-to-self failure
+
+Client date: 21 November 2026, Asia/Beirut. Member: not provided. Tool: Codex desktop. Model: GPT-6 family; exact runtime model ID unavailable. This corrects the helper in the previously authorized fix-and-publish workflow. Final response below is prepared for release after successful push verification; no push outcome is fabricated in this preparation entry.
+
+The user reported six successful directed cross-VM SSH checks followed by a CPU preflight host-key failure for heat1. Inspection confirmed the CPU helper unnecessarily SSHed into every guest including the launcher, whereas connectivity checks deliberately skip self. Added local Tailscale IPv4 identification and local nproc for the launcher; only remote guests use SSH, with explicit StrictHostKeyChecking=yes. Missing identity stops safely, local CPU limits remain enforced, and remote host-key failures are preserved. Updated three existing preflight test fixtures to isolate identity discovery. Added four mocked subprocess regressions, and documented the failure/retry behavior. No SSH trust bypass, key deletion, VM modifications, C++ solver changes or measurement archive edits.
+
+PASS four new CPU preflight regressions, all sixteen Part 3 evidence tests, and all nine Part 2 evidence tests (29 total; no real MPI or VM execution). Fetched origin and verified local HEAD/origin main synchronized before publication. Whitespace checks pass. Primary sources consulted: OpenSSH manual https://man.openbsd.org/ssh and Tailscale connection types https://tailscale.com/docs/reference/connection-types. Relay observations are distinct from the preflight failure; no claim that the full future run is direct or that a relay issue was fixed.
+
+Full visible prompts/responses follow with public-copy redactions: IPv4 endpoint values and the private heat-3 hostname are replaced. Original complete visible text is retained in the ignored private record; this public copy is not the unredacted private course record.
+
+```json
+[
+  {
+    "role": "user",
+    "content": "mpi@heat-1:\\~/heat-project-repo$ bash scripts/rerun-parts23.sh\\\nBundle: /home/mpi/heat-project-repo/output/parts23-20261120T230703Z\\\nsource_host=heat-1 source_ip=[redacted-IP]\\\n\\\nChecking peer=[redacted-IP]\\\npong from heat-2 ([redacted-IP]) via [redacted-IP]:17511 in 18ms\\\nheat-2\\\nmpi\\\n\\\nChecking peer=[redacted-IP]\\\npong from [heat3-hostname] ([redacted-IP]) via DERP(fra) in 237ms\\\npong from [heat3-hostname] ([redacted-IP]) via DERP(fra) in 221ms\\\npong from [heat3-hostname] ([redacted-IP]) via DERP(fra) in 214ms\\\ndirect connection not established\\\nRead the ping output: relay replies differ from no replies.\\\n[heat3-hostname]\\\nmpi\\\nsource_host=heat-2 source_ip=[redacted-IP]\\\n\\\nChecking peer=[redacted-IP]\\\npong from heat-1 ([redacted-IP]) via [redacted-IP]:2365 in 15ms\\\nheat-1\\\nmpi\\\n\\\nChecking peer=[redacted-IP]\\\npong from [heat3-hostname] ([redacted-IP]) via DERP(fra) in 407ms\\\npong from [heat3-hostname] ([redacted-IP]) via DERP(fra) in 258ms\\\npong from [heat3-hostname] ([redacted-IP]) via DERP(fra) in 292ms\\\ndirect connection not established\\\nRead the ping output: relay replies differ from no replies.\\\n[heat3-hostname]\\\nmpi\\\nsource_host=[heat3-hostname] source_ip=[redacted-IP]\\\n\\\nChecking peer=[redacted-IP]\\\npong from heat-1 ([redacted-IP]) via [redacted-IP]:2365 in 137ms\\\nheat-1\\\nmpi\\\n\\\nChecking peer=[redacted-IP]\\\npong from heat-2 ([redacted-IP]) via [redacted-IP]:17511 in 95ms\\\nheat-2\\\nmpi\\\nCannot read the vCPU count of heat1 over SSH: Host key verification failed.\n\nWhat happened?"
+  },
+  {
+    "role": "assistant",
+    "channel": "commentary",
+    "content": "The connectivity checks succeeded. The script then stopped while checking heat-1’s CPU count over SSH. I’ll check why that step failed and give you a fix that keeps host-key verification enabled."
+  },
+  {
+    "role": "assistant",
+    "channel": "commentary",
+    "content": "The cause is in the helper I supplied: it tries to SSH into heat-1 from heat-1 to read `nproc`. The earlier connectivity checks skip that self-connection, so they passed.\n\nI’m correcting the helper to read the local CPU count directly and use SSH only for the other VMs. Your heat simulations have not started yet, so this failure has not lost a completed run."
+  },
+  {
+    "role": "assistant",
+    "channel": "commentary",
+    "content": "The correction passes all 29 relevant tests, including a new test that confirms the launcher never SSHs into itself. I’m publishing it now so you can pull it.\n\nThe DERP messages are separate: some probes to heat-3 used a relay, but SSH still succeeded. That can affect run time and timing results; it did not cause this host-key failure."
+  },
+  {
+    "role": "assistant",
+    "channel": "final",
+    "content": "The script stopped **before any heat simulations started**.\n\nThe six connections between different VMs succeeded. Then the CPU checker tried to SSH **from heat-1 back into heat-1**, where host-key verification failed. That self-connection was unnecessary—a bug in the helper I supplied.\n\n**I corrected it and pushed the fix.** The launcher now reads its CPU count locally and uses verified SSH only for the other VMs. All 29 relevant tests pass.\n\nOn **heat-1**, run these commands one at a time:\n\n```bash\ncd /home/mpi/heat-project-repo\ngit status --short\n```\n\nIf the status prints nothing, continue:\n\n```bash\ngit pull --ff-only origin main\nbash scripts/update-vms.sh\n```\n\nOnce you see:\n\n```text\nAll three VMs updated and built successfully.\n```\n\nrestart the sequence:\n\n```bash\nbash scripts/rerun-parts23.sh\n```\n\nKeep the existing partial bundle. The retry creates a new timestamped folder, so you do not need to delete anything or change the vCPU allocation again.\n\nThe **DERP relay messages are a separate network observation**. Connections worked, but relay use can slow runs and affect performance measurements. Your output later also showed direct replies from heat-3, so the route was changing during these probes. [Tailscale connection types](https://tailscale.com/docs/reference/connection-types)\n\nIf the retry stops again, send the new error."
+  }
+]
+```
+
+### Verified changed file ranges
+
+- part0/config/check_slots.py: 5, 9-19, 27, 38-42, 44-45; file length 51.
+- part0/config/tests/test_check_slots.py: 1-65; file length 65.
+- part3/tests/test_evidence.py: 308, 316, 324; file length 330.
+- docs/parts2-3-rerun.md: 39-47; file length 121.
+- llm_log/private/2026-11-21-self-ssh-preflight-fix/visible-messages.json: 1-35; file length 35.
+Verified append range: llm_log/LOG.md lines 1456-1503.
