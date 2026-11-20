@@ -17,6 +17,7 @@ import argparse
 import csv
 from datetime import datetime, timezone
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
 import platform
@@ -31,7 +32,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 HOSTFILE = ROOT/'part0'/'config'/'hosts'
-CLUSTER_ARGS = ['--hostfile', str(HOSTFILE), '--map-by', 'node',
+CLUSTER_ARGS = ['--hostfile', str(HOSTFILE), '--map-by', 'node', '--nooversubscribe',
                 '--mca', 'plm_rsh_args', '-o BatchMode=yes -o ConnectTimeout=15',
                 '--mca', 'oob_tcp_if_include', 'tailscale0',
                 '--mca', 'btl_tcp_if_include', 'tailscale0',
@@ -39,6 +40,14 @@ CLUSTER_ARGS = ['--hostfile', str(HOSTFILE), '--map-by', 'node',
 SAME = ['steps', 'r', 'dt', 'T', 'minimum', 'maximum', 'err_inf', 'err_l2']
 PUBLISHED = ['compare.csv', 'debug_halo.txt', 'decomposition.png', 'decomposition.pdf',
              'cases.png', 'raw_runs.json', 'metadata.json']
+
+_slot_spec = importlib.util.spec_from_file_location('heat_cluster_slots', ROOT/'part0/config/check_slots.py')
+_slot_module = importlib.util.module_from_spec(_slot_spec)
+_slot_spec.loader.exec_module(_slot_module)
+
+
+def cluster_slots():
+    return _slot_module.check_slots(HOSTFILE)
 
 
 def ints(text):
@@ -106,13 +115,16 @@ def main():
         if not exe.is_file():
             parser.error(f'Missing {exe}. Build first: make serial strips')
     serial_exe, mpi_exe = str(args.serial.resolve()), str(args.mpi.resolve())
+    hosts = None
     if args.cluster:
         # Render the ignored hostfile from the private configuration (as Part 0 does).
         subprocess.run(['bash', '-c', f'source {shlex.quote(str(ROOT/"part0/config/cluster.sh"))}'],
                        check=True)
         extra = CLUSTER_ARGS
-        if max(args.np) > 6:
-            parser.error('The team hostfile has 6 slots; P must be <= 6 in cluster mode.')
+        hosts = cluster_slots()
+        total = sum(h['slots'] for h in hosts)
+        if max(args.np) > total:
+            parser.error(f'The checked hostfile has {total} real slots; P must be <= {total} in cluster mode.')
     else:
         extra = shlex.split(args.mpirun_args if args.mpirun_args is not None else '--oversubscribe')
 
@@ -219,13 +231,16 @@ def main():
                 writer.writeheader()
                 writer.writerows(rows)
         version = subprocess.run(['mpirun', '--version'], capture_output=True, text=True).stdout
-        meta = dict(utc=stamp.isoformat(), mode='cluster' if args.cluster else 'local',
+        meta = dict(evidence_schema=2, utc=stamp.isoformat(), mode='cluster' if args.cluster else 'local',
                     mpirun_args=extra, platform=platform.system(), architecture=platform.machine(),
                     mpirun_version=version.strip().splitlines()[0] if version else None,
                     serial_source_sha256=hashlib.sha256((ROOT/'part1/heat_serial.cpp').read_bytes()).hexdigest(),
                     strips_source_sha256=hashlib.sha256((ROOT/'part2/heat_mpi.cpp').read_bytes()).hexdigest(),
                     parameters=dict(np=args.np, N=args.N, cases=args.cases, steps=args.steps, T=args.T,
                                     r=args.r, figure_N=args.figure_N, figure_steps=args.figure_steps),
+                    cluster_slots=hosts,
+                    launcher_executables={role: dict(name=Path(path).name, sha256=hashlib.sha256(Path(path).read_bytes()).hexdigest())
+                                          for role,path in {'serial':serial_exe,'strips':mpi_exe}.items() if Path(path).is_file()},
                     scope='Correctness comparison; timings are incidental, not Part 4 measurements')
         (out/'metadata.json').write_text(json.dumps(meta, indent=2)+'\n', encoding='utf-8')
         # Every field file is evidence too: hash it so the archive can be re-checked offline.

@@ -21,6 +21,9 @@ import csv
 import hashlib
 import importlib.util
 import json
+import math
+import statistics
+from collections import Counter
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -49,112 +52,75 @@ def rows_of(path):
         return list(csv.DictReader(f))
 
 
+def verify_timing(folder,names,meta,runs):
+    p = meta['parameters']
+    if not p.get('timing'):
+        return 0, False
+    require({'timing.csv','timing_summary.csv','timing.png','timing.pdf'} <= names, 'Missing timing evidence')
+    timing, aggregate = rows_of(folder/'timing.csv'), rows_of(folder/'timing_summary.csv')
+    expected = {(d,P,N) for d in ('strips','blocks') for P in p['timing_np'] for N in p['timing_N']}
+    keys = [(r['decomp'],int(r['P']),int(r['N']),int(r['rep'])) for r in timing]
+    require(set(keys) == {(*k,rep) for k in expected for rep in range(1,p['timing_reps']+1)}
+            and len(keys) == len(set(keys)), 'Missing/duplicate timing repetition')
+    raw = [part2_verify.summary(run) for run in runs if '--out' not in run['command'] and '--debug-print' not in run['command']]
+    def signature(row):
+        return (row['decomp'],int(row['P']),int(row['N']),int(row['nodes']),int(row['steps']),
+                *(float(row[k]) for k in ('t_total','t_comp','t_comm')))
+    require(Counter(map(signature,timing)) == Counter(map(signature,raw)), 'Timing CSV/raw mismatch')
+    for row in timing:
+        P,N = int(row['P']),int(row['N'])
+        grid = (P,1) if row['decomp'] == 'strips' else part2_verify.dims(P)
+        require(row['grid'] == f'{grid[0]}x{grid[1]}' and int(row['steps']) == p['timing_steps'], 'Timing grid/steps mismatch')
+    skeys = [(r['decomp'],int(r['P']),int(r['N'])) for r in aggregate]
+    require(set(skeys) == expected and len(skeys) == len(expected), 'Missing/duplicate timing summary')
+    for row,key in zip(aggregate,skeys):
+        selected = [r for r in timing if (r['decomp'],int(r['P']),int(r['N'])) == key]
+        require(int(row['reps']) == len(selected) and all(row['nodes'] == r['nodes'] and row['grid'] == r['grid'] for r in selected), 'Timing summary group differs')
+        def per(k):
+            return [float(r[k])/int(r['steps']) for r in selected]
+        expected_values = {f'median_{name}_ms_per_step': statistics.median(per('t_'+name))*1000 for name in ('total','comp','comm')}
+        expected_values.update(min_comm_ms_per_step=min(per('t_comm'))*1000,max_comm_ms_per_step=max(per('t_comm'))*1000)
+        for column,value in expected_values.items():
+            require(math.isclose(float(row[column]),value,rel_tol=1e-12,abs_tol=1e-12), column+' does not recompute from timing.csv')
+    # Coverage alone is not a CPU-capacity check; verify_study enforces that separately.
+    p8 = meta['mode'] == 'cluster' and p['timing_reps'] >= 3 and {
+        (d,P,N) for d in ('strips','blocks') for P in (4,8) for N in (512,2048,8192)} <= expected
+    return len(timing),p8
+
+
+def verify_study(folder,allow_local=False,require_fields=False,require_p8=False):
+    folder = Path(folder).resolve()
+    names,meta,runs,warnings = part2_verify.load_study(folder,'blocks',allow_local)
+    result = part2_verify.check_comparisons(folder,names,meta,runs,'blocks',require_fields)
+    largest = max([int(part2_verify.summary(run)['P']) for run in runs])
+    hosts = meta.get('cluster_slots')
+    if meta['mode'] == 'cluster' and (largest > 6 or meta.get('evidence_schema',1) >= 2):
+        require(hosts and len(hosts) == 3 and len({h['host'] for h in hosts}) == 3, 'Missing/duplicate checked VM slot record')
+        require(all(isinstance(h['slots'],int) and isinstance(h['vcpus'],int) and 0 < h['slots'] <= h['vcpus'] for h in hosts), 'A VM has invalid slots or more slots than vCPUs')
+        require(sum(h['slots'] for h in hosts) >= largest, 'P exceeds checked real CPU slots')
+    part2_verify.check_debug(folder,runs,'blocks',(4,6,8) if largest >= 8 else (4,6))
+    timing,p8 = verify_timing(folder,names,meta,runs)
+    require(not require_p8 or p8, 'P=4,8 timing at N=512,2048,8192 with at least three cluster repetitions is required')
+    return dict(result,published=len(names),warnings=warnings,timing=timing,p8=p8)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--data', type=Path, help='study folder (default: newest under part3/results/)')
-    parser.add_argument('--allow-local', action='store_true', help='accept a one-VM study')
+    parser.add_argument('--data',type=Path)
+    parser.add_argument('--allow-local',action='store_true')
+    parser.add_argument('--require-fields',action='store_true')
+    parser.add_argument('--require-p8',action='store_true',help='require the assignment P=4,8 timing matrix and checked real CPUs')
     args = parser.parse_args()
-    folder = (args.data or default_study()).resolve()
-
-    manifest = json.loads((folder/'manifest.json').read_text(encoding='utf-8'))
-    for item in manifest['published_files']:
-        data = (folder/item['file']).read_bytes()
-        require(len(data) == item['bytes'] and hashlib.sha256(data).hexdigest() == item['sha256'],
-                'Result hash/size mismatch: '+item['file'])
-    names = {item['file'] for item in manifest['published_files']}
-    require({'compare.csv', 'raw_runs.json', 'metadata.json', 'debug_halo.txt'} <= names,
-            'Manifest is missing required evidence files')
-
-    meta = json.loads((folder/'metadata.json').read_text(encoding='utf-8'))
-    root = HERE.parent
-    for key, path in [('serial_source_sha256', 'part1/heat_serial.cpp'),
-                      ('strips_source_sha256', 'part2/heat_mpi.cpp'),
-                      ('blocks_source_sha256', 'part3/heat_blocks.cpp')]:
-        require(meta[key] == hashlib.sha256((root/path).read_bytes()).hexdigest(),
-                f'{path} changed since this study; rerun it')
-    cluster = meta['mode'] == 'cluster'
-    require(cluster or args.allow_local, 'Study is local (one VM); cluster evidence is required')
-
-    rows = rows_of(folder/'compare.csv')
-    require(rows and all(r['result'] == 'PASS' and r['identical'] == 'True' and not r['summary_mismatch']
-                         for r in rows), 'Not every comparison is bit-for-bit identical')
-    require({1, 2, 3, 4} <= {int(r['P']) for r in rows}, 'P = 1, 2, 3 and 4 must all be covered')
-    require(any(int(r['Px']) >= 2 for r in rows), 'No genuinely two-dimensional process grid (Px >= 2)')
-    require(len({int(r['N']) for r in rows}) >= 3, 'Several N are required')
-    require(any(r['uneven_blocks'] == 'True' and int(r['Px']) >= 2 for r in rows),
-            'No uneven 2D block case (N-1 not divisible by Py or Px)')
-    if cluster:
-        require(all(int(r['nodes']) >= 2 for r in rows if int(r['P']) >= 2),
-                'A P>=2 cluster run used only one machine')
-
-    runs = json.loads((folder/'raw_runs.json').read_text(encoding='utf-8'))
-    require(all(r['returncode'] == 0 for r in runs), 'A recorded solver run failed')
-    blocks = {}
-    for r in runs:
-        if 'heat_blocks' in r['command'] and '--debug-print' not in r['command']:
-            s = dict(t.split('=', 1) for t in r['stdout'].splitlines()[-1].split())
-            blocks.setdefault((s['case'], int(s['N']), int(s['P'])), []).append(s)
-    for r in rows:
-        found = blocks.get((r['case'], int(r['N']), int(r['P'])), [])
-        require(any(s['decomp'] == 'blocks' and s['Py'] == r['Py'] and s['Px'] == r['Px'] and
-                    int(s['nodes']) == int(r['nodes']) for s in found),
-                'CSV row without matching raw blocks run: '+str(r))
-    text = (folder/'debug_halo.txt').read_text(encoding='utf-8')
-    require('of 2x2 grid' in text and 'of 3x2 grid' in text, 'Halo debug transcripts for 2x2 and 3x2 are missing')
-
-    has_fields = 'blocks_sha256' in rows[0]
-    if has_fields:
-        references, figures, approximate = part2_verify.check_fields(folder, rows, runs, names, 'blocks')
-
-    largest = max([int(r['P']) for r in rows] +
-                  [int(P) for P in meta['parameters'].get('timing_np', [])
-                   if meta['parameters'].get('timing')])
-    slots_note = ''
-    if cluster and largest > 6:
-        hosts = meta.get('cluster_slots')
-        require(hosts, f'P = {largest} was run, but metadata.json has no checked slot record')
-        require(all(h['slots'] <= h['vcpus'] for h in hosts), 'A VM had more slots than vCPUs')
-        total = sum(h['slots'] for h in hosts)
-        require(total >= largest, f'P = {largest} exceeds the {total} checked slots')
-        slots_note = ', '.join(f"{h['host']} {h['slots']}/{h['vcpus']}" for h in hosts)
-    if largest >= 8:
-        require('of 4x2 grid' in text, 'P = 8 was run, but the 4x2 halo transcript is missing')
-
-    timing_note = 'no timing stage'
-    if meta['parameters'].get('timing'):
-        p = meta['parameters']
-        timing = rows_of(folder/'timing.csv')
-        summary = rows_of(folder/'timing_summary.csv')
-        expected = {(d, P, N) for d in ('strips', 'blocks') for P in p['timing_np'] for N in p['timing_N']}
-        got = {(t['decomp'], int(t['P']), int(t['N'])) for t in timing}
-        require(got == expected, 'Timing runs do not cover every decomposition, P and N')
-        require(len(timing) == len(expected)*p['timing_reps'], 'Missing timing repetitions')
-        require(all(float(t['t_comm']) >= 0 and float(t['t_comp']) >= 0 for t in timing), 'Invalid timers')
-        require(len(summary) == len(expected), 'Timing summary incomplete')
-        if cluster:
-            require(all(int(t['nodes']) >= 2 for t in timing), 'A timing run used only one machine')
-        timing_note = f'{len(timing)} timing runs, {len(summary)} medians'
-
-    print(f'PASS {len(names)} published hashes and unchanged serial/strips/blocks sources ({meta["mode"]} study)')
-    print(f'PASS {len(rows)} comparisons bit-for-bit identical; P = '
-          f'{sorted({int(r["P"]) for r in rows})}; grids = {sorted({r["Py"]+"x"+r["Px"] for r in rows})}; '
-          f'N = {sorted({int(r["N"]) for r in rows})}')
-    if cluster:
-        print('PASS every P >= 2 run used at least two machines')
-    print(f'PASS raw runs consistent with compare.csv; 2x2 and 3x2 halo transcripts present; {timing_note}')
-    if slots_note:
-        print(f'PASS P up to {largest} on checked real slots (slots/vCPUs: {slots_note})')
-    if has_fields:
-        exact = ('exactly' if not approximate else
-                 f'({approximate} Case V fields within tolerance: the sin() of this C library differs in the '
-                 'last bit from the one on the VMs; run on Ubuntu for an exact check)')
-        print(f'PASS {len(rows)} blocks fields re-compared byte for byte offline against {references} serial '
-              'fields; hashes, sizes, min/max and V error norms match their runs')
-        print(f'PASS all {references} serial fields equal an independent Python recomputation of the scheme '
-              f'{exact}; {figures} figure field pairs byte-identical')
-    else:
-        print('NOTE record-only study: fields were not retained, so byte equality comes from '
-              'compare.csv and was not re-checked offline')
+    result = verify_study(args.data or default_study(),args.allow_local,args.require_fields,args.require_p8)
+    print('PASS hashes, source provenance, comparisons, raw summaries, V norms, halo values and recomputed timing aggregates:',result)
+    if not result['fields']:
+        print('NOTE record-only archive: original binary fields unavailable; byte equality cannot be repeated offline')
+    if not result['p8']:
+        print('NOTE required P=4,8 timing matrix remains incomplete')
+    if result['approximate']:
+        print('NOTE Case V independent recomputation used the documented C-library tolerance:',result['approximate'])
+    if result['warnings']:
+        print('NOTE retained Open MPI setpgid warnings:',result['warnings'])
 
 
 if __name__ == '__main__':

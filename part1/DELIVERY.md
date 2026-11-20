@@ -45,5 +45,6 @@ Add actual team identification/contributions where the final submission requires
 them. The final report (at most ten pages plus appendices) must later integrate
 Parts 2-4. Use ANALYSIS.md as its numerical-verification material.
 
-Next implementation stage: Part 2 strip decomposition, retaining this serial
-reference and its arithmetic order for the required output comparisons.
+Parts 2 and 3 now implement strips and blocks with this unchanged serial reference.
+Their retained-field evidence and Part 3 P=8 measurements are tracked separately;
+the next implementation stage is Part 4.

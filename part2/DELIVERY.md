@@ -1,6 +1,7 @@
 # Part 2 delivery checklist
 
-Part 2 technical work and evidence review are complete, and **checkpoint C2 is reached**.
+Part 2 implementation and archived C2 records pass the technical checks.
+**Evidence closure remains open until a new retained-field cluster study is archived.**
 The primary evidence is the reviewed [cluster study of 19 November 2026](results/2026-11-19-cluster/),
 launched from heat-3 across all three VMs. This checklist is the Part 2 handoff. It does
 not claim that Part 3 (blocks), Part 4 (performance) or the final report are complete.
@@ -75,5 +76,5 @@ gap remains open.
 The complete AI-interaction record for this work still needs the full session exports
 (see `llm_log/`).
 
-Next implementation stage: Part 3 (2D blocks). It will reuse the strips gather/compare
-machinery, and its output must match the same serial reference.
+Part 3 blocks are implemented and use the same serial reference. Close the
+[retained-field gap](RECOVERY.md), then continue with Part 4 performance measurements.

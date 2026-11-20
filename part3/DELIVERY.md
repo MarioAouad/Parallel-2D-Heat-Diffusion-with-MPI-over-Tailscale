@@ -1,9 +1,11 @@
 # Part 3 delivery checklist
 
-This maps assignment section 7 to the code and evidence. **Complete:** every row's
-evidence points at the reviewed [cluster study](results/2026-11-19-cluster/) of 19 November 2026
-(90/90 byte-identical across 2–3 VMs). Checkpoint C3 also includes the Part 4
-performance runs, which are not part of this checklist.
+This maps assignment section 7 to the code and evidence. The solver implementation
+and recorded correctness checks are available in the [cluster study](results/2026-11-19-cluster/)
+of 19 November 2026 (90/90 recorded byte matches across 2–3 VMs). **Open:** the required
+P=8 measured check and retained original binary evidence. P=6 does not automatically
+replace P=8. See [RECOVERY.md](RECOVERY.md). Checkpoint C3 also includes the Part 4
+performance runs, which are outside this checklist.
 
 **Two evidence gaps remain open until a new cluster run is archived:**
 
@@ -24,7 +26,7 @@ performance runs, which are not part of this checklist.
 | Rows sent contiguously; **columns with an `MPI_Type_vector` derived datatype**, not by copying into a buffer by hand | `exchange` lambda, `column` type | Code; ghost-column test (P = 4, 6) OK; every ghost column in `debug_halo.txt` equals the neighbour's owned column |
 | Output identical to serial, as in Part 2 | Unchanged stencil, data and time-step code; subarray gather | **90/90 byte-identical** for P = 1, 2, 3, 4, 6 (grids up to 3×2), Cases 1, 2, V, six N; P ≥ 2 on 2–3 VMs ([ANALYSIS](ANALYSIS.md#correctness-results)); [cases.png](results/2026-11-19-cluster/cases.png) |
 | Report: why corner ghosts are not needed, and which stencil would need them | — | [ANALYSIS, question 1](ANALYSIS.md#question-1-why-are-corner-ghosts-not-needed); corners print as `-` in `debug_halo.txt` and results still match serial |
-| Report: predict strips vs blocks for P = 4, 8 and N = 512, 2048, 8192 from Task 8.2 with the measured t<sub>s</sub>, t<sub>w</sub>, then check | Model in ANALYSIS; timing stage of `run_experiments.py` | [Prediction table](ANALYSIS.md#question-2-strips-or-blocks-prediction-from-task-82-with-the-measured-ts-tw) and [measured check](ANALYSIS.md#then-check-measured-strips-vs-blocks) for P = 4, 6 ([timing_summary.csv](results/2026-11-19-cluster/timing_summary.csv), [timing.png](results/2026-11-19-cluster/timing.png)): blocks win at N = 8192, strips at N ≤ 2048, explained. P = 8 is model-only (6 slots) |
+| Report: predict strips vs blocks for P = 4, 8 and N = 512, 2048, 8192 from Task 8.2 with the measured t<sub>s</sub>, t<sub>w</sub>, then check | Model in ANALYSIS; timing stage of `run_experiments.py` | [Prediction table](ANALYSIS.md#question-2-strips-or-blocks-prediction-from-task-82-with-the-measured-ts-tw) and [measured check](ANALYSIS.md#then-check-measured-strips-vs-blocks) for P = 4, 6 ([timing_summary.csv](results/2026-11-19-cluster/timing_summary.csv), [timing.png](results/2026-11-19-cluster/timing.png)): blocks win all six paired runs at N = 8192; strips win 10/12 paired runs at N ≤ 2048. Extra exchange phases are a proposed contributor, not an isolated causal measurement. **Open:** P = 8 is model-only (6 slots); add its measurements or obtain instructor acceptance of the resource-limited substitution |
 | Optional: overlap communication with computation (`MPI_Isend`/`MPI_Irecv`) | Not attempted | — |
 
 ## Single-machine pre-check (not evidence)
@@ -55,7 +57,7 @@ Then, on one VM:
 ```bash
 make check-blocks                                   # 1. six correctness groups (this VM)
 python3 part3/run_experiments.py --cluster          # 2. comparisons + debug + figures + timing across the VMs
-python3 part3/verify_results.py --data part3/results/runs/<stamp>   # 3. offline check of that folder
+python3 part3/verify_results.py --data part3/results/runs/<stamp> --require-fields   # 3. repeat the byte comparisons
 ```
 
 Before step 2, make every VM pair `direct` in `tailscale ping`, and keep all three VMs free
@@ -73,3 +75,15 @@ of other work during the timing stage (assignment section 8.1).
 
 The full performance study (single-node baseline, strong and weak scaling for both
 placements, communication share against the model) is Part 4.
+
+## Evidence checks after the review
+
+The new runner retains all comparison/figure fields, their hashes and launcher-binary
+hashes. New offline verification repeats byte comparisons, validates actual boundaries
+and V norms, cross-checks CSV values against raw commands, recomputes every timing
+summary and rejects duplicate/missing repetitions. `--require-p8` fails until the full
+P=4,8 by N=512,2048,8192 timing matrix is present on the cluster.
+
+The original archive remains unchanged: its byte equality is historical recorded
+evidence, not a comparison repeated from retained files. New regression tests use a
+real serial executable and mocked MPI in temporary fixtures; they are not new VM runs.

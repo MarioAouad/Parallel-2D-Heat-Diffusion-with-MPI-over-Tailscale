@@ -16,7 +16,8 @@ Slots. In cluster mode the hostfile's slots (part0/config/cluster.sh, HEATn_SLOT
 checked against each VM's real vCPU count (`nproc` over SSH) before anything runs: a
 slot without a vCPU is refused, as the assignment forbids more processes than
 allocated vCPUs. P = 8 (a 4x2 grid) is added to every stage only when the checked slots
-total at least 8. The slots, vCPU counts and this decision go into metadata.json.
+total at least 8 (local mode may oversubscribe for correctness only). The slots and
+vCPU counts go into metadata.json; no local timing is cluster evidence.
 
 Fields. Every serial and blocks field is kept under fields/ and listed with its SHA-256
 in compare.csv and manifest.json, so verify_results.py can repeat the comparison offline.
@@ -25,6 +26,7 @@ import argparse
 import csv
 from datetime import datetime, timezone
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
 import platform
@@ -40,7 +42,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 HOSTFILE = ROOT/'part0'/'config'/'hosts'
-CLUSTER_ARGS = ['--hostfile', str(HOSTFILE), '--map-by', 'node',
+CLUSTER_ARGS = ['--hostfile', str(HOSTFILE), '--map-by', 'node', '--nooversubscribe',
                 '--mca', 'plm_rsh_args', '-o BatchMode=yes -o ConnectTimeout=15',
                 '--mca', 'oob_tcp_if_include', 'tailscale0',
                 '--mca', 'btl_tcp_if_include', 'tailscale0',
@@ -49,31 +51,17 @@ SAME = ['steps', 'r', 'dt', 'T', 'minimum', 'maximum', 'err_inf', 'err_l2']
 PUBLISHED = ['compare.csv', 'debug_halo.txt', 'decomposition.png', 'decomposition.pdf', 'cases.png',
              'timing.csv', 'timing_summary.csv', 'timing.png', 'timing.pdf', 'raw_runs.json', 'metadata.json']
 
+_slot_spec = importlib.util.spec_from_file_location('heat_cluster_slots', ROOT/'part0/config/check_slots.py')
+_slot_module = importlib.util.module_from_spec(_slot_spec)
+_slot_spec.loader.exec_module(_slot_module)
+
 
 def ints(text):
     return [int(v) for v in text.split(',') if v]
 
 
 def cluster_slots():
-    """Slots per VM from the rendered hostfile, checked against the VM's real vCPUs.
-
-    Returns a list of dict(host=heatN, slots, vcpus). Hosts are recorded by alias only,
-    never by address. Raises if any VM has more slots than vCPUs.
-    """
-    hosts = []
-    for k, line in enumerate(l for l in HOSTFILE.read_text().splitlines() if l.strip() and not l.startswith('#')):
-        address, _, rest = line.partition(' ')
-        slots = int(rest.split('slots=')[1].split()[0]) if 'slots=' in rest else 1
-        p = subprocess.run(['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=15', address, 'nproc'],
-                           capture_output=True, text=True, timeout=60)
-        if p.returncode or not p.stdout.strip().isdigit():
-            raise SystemExit(f'Cannot read the vCPU count of heat{k+1} over SSH: {p.stderr.strip()}')
-        vcpus = int(p.stdout.strip())
-        if slots > vcpus:
-            raise SystemExit(f'heat{k+1} has slots={slots} but only {vcpus} vCPUs (nproc). Allocate the vCPUs '
-                             f'in VirtualBox first, or lower HEAT{k+1}_SLOTS in cluster.local.sh.')
-        hosts.append(dict(host=f'heat{k+1}', slots=slots, vcpus=vcpus))
-    return hosts
+    return _slot_module.check_slots(HOSTFILE)
 
 
 def dims_create(P):
@@ -251,7 +239,7 @@ def main():
 
         # Stage 2a: halo-debugging transcripts (2x2 and 3x2 grids, N=8, one step, Case 1).
         with (out/'debug_halo.txt').open('w', encoding='utf-8') as f:
-            for P in [p for p in (4, 6, 8) if p <= max(args.np)]:
+            for P in [4, 6] + ([8] if max(args.np + (args.timing_np if timing else [])) >= 8 else []):
                 text = run(mpirun(blocks_exe, 'blocks', P, '--case', '1', '--N', '8', '--r', str(args.r),
                                   '--steps', '1', '--debug-print'), summary=False)
                 f.write(f'$ mpirun -np {P} heat_blocks --decomp blocks --case 1 --N 8 --r {args.r} '
@@ -291,7 +279,8 @@ def main():
             for rep in range(1, args.timing_reps+1):
                 for N in args.timing_N:
                     for P in args.timing_np:
-                        for decomp, exe in (('strips', strips_exe), ('blocks', blocks_exe)):
+                        for decomp, exe in ((('strips', strips_exe), ('blocks', blocks_exe)) if rep%2 else
+                                            (('blocks', blocks_exe), ('strips', strips_exe))):
                             s = run(mpirun(exe, decomp, P, '--case', '1', '--N', str(N), '--r', str(args.r),
                                            '--steps', str(args.timing_steps)))
                             steps = int(s['steps'])
@@ -359,7 +348,7 @@ def main():
             plt.close(fig)
         version = subprocess.run(['mpirun', '--version'], capture_output=True, text=True).stdout
         sha = lambda p: hashlib.sha256((ROOT/p).read_bytes()).hexdigest()
-        meta = dict(utc=stamp.isoformat(), mode='cluster' if args.cluster else 'local',
+        meta = dict(evidence_schema=2, utc=stamp.isoformat(), mode='cluster' if args.cluster else 'local',
                     mpirun_args=extra, platform=platform.system(), architecture=platform.machine(),
                     mpirun_version=version.strip().splitlines()[0] if version else None,
                     serial_source_sha256=sha('part1/heat_serial.cpp'),
@@ -369,7 +358,9 @@ def main():
                                     r=args.r, figure_N=args.figure_N, figure_steps=args.figure_steps,
                                     timing=timing, timing_np=args.timing_np, timing_N=args.timing_N,
                                     timing_steps=args.timing_steps, timing_reps=args.timing_reps),
-                    cluster_slots=hosts,
+                    cluster_slots=hosts, timing_order="alternating by repetition (odd: strips first)",
+                    launcher_executables={role: dict(name=Path(path).name, sha256=hashlib.sha256(Path(path).read_bytes()).hexdigest())
+                                          for role,path in {'serial':serial_exe,'strips':strips_exe,'blocks':blocks_exe}.items() if Path(path).is_file()},
                     scope='Correctness comparison plus a small strips-vs-blocks timing check; '
                           'full scaling study belongs to Part 4')
         (out/'metadata.json').write_text(json.dumps(meta, indent=2)+'\n', encoding='utf-8')

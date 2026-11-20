@@ -51,5 +51,6 @@ the ignore rules cover their documented locations.
 
 Wait for a successful push before pulling on the VMs. Current source and delivery
 files come from Git; old local transfer bundles are historical artifacts.
-The next implementation stage is Part 2 strips, using the
-[serial reference](../part1/README.md) for comparisons.
+Parts 2 and 3 are implemented. Use the [Parts 2/3 rerun guide](parts2-3-rerun.md)
+for remote updates, fresh retained-field evidence, P=8 and the return bundle.
+Part 4 performance work follows.

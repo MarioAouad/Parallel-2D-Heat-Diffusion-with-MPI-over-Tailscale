@@ -4,11 +4,15 @@ A C++17 heat-diffusion project using three Ubuntu VMs on Windows laptops in
 different homes. Tailscale connects the VMs, SSH launches remote processes, and
 MPI carries messages between them.
 
-**Status, 19 November 2026:** Parts 0 and 1 technical work and evidence review
-are complete. Part 2 strip decomposition is complete: checkpoint C2 was reached with
-84/84 byte-identical comparisons across the VMs. Part 3 block decomposition is
-complete: 90/90 byte-identical comparisons on 2×2 and 3×2 grids across the VMs, plus a
-measured strips-vs-blocks check. The Part 4 performance study follows. See the [assignment status](docs/deliverables.md) for the full hand-in.
+**Status, 20 November 2026:** Parts 0 and 1 technical checks pass. Part 2 strips
+and Part 3 blocks are implemented, with archived records of 84/84 and 90/90
+byte-identical comparisons on two/three VMs. The local verification tools, tests
+and documentation are reconciled with the pulled field-retention and real-CPU
+checks. Both archives lack their original binary fields; Part 3 also lacks the
+required P=8 timing measurements. See [Part 2 recovery](part2/RECOVERY.md),
+[Part 3 recovery](part3/RECOVERY.md) and the [deliverable map](docs/deliverables.md).
+Part 4 implementation can start; complete those evidence tasks before treating
+Parts 0–3 as fully closed.
 
 ## Start here
 
@@ -46,7 +50,7 @@ NumPy and Matplotlib. SSH, Tailscale and local addresses are covered in
 [private configuration](part0/config/README.md).
 For an existing checkout, use the [update instructions](docs/local-update.md).
 
-`make` builds `build/mpi_hello`, `build/mpi_pingpong`, `build/heat` and `build/heat_mpi`.
+`make` builds `build/mpi_hello`, `build/mpi_pingpong`, `build/heat`, `build/heat_mpi` and `build/heat_blocks`.
 `make strips` and `make blocks` build only the Part 2 and Part 3 MPI solvers.
 `make serial` builds only the serial solver with an ordinary C++ compiler.
 All use C++17, optimization, warnings and `-ffp-contract=off`.
@@ -117,22 +121,38 @@ records are incidental; controlled scaling measurements belong to Part 4.
 
 The [Part 2 cluster study](part2/results/2026-11-19-cluster/) shows the strips output
 byte-identical to serial in 84/84 comparisons (P = 1–4, seven N, uneven strips, two to
-three VMs). Its incidental timers already show halo latency taking at least 99.98 % of
-cross-VM run time. The [results index](part2/results/README.md) explains how studies are
+three VMs). Its incidental timers attribute at least 99.98 % of
+cross-VM loop time to the halo-exchange region, including waits. This is not an
+isolated network-latency measurement. The [results index](part2/results/README.md) explains how studies are
 reviewed and archived.
 
 The [Part 3 cluster study](part3/results/2026-11-19-cluster/) shows the blocks output
 byte-identical to serial in 90/90 comparisons (P = 1, 2, 3, 4, 6; grids up to 3×2; two to
-three VMs). Its timing check answers the strips-vs-blocks question. Blocks win at N = 8192
-by 1.5–2.3×. Strips win at N ≤ 2048, because blocks need four sequential exchange
-phases per step instead of two. The [analysis](part3/ANALYSIS.md#then-check-measured-strips-vs-blocks)
-compares this with the Task 8.2 prediction.
+three VMs). Its available P=4,6 timing check partially answers the strips-vs-blocks
+question. Blocks win all six paired runs at N = 8192, by 1.5–2.3× in the medians;
+strips win 10/12 paired runs at N ≤ 2048. Extra exchange phases are a plausible
+contributor; these measurements do not isolate the cause. P=8 remains open.
+The [analysis](part3/ANALYSIS.md#then-check-measured-strips-vs-blocks) compares
+this with the Task 8.2 prediction.
+
+## Data exchanged during a simulation
+
+Each MPI process initializes and stores its own strip or block plus a thin ghost
+layer. Every time step updates all its owned interior grid points. It exchanges
+only neighboring edge values: two rows for strips, or up to two rows and two
+columns for blocks. The five-point stencil does not require diagonal corners.
+A process boundary can be inside one VM or cross to another VM.
+
+The full matrix is assembled on rank zero when `--out` is requested or Case V
+needs the deterministic serial-order error calculation. The Case 1 performance
+runs omit output, so they do not collect a full matrix each step. Timers/extrema
+use small reductions; debug printing gathers text separately.
 
 ## Submission and private records
 
 Reviewed code, CSVs, figures, PDFs and provenance belong in Git. Build products,
-new unreviewed runs, binary snapshots, private archives and local configuration
-are ignored. Public cluster records use generic aliases; exact originals remain
+new unreviewed runs, private archives and local configuration are ignored.
+Reviewed Part 2/3 cluster archives retain `fields/*.bin` using the explicit ignore-rule exception. Public cluster records use generic aliases; exact originals remain
 private. Keep every measured dataset and its manifest intact.
 
 The [deliverable map](docs/deliverables.md) tracks the later MPI solvers, final

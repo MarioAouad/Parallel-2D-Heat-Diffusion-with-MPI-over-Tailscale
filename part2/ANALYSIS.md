@@ -2,7 +2,7 @@
 
 ## Outcome and provenance
 
-**Status: complete; checkpoint C2 reached.** The [primary cluster study](results/2026-11-19-cluster/)
+**Status: implementation and C2 run records pass; retained-field evidence remains open.** The [primary cluster study](results/2026-11-19-cluster/)
 was launched from heat-3 at 2026-11-19 18:49:15 UTC. It ran the executables built from commit 1c2b5e6
 on all three VMs, and the source hashes in its metadata match the committed files. In it:
 
@@ -11,7 +11,11 @@ on all three VMs, and the source hashes in its metadata match the committed file
   values of N and uneven strips;
 - every multi-process run spanned two or three VMs.
 
-The archive was re-verified after transfer and reviewed (`review.json`).
+The archive was re-verified after transfer and reviewed (`review.json`). It records
+the original byte comparisons, but its binary fields were omitted. Current offline
+checks verify hashes, full coverage, raw/CSV summary consistency, V error norms
+and machine counts; they cannot repeat the original `cmp`. New runs retain all
+fields and support `--require-fields`; see [recovery](RECOVERY.md).
 
 Before any MPI run, the decomposition logic had been checked by an exact Python emulation
 of the row split, ghost layout, two-shift exchange and gather. It produced 96/96 fields
@@ -73,13 +77,16 @@ same time, so all neighbour pairs communicate in parallel and the exchange costs
 about two message times whatever P is. Sending rows directly from the array works
 because a row is contiguous: one message of N+1 doubles, with no packing.
 
-A naive "blocking `MPI_Send` up, then `MPI_Recv`" works only while messages fit the
-eager protocol. Above the eager limit `MPI_Send` waits for the matching receive.
-Every rank waits in its send for a neighbour that is also waiting in its send, so
-the program deadlocks. This explains "works for small N, hangs for large N". The
-[README](README.md#why-a-blocking-send-then-recv-exchange-can-deadlock-report-question)
-gives the Open MPI limits to check. `MPI_Sendrecv` progresses the send and the receive
-together, so it cannot deadlock this way.
+Standard-mode blocking sends may wait for a matching receive, so an exchange
+must not rely on eager buffering. A nonperiodic `Send(up); Recv(down)` chain can
+progress from the top `MPI_PROC_NULL` endpoint; it is not itself a circular wait.
+In contrast, sending both halo rows before posting either receive can deadlock:
+for P=2, rank 0 waits sending up and rank 1 waits sending down. A periodic
+send-up/receive-down ring can also deadlock. Small eager-buffered messages may
+hide these unsafe dependencies. Our two `MPI_Sendrecv` shifts let both halves
+progress together. The [README](README.md#why-a-blocking-send-then-recv-exchange-can-deadlock-report-question)
+gives the explicit sequence and primary MPI references; it makes no assumed
+message-size threshold claim.
 
 ## Expected cost: a prediction from Part 0 and Part 1 data
 
@@ -187,5 +194,6 @@ The figure runs make the cost concrete. Case 1 with P=4 and N=64 took **68.0 s**
 500 steps, of which only 0.0035 s was computation; Case 2 took 77.1 s. The serial solver
 runs the same 500 steps in a few milliseconds. This confirms the model's main prediction:
 over this network, strips are far slower than one process at these grid sizes, and the halo
-latency alone dominates. Part 4 will measure this properly with repeated runs, larger N and
+time in the exchange region (including waits) dominates. This does not isolate
+network latency. Part 4 will measure this properly with repeated runs, larger N and
 both placements, and test where (if anywhere) the crossover lies.

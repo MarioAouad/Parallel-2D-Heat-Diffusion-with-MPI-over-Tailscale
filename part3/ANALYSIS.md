@@ -2,7 +2,7 @@
 
 ## Outcome and provenance
 
-**Status: complete.** The [reviewed cluster study](results/2026-11-19-cluster/) of
+**Status: implemented; original fields and the required P=8 measurement remain open.** The [reviewed cluster study](results/2026-11-19-cluster/) of
 19 November 2026 gives 90/90 block fields byte-identical to serial on two or three VMs
 (P = 1, 2, 3, 4, 6; grids up to 3×2). It also gives a three-repetition strips-vs-blocks
 timing check. The results are in the last two sections.
@@ -165,10 +165,10 @@ message, not N.
 all six at P = 4, where the model said blocks win for every N. So the measured
 crossover sits between N = 2048 and N = 8192. The spread is wide: within one layout,
 repetitions differ by up to 4.7×. Three repetitions over home Wi-Fi cannot fix the
-crossover point. However, the direction at small N is consistent across the pairs, so
-it is not just noise.
+crossover point. The paired outcomes favor strips at small N, but three repetitions do not
+isolate network drift or ordering bias.
 
-**Why the model is wrong at small N.** The Task 8.2 model counts *messages per rank*.
+**A possible explanation for the small-N discrepancy.** The Task 8.2 model counts *messages per rank*.
 That is 2 for a middle strip and 2 for a 2×2 block, hence "same latency, half the data".
 The code instead exchanges in blocking `MPI_Sendrecv` *phases*, which run in sequence:
 
@@ -179,10 +179,10 @@ In a 2×2 grid, each rank's row neighbour is reached in two phases: one send-onl
 one receive-only after the neighbour's own phase finishes. The column phases only start
 after the row phases finish. So the critical path holds about four latencies per step
 for blocks, against two for strips. The extra 2t<sub>s</sub> is 35–155 ms on these links.
-At N = 512 the payload term is tiny (2–4 KiB per message), so the extra latencies
-decide the result. At N = 8192 the halved payload outweighs them.
+At N = 512 the payload term is tiny (2–4 KiB per message), so these extra phases may contribute to the result. At N = 8192 the smaller
+payload is consistent with the observed blocks advantage; this is not an isolated causal test.
 
-**Why both layouts are slower than predicted.** At N = 8192, strips at P = 4 measured
+**Possible contributors to both layouts being slower than predicted.** At N = 8192, strips at P = 4 measured
 5.7 s per step against the model's worst-link 1.5 s. Part 0 measured one message at a
 time on an idle link. Here, every rank sends at once, and two ranks share each VM's home
 connection. The *total* bytes per step therefore matter as well. Blocks move fewer:
@@ -200,10 +200,10 @@ Two experiments would test the phase explanation:
 - strips are better for small grids (N ≤ 2048 at P = 4 and 6);
 - blocks are better for large grids (N = 8192), by 1.5–2.3×.
 
-The busiest-rank model predicts the large-N winner. It misses the small-N winner because
-it ignores how the exchange phases are ordered. For P = 8 (4×2, model only), the same
-reasoning gives the same pattern. 4×2 blocks still have four sequential phases and three
-or four neighbours, so strips should win at small N and blocks at large N. Measuring the
+The busiest-rank model predicts the large-N winner. It misses the small-N winner; phase ordering is one plausible contributor,
+which the current experiment does not isolate. For P = 8 (4×2, model only), the same
+reasoning gives the same pattern. 4×2 blocks still have four sequential phases and two
+or three neighbours, so strips should win at small N and blocks at large N. Measuring the
 crossover would need eight real vCPUs.
 
 ## Correctness results
@@ -217,7 +217,9 @@ From the [cluster study](results/2026-11-19-cluster/) (launched from heat-3, Ope
 - **Uneven blocks:** 48 rows have N−1 not divisible by P<sub>y</sub> or P<sub>x</sub>,
   e.g. N = 8 on 3×2 gives rows 3/2/2 and columns 4/3.
 - **Machines:** every P = 2 run used 2 VMs and every P = 3, 4 or 6 run used all 3.
-  That makes 72 multi-machine runs, so every row and column ghost crossed the network.
+  That makes 72 multi-machine runs. Some neighboring ranks can share one VM;
+  the machine count proves distributed execution, not that every halo message
+  crossed between VMs.
 - **Halo transcripts** (`debug_halo.txt`, Case 1, N = 8, one step, 2×2 and 3×2):
   - every ghost row and ghost column equals the neighbour's owned values;
   - plate-edge ghosts hold the fixed boundary value 1;
@@ -227,4 +229,6 @@ From the [cluster study](results/2026-11-19-cluster/) (launched from heat-3, Ope
 - **Provenance:** the source hashes in `metadata.json` equal the committed
   `heat_serial.cpp`, `heat_mpi.cpp` and `heat_blocks.cpp`.
 
-Checkpoint C3's correctness part is therefore met. The Part 4 performance runs remain.
+These records support distributed correctness. Original binary fields and the
+required P=8 timing check remain open; see [recovery](RECOVERY.md). Full checkpoint
+C3 also requires Part 4 performance work.

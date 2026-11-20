@@ -30,6 +30,7 @@ import csv
 import hashlib
 import json
 import math
+import re
 from pathlib import Path
 import sys
 
@@ -114,12 +115,15 @@ def check_fields(folder, rows, runs, names, decomp='strips'):
     checked, approximate = set(), set()
     for r in rows:
         N, ref_name, got_name = int(r['N']), r['serial_field'], r[decomp+'_field']
+        require(all(Path(n).name == n and n not in ('.','..') for n in (ref_name,got_name)), 'Unsafe field filename')
+        require(ref_name == f"serial_case{r['case']}_N{N}.bin" and
+                got_name == f"{decomp}_case{r['case']}_N{N}_P{r['P']}.bin", 'Field name/configuration mismatch')
         for name, digest in ((ref_name, r['serial_sha256']), (got_name, r[decomp+'_sha256'])):
             require('fields/'+name in names, f'{name} is not in the manifest')
             require(hashlib.sha256((folder/'fields'/name).read_bytes()).hexdigest() == digest,
                     f'{name}: SHA-256 differs from compare.csv')
         require((folder/'fields'/got_name).read_bytes() == (folder/'fields'/ref_name).read_bytes(),
-                f'{got_name} is not byte-identical to {ref_name}')
+                f'Retained field bytes differ: {got_name} is not byte-identical to {ref_name}')
         if ref_name in checked:
             continue
         run = printed.get(ref_name)
@@ -135,90 +139,254 @@ def check_fields(folder, rows, runs, names, decomp='strips'):
                 continue
             require(float(run[key]) == value,
                     f'{ref_name}: {key} recomputed as {value!r}, but the run printed {run[key]}')
+        check_boundary(values, N, r['case'], ref_name)
         again = recompute(r['case'], N, float(run['r']), int(run['steps']))
         if again != values:
             require(V and max(abs(a-b) for a, b in zip(again, values)) <= 1e-12,
                     f'{ref_name} differs from an independent recomputation of the serial scheme')
             approximate.add(ref_name)
         checked.add(ref_name)
+    require({Path(n).name for n in names if n.startswith('fields/figure_serial_case')} ==
+            {'figure_serial_case1.bin','figure_serial_case2.bin'}, 'Missing retained figure fields')
     figures = sorted(n for n in names if n.startswith('fields/figure_serial_case'))
     for name in figures:
         other = name.replace('figure_serial_', 'figure_'+decomp+'_')
         require(other in names and (folder/other).read_bytes() == (folder/name).read_bytes(),
-                f'{other} is missing or differs from {name}')
+                f'Retained field bytes differ: {other} is missing or differs from {name}')
+        run = printed.get(Path(name).name)
+        require(run is not None, f'No serial run wrote {name}')
+        N, case = int(run['N']), run['case']
+        values = read_field(folder/name, N)
+        check_boundary(values, N, case, name)
+        require(values == recompute(case, N, float(run['r']), int(run['steps'])),
+                f'{name} differs from independent figure recomputation')
     return len(checked), len(figures), len(approximate)
+
+
+def rows_of(path):
+    with path.open(newline='', encoding='utf-8') as f:
+        return list(csv.DictReader(f))
+
+
+def check_boundary(values, N, case, name):
+    require(all(math.isfinite(v) and -1e-14 <= v <= 1+1e-14 for v in values),
+            f'{name}: non-finite or out-of-range stable field')
+    for j in range(N+1):
+        for i in range(N+1):
+            if i not in (0, N) and j not in (0, N):
+                continue
+            expected = 0.0 if case == 'V' else float(case == '1' or j in (0, N))
+            require(values[j*(N+1)+i] == expected, f'Retained boundary value is wrong: {name} ({j},{i})')
+
+
+def summary(run):
+    return dict(t.split('=', 1) for t in run['stdout'].splitlines()[-1].split())
+
+
+def option(command, flag):
+    return command[command.index(flag)+1] if flag in command else None
+
+
+def dims(P):
+    return min(((P//a, a) for a in range(1, P+1) if P%a == 0 and P//a >= a), key=lambda d:d[0]-d[1])
+
+
+def split(part, parts, N):
+    base, extra = divmod(N-1, parts)
+    return 1+part*base+min(part, extra), base+(part < extra)
+
+
+def load_study(folder, decomp, allow_local):
+    manifest = json.loads((folder/'manifest.json').read_text(encoding='utf-8'))
+    names = set()
+    for item in manifest['published_files']:
+        name = item['file']
+        require(name not in names and not Path(name).is_absolute() and '..' not in Path(name).parts
+                and (folder/name).resolve().is_relative_to(folder.resolve()), 'Unsafe/duplicate manifest entry: '+name)
+        names.add(name)
+        data = (folder/name).read_bytes()
+        require(len(data) == item['bytes'] and hashlib.sha256(data).hexdigest() == item['sha256'],
+                'Result hash/size mismatch: '+name)
+    require({'compare.csv','raw_runs.json','metadata.json','debug_halo.txt','cases.png',
+             'decomposition.png','decomposition.pdf'} <= names, 'Manifest is missing required evidence files')
+    meta = json.loads((folder/'metadata.json').read_text(encoding='utf-8'))
+    for key, path in [('serial','part1/heat_serial.cpp'), ('strips','part2/heat_mpi.cpp')]+(
+            [('blocks','part3/heat_blocks.cpp')] if decomp == 'blocks' else []):
+        require(meta[key+'_source_sha256'] == hashlib.sha256((HERE.parent/path).read_bytes()).hexdigest(),
+                path+' changed since this study; rerun it')
+    if meta.get('evidence_schema',1) >= 2:
+        binaries = meta.get('launcher_executables',{})
+        require({'serial',decomp} <= set(binaries) and all(re.fullmatch(r'[0-9a-f]{64}',v.get('sha256','')) for v in binaries.values()),
+                'New study missing launcher executable hashes')
+    require(meta['mode'] in ('cluster','local'), 'Invalid study mode')
+    require(meta['mode'] == 'cluster' or allow_local, 'Study is local; cluster evidence is required')
+    runs = json.loads((folder/'raw_runs.json').read_text(encoding='utf-8'))
+    require(runs and all(r['returncode'] == 0 for r in runs), 'A recorded solver run failed')
+    warnings = 0
+    for run in runs:
+        if run.get('stderr', '').strip():
+            require(all(re.fullmatch(r'\[heat[123]:\d+\] plm:rsh: Warning: setpgid\(\d+,\d+\) failed in parent with errno=Permission denied\(13\)', line)
+                        for line in run['stderr'].strip().splitlines()), 'Unexpected stderr in a recorded run')
+            warnings += 1
+        c, s = run['command'], summary(run)
+        N, steps, r, dt, T = int(s['N']), int(s['steps']), float(s['r']), float(s['dt']), float(s['T'])
+        require(N >= 2 and steps > 0 and all(math.isfinite(x) for x in (r,dt,T)) and 0 < r <= .25
+                and dt > 0 and T > 0, 'Invalid numerical parameters')
+        require(s['case'] == option(c,'--case') and N == int(option(c,'--N'))
+                and s['decomp'] == option(c,'--decomp'), 'Command/raw parameter mismatch')
+        if '--steps' in c:
+            require(steps == int(option(c,'--steps')) and r == float(option(c,'--r')), 'Command/raw steps or r mismatch')
+        else:
+            require(T == float(option(c,'--T')) and r <= float(option(c,'--r')), 'Command/raw final-time mismatch')
+        require(math.isclose(dt, r*(1.0/N)**2, rel_tol=2e-14)
+                and math.isclose(T, steps*dt, rel_tol=2e-14), 'Inconsistent r, dt, steps and T')
+        for key in ('t_total','t_comp','t_comm','minimum','maximum'):
+            require(math.isfinite(float(s[key])), 'Non-finite summary value')
+        require(all(float(s[k]) >= 0 for k in ('t_total','t_comp','t_comm'))
+                and 0 <= float(s['minimum']) <= float(s['maximum']) <= 1+1e-14, 'Invalid timers/extrema')
+        P = int(s['P'])
+        if meta.get('evidence_schema',1) >= 2 and meta['mode'] == 'cluster':
+            hosts = meta.get('cluster_slots')
+            require(hosts and len(hosts) == 3 and len({h['host'] for h in hosts}) == 3, 'Missing/duplicate checked VM slot record')
+            require(all(isinstance(h['slots'],int) and isinstance(h['vcpus'],int) and 0 < h['slots'] <= h['vcpus'] for h in hosts)
+                    and sum(h['slots'] for h in hosts) >= P, 'P exceeds checked real CPU slots')
+        require(P == (int(option(c,'-np')) if '-np' in c else 1), 'Command/raw P mismatch')
+        if s['decomp'] != 'serial':
+            require(1 <= int(s['nodes']) <= min(P,3), 'Invalid machine count')
+            if meta['mode'] == 'cluster' and P >= 2:
+                require(int(s['nodes']) >= 2, 'A P>=2 cluster run used only one machine')
+        if s['case'] == 'V':
+            # Exact discrete sine eigenmode: verifies the reported error without stored fields.
+            eigen = (1-8*r*math.sin(math.pi/(2*N))**2)**steps
+            error = abs(eigen-math.exp(-2*math.pi**2*T))
+            expected_inf = error*math.sin(math.pi*(N//2)/N)**2
+            for key, expected in [('err_inf',expected_inf),('err_l2',error/2)]:
+                require(math.isclose(float(s[key]), expected, rel_tol=1e-7, abs_tol=5e-13), 'V error norm disagrees with discrete sine solution')
+    figure_runs = {Path(option(run['command'],'--out')).name:summary(run) for run in runs
+                   if '--out' in run['command'] and 'figure_' in option(run['command'],'--out')}
+    for case in ('1','2'):
+        reference,parallel = (figure_runs.get(f'figure_{d}_case{case}.bin') for d in ('serial',decomp))
+        require(reference and parallel and all(reference.get(k) == parallel.get(k) for k in
+                ('case','N','steps','r','dt','T','minimum','maximum')), 'Figure serial/parallel summary mismatch')
+    return names, meta, runs, warnings
+
+
+def check_comparisons(folder, names, meta, runs, decomp, require_fields):
+    rows = rows_of(folder/'compare.csv')
+    p = meta['parameters']
+    cases = p['cases'].split(',') if isinstance(p['cases'],str) else p['cases']
+    expected = {(case,N,P) for case in cases for N in p['N'] for P in p['np']
+                if N-1 >= (P if decomp == 'strips' else dims(P)[0])}
+    keys = [(r['case'],int(r['N']),int(r['P'])) for r in rows]
+    require(set(keys) == expected and len(keys) == len(expected), 'Missing, duplicate or extra comparison configurations')
+    require({'1','2','V'} <= set(cases) and {1,2,3,4} <= set(p['np']) and len(set(p['N'])) >= 3,
+            'Cases 1,2,V, P=1..4 and several N are required')
+    raw = {(s['case'],int(s['N']),int(s['P'])): s for run in runs
+           if (s:=summary(run))['decomp'] == decomp and '--out' in run['command']
+           and 'figure_' not in option(run['command'],'--out')}
+    serial = {(s['case'],int(s['N'])):s for run in runs
+              if (s:=summary(run))['decomp'] == 'serial' and '--out' in run['command']
+              and 'figure_' not in option(run['command'],'--out')}
+    for row,key in zip(rows,keys):
+        case,N,P = key
+        s, ref = raw.get(key), serial.get((case,N))
+        require(s is not None and ref is not None, 'CSV row without matching raw run')
+        prefix = 'Comparison CSV/raw mismatch' if decomp == 'blocks' else 'CSV/raw mismatch'
+        for column in ('steps','nodes','t_total','t_comp','t_comm')+ (('Py','Px') if decomp == 'blocks' else ()):
+            require(float(row[column]) == float(s[column]), prefix+': '+column)
+        require(all(ref.get(k) == s.get(k) for k in ('steps','r','dt','T','minimum','maximum','err_inf','err_l2')),
+                'Serial/parallel raw summary mismatch')
+        require(row['result'] == 'PASS' and row['identical'] == 'True' and not row['summary_mismatch']
+                and int(row['bytes']) == 8*(N+1)**2, 'Invalid comparison result/field size')
+        py,px = (P,1) if decomp == 'strips' else dims(P)
+        if decomp == 'blocks':
+            require((int(row['Py']),int(row['Px'])) == (py,px), 'Wrong Cartesian grid')
+        uneven = (N-1)%py != 0 or (N-1)%px != 0
+        require(row['uneven_'+decomp] == str(uneven), 'Incorrect uneven decomposition flag')
+    if decomp == 'strips':
+        for P in (2,3,4):
+            require(any(k[2] == P and (k[1]-1)%P for k in keys), 'Missing uneven strips')
+    else:
+        require(any(int(r['Px']) >= 2 and r['uneven_blocks'] == 'True' for r in rows), 'Missing uneven 2D blocks')
+    fields = bool(rows) and all(k in rows[0] for k in ('serial_field','serial_sha256',decomp+'_field',decomp+'_sha256'))
+    require(meta.get('evidence_schema',1) < 2 or fields, 'New study missing retained field records')
+    require(not require_fields or fields, 'Original binary fields unavailable: record-only legacy archive; run a new retained-field study')
+    references, figures, approximate = check_fields(folder,rows,runs,names,decomp) if fields else (0,0,0)
+    return dict(comparisons=len(rows), fields=fields, pairs=len(rows)+figures if fields else 0,
+                references=references, approximate=approximate)
+
+
+def check_debug(folder, runs, decomp, required):
+    text = (folder/'debug_halo.txt').read_text(encoding='utf-8')
+    found = set()
+    for run in runs:
+        if '--debug-print' not in run['command']:
+            continue
+        s = summary(run)
+        N,P = int(s['N']),int(s['P'])
+        found.add(P)
+        require(run['stdout'].strip() in text, 'Debug transcript differs from raw output')
+        values = recompute(s['case'],N,float(s['r']),int(s['steps']))
+        py,px = (P,1) if decomp == 'strips' else dims(P)
+        rank = None
+        seen = set()
+        seen_rows = {}
+        for line in run['stdout'].splitlines():
+            if line.startswith('rank '):
+                rank = int(re.match(r'rank (\d+):',line)[1])
+                require(rank not in seen and 0 <= rank < P, 'Duplicate/invalid debug rank')
+                seen.add(rank)
+                cy,cx = divmod(rank,px)
+                fy,nr = split(cy,py,N)
+                fx,nc = (1,N-1) if decomp == 'strips' else split(cx,px,N)
+                if decomp == 'blocks':
+                    require(f'coords ({cy},{cx}) of {py}x{px} grid, rows {fy}..{fy+nr-1}, cols {fx}..{fx+nc-1}' in line,
+                            'Debug rank coordinates/ranges disagree')
+                else:
+                    require(f'owns global rows {fy}..{fy+nr-1} ({nr} rows)' in line, 'Debug strip range disagrees')
+                neighbors = dict(down='none' if cy == 0 else str(rank-px), up='none' if cy == py-1 else str(rank+px))
+                if decomp == 'blocks':
+                    neighbors.update(left='none' if cx == 0 else str(rank-1),right='none' if cx == px-1 else str(rank+1))
+                require(all(f'{k}={v}' in line for k,v in neighbors.items()), 'Debug neighbor disagrees')
+                seen_rows[rank] = set()
+            elif (m:=re.match(r'  (ghost|owned|boundary)\s+j=\s*(\d+):\s*(.*)',line)):
+                require(rank is not None, 'Debug row without rank')
+                j, tokens = int(m[2]),m[3].split()
+                require(j not in seen_rows[rank] and fy-1 <= j <= fy+nr, 'Missing/duplicate debug row')
+                seen_rows[rank].add(j)
+                kind = 'owned' if fy <= j < fy+nr else ('boundary' if j in (0,N) else 'ghost')
+                require(m[1] == kind and len(tokens) == nc+2, 'Debug row shape/kind disagrees')
+                for q,token in enumerate(tokens):
+                    corner = decomp == 'blocks' and j in (fy-1,fy+nr) and q in (0,nc+1)
+                    require((token == '-') == corner, 'Debug corner ghost disagrees')
+                    if not corner:
+                        require(abs(float(token)-values[j*(N+1)+fx-1+q]) <= 5.1e-7, 'Debug value disagrees with independent FTCS solution')
+        require(seen == set(range(P)) and all(len(v) == split(k//px,py,N)[1]+2 for k,v in seen_rows.items()), 'Incomplete debug ranks/rows')
+    require(set(required) <= found, 'Required halo debug transcripts are missing')
+
+
+def verify_study(folder, allow_local=False, require_fields=False):
+    folder = Path(folder).resolve()
+    names,meta,runs,warnings = load_study(folder,'strips',allow_local)
+    result = check_comparisons(folder,names,meta,runs,'strips',require_fields)
+    check_debug(folder,runs,'strips',(2,3))
+    return dict(result, published=len(names), warnings=warnings)
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--data', type=Path, help='study folder (default: newest under part2/results/)')
-    parser.add_argument('--allow-local', action='store_true', help='accept a one-VM study (not C2 evidence)')
+    parser.add_argument('--data',type=Path)
+    parser.add_argument('--allow-local',action='store_true')
+    parser.add_argument('--require-fields',action='store_true', help='reject record-only studies without original binaries')
     args = parser.parse_args()
-    folder = (args.data or default_study()).resolve()
-
-    manifest = json.loads((folder/'manifest.json').read_text(encoding='utf-8'))
-    for item in manifest['published_files']:
-        data = (folder/item['file']).read_bytes()
-        require(len(data) == item['bytes'] and hashlib.sha256(data).hexdigest() == item['sha256'],
-                'Result hash/size mismatch: '+item['file'])
-    names = {item['file'] for item in manifest['published_files']}
-    require({'compare.csv', 'raw_runs.json', 'metadata.json', 'debug_halo.txt'} <= names,
-            'Manifest is missing required evidence files')
-
-    meta = json.loads((folder/'metadata.json').read_text(encoding='utf-8'))
-    root = HERE.parent
-    require(meta['strips_source_sha256'] == hashlib.sha256((HERE/'heat_mpi.cpp').read_bytes()).hexdigest(),
-            'heat_mpi.cpp changed since this study; rerun it')
-    require(meta['serial_source_sha256'] ==
-            hashlib.sha256((root/'part1/heat_serial.cpp').read_bytes()).hexdigest(),
-            'Serial reference changed since this study')
-    cluster = meta['mode'] == 'cluster'
-    require(cluster or args.allow_local, 'Study is local (one VM); C2 needs --cluster evidence')
-
-    with (folder/'compare.csv').open(newline='', encoding='utf-8') as f:
-        rows = list(csv.DictReader(f))
-    require(rows and all(r['result'] == 'PASS' and r['identical'] == 'True' and not r['summary_mismatch']
-                         for r in rows), 'Not every comparison is bit-for-bit identical')
-    require({1, 2, 3, 4} <= {int(r['P']) for r in rows}, 'P = 1, 2, 3 and 4 must all be covered')
-    require(len({int(r['N']) for r in rows}) >= 3, 'Several N are required')
-    for P in (2, 3, 4):
-        require(any(int(r['P']) == P and r['uneven_strips'] == 'True' for r in rows),
-                f'No uneven-strip case (N-1 not divisible by P) for P={P}')
-    if cluster:
-        require(all(int(r['nodes']) >= 2 for r in rows if int(r['P']) >= 2),
-                'A P>=2 cluster run used only one machine')
-
-    runs = json.loads((folder/'raw_runs.json').read_text(encoding='utf-8'))
-    require(all(r['returncode'] == 0 for r in runs), 'A recorded solver run failed')
-    strips = [dict(t.split('=', 1) for t in r['stdout'].splitlines()[-1].split())
-              for r in runs if 'heat_mpi' in r['command'] and '--debug-print' not in r['command']]
-    by_key = {(s['case'], int(s['N']), int(s['P'])): s for s in strips}
-    for r in rows:
-        s = by_key.get((r['case'], int(r['N']), int(r['P'])))
-        require(s is not None and s['decomp'] == 'strips' and int(s['nodes']) == int(r['nodes']),
-                'CSV row without matching raw strips run: '+str(r))
-    text = (folder/'debug_halo.txt').read_text(encoding='utf-8')
-    require(text.count('rank ') >= 5, 'Halo debug transcripts for P=2 and P=3 are missing')
-    has_fields = 'strips_sha256' in rows[0]
-    references, figures, approximate = check_fields(folder, rows, runs, names) if has_fields else (0, 0, 0)
-
-    print(f'PASS {len(names)} published hashes and unchanged serial/strips sources ({meta["mode"]} study)')
-    print(f'PASS {len(rows)} comparisons bit-for-bit identical; P = '
-          f'{sorted({int(r["P"]) for r in rows})}; N = {sorted({int(r["N"]) for r in rows})}')
-    if cluster:
-        print('PASS every P >= 2 run used at least two machines')
-    print('PASS raw runs successful and consistent with compare.csv; halo debug transcripts present')
-    if has_fields:
-        print(f'PASS {len(rows)} strips fields re-compared byte for byte offline against {references} serial '
-              'fields; hashes, sizes, min/max and V error norms match their runs')
-        exact = ('exactly' if not approximate else
-                 f'({approximate} Case V fields within tolerance: the sin() of this C library differs in the '
-                 'last bit from the one on the VMs; run on Ubuntu for an exact check)')
-        print(f'PASS all {references} serial fields equal an independent Python recomputation of the scheme '
-              f'{exact}; {figures} figure field pairs byte-identical')
-    else:
-        print('NOTE record-only study: fields were not retained, so byte equality comes from '
-              'compare.csv and was not re-checked offline')
+    result = verify_study(args.data or default_study(),args.allow_local,args.require_fields)
+    print('PASS hashes, source provenance, complete comparisons, CSV/raw summaries, V norms and halo values:',result)
+    if not result['fields']:
+        print('NOTE record-only archive: original binary fields unavailable; byte equality cannot be repeated offline')
+    elif result['approximate']:
+        print('NOTE Case V independent recomputation used the documented C-library tolerance:',result['approximate'])
+    if result['warnings']:
+        print('NOTE retained Open MPI setpgid warnings:',result['warnings'])
 
 
 if __name__ == '__main__':

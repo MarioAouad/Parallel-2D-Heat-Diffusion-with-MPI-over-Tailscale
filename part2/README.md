@@ -1,6 +1,6 @@
 # Part 2: 1D strip decomposition
 
-**Status: complete; checkpoint C2 reached.** Start with the [delivery checklist](DELIVERY.md)
+**Status: implemented; C2 is supported by the archived run records. Original binary-field evidence remains open.** Start with the [delivery checklist](DELIVERY.md)
 and the [analysis](ANALYSIS.md). The [cluster study](results/2026-11-19-cluster/) shows
 84/84 strips fields byte-identical to the serial reference for P = 1–4 across two and
 three VMs, including uneven strips.
@@ -11,10 +11,11 @@ three VMs, including uneven strips.
 | [verify_strips.py](verify_strips.py) | Six correctness groups (`make check-strips`) |
 | [run_experiments.py](run_experiments.py) | C2 study: byte-for-byte comparisons, halo-debug transcripts, figures (`make verify-part2`, add `--cluster`) |
 | [verify_results.py](verify_results.py) | Offline check of an archived study (`make verify-part2-results`) |
+| [tests/test_evidence.py](tests/test_evidence.py) | Evidence-capture and tampering regression tests (`make test-part2-evidence`); MPI is mocked, so these are not cluster measurements |
 | [DELIVERY.md](DELIVERY.md) · [ANALYSIS.md](ANALYSIS.md) · [results/](results/README.md) | Checklist, interpretation, evidence index |
 
 The Part 1 reference [`heat_serial.cpp`](../part1/heat_serial.cpp) is unchanged and
-stays the `--decomp serial` executable (`build/heat`). Part 3 (blocks) is not started.
+stays the `--decomp serial` executable (`build/heat`). Part 3 (blocks) is now available in [part3/](../part3/README.md). The Part 2 solver source is retained unchanged to preserve the archived source hash.
 
 ## Build and run (Ubuntu, repository root, as `mpi`)
 
@@ -85,24 +86,38 @@ loop after an `MPI_Barrier`. Each is reduced with `MPI_MAX`, because the slowest
 
 ## Why a blocking Send-then-Recv exchange can deadlock (report question)
 
-Suppose every rank first calls a blocking `MPI_Send` to its upper neighbour and only then
-`MPI_Recv`. Whether `MPI_Send` returns before the matching receive is posted is up to the
-MPI implementation:
+A standard-mode `MPI_Send` is allowed to wait for a matching receive. Small
+messages often succeed using internal eager buffers; larger messages may use a
+rendezvous protocol. Correctness must not depend on buffer availability.
 
-- **Small messages** use the *eager* protocol. The data is copied into an internal buffer
-  and `MPI_Send` returns at once, so the program works.
-- **Large messages** use the *rendezvous* protocol. `MPI_Send` waits until the receiver has
-  posted its `MPI_Recv`. Each rank then blocks in its send, waiting for a neighbour that is
-  itself blocked in a send. That circular wait never resolves: **deadlock**.
+The exact order and matching neighbours matter. For this nonperiodic chain,
+`Send(up); Recv(down)` does **not** by itself form a circular wait: the top rank's
+send to `MPI_PROC_NULL` completes, allowing its receive from below to start a
+wave of progress down the chain. It can serialize the exchange, but it is not
+the deadlock example.
 
-A row is 8(N+1) bytes, so the switch depends on N. Open MPI 4.1's default eager limits are
-4 KiB for shared memory (`vader`) and 64 KiB for TCP. In this model the naive code
-would hang from about N≈512 on one VM, and from N≈8192 across VMs over TCP. Check the real values with
-`ompi_info --param btl vader --level 9` and `ompi_info --param btl tcp --level 9`.
+A genuinely unsafe two-sided halo exchange is:
 
-`MPI_Sendrecv` posts the send and the receive together and lets the library progress
-both. A rank can therefore receive while its own send is pending, and the exchange completes for
-any message size. With `MPI_PROC_NULL` neighbours this holds at the plate edges too.
+```text
+Send(top_row, up)
+Send(bottom_row, down)
+Recv(bottom_ghost, down)
+Recv(top_ghost, up)
+```
+
+For P=2 and unbuffered/rendezvous sends, rank 0 waits sending upward to rank 1,
+while rank 1 has completed its null upward send and waits sending downward to
+rank 0. Neither reaches its receive. Eager buffering can hide this bug for small
+rows. A periodic send-up/receive-down ring also has a circular dependency.
+
+Our two `MPI_Sendrecv` calls combine matching sends and receives, so the library
+can progress them together without relying on eager buffering. The send/receive
+buffers are disjoint, and `MPI_PROC_NULL` preserves the physical boundary rows.
+Do not predict a fixed grid-size threshold from assumed eager limits: transport,
+configuration and MPI version affect when buffering is used.
+
+Sources: [MPI null-process semantics](https://www.mpi-forum.org/docs/mpi-4.1/mpi41-report/node84.htm)
+and [Open MPI `MPI_Sendrecv`](https://docs.open-mpi.org/en/main/man-openmpi/man3/MPI_Sendrecv.3.html).
 
 ## Debugging a halo exchange (section 6, yellow box)
 
@@ -146,7 +161,20 @@ Each run writes `part2/results/runs/<UTC timestamp>/` containing:
 - `decomposition.png/.pdf` and `cases.png`;
 - `raw_runs.json` (commands and outputs);
 - `metadata.json` (mode, MPI version, source hashes);
-- `manifest.json`.
+- `manifest.json`;
+- every original `fields/*.bin`, with byte counts and SHA-256 hashes in the manifest;
+  `compare.csv` records the serial/strips filenames and hashes. Metadata schema 2
+  prevents a new study from silently falling back to record-only verification.
+
+For new runs, verify the retained fields explicitly:
+
+```bash
+python3 part2/verify_results.py --data part2/results/runs/<stamp> --require-fields
+```
+
+The 19 November legacy archive records byte equality but does not contain its binary
+fields. The verifier labels that limitation; it never presents the old records as a
+fresh byte comparison. See [evidence recovery](RECOVERY.md).
 
 Run folders are git-ignored until reviewed. Copy the reviewed cluster run to
 `part2/results/<date>-cluster/`, as was done for Part 1 (see the [results index](results/README.md)).

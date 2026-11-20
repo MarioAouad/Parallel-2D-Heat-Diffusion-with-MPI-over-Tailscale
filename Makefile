@@ -8,7 +8,7 @@ CPPFLAGS += -DOMPI_SKIP_MPICXX=1
 # ffp-contract=off prepares consistent arithmetic for the later heat solver.
 CXXFLAGS := -std=c++17 -O2 -ffp-contract=off -Wall -Wextra -Wpedantic
 
-.PHONY: all serial strips verify-results verify-setup analyze test-analysis check-serial verify-part1 verify-part1-results check-strips verify-part2 verify-part2-results blocks check-blocks verify-part3 verify-part3-results
+.PHONY: all serial strips verify-results verify-setup analyze test-analysis check-serial verify-part1 verify-part1-results check-strips verify-part2 verify-part2-results test-part2-evidence blocks check-blocks verify-part3 verify-part3-results test-part3-evidence
 all: build/mpi_hello build/mpi_pingpong build/heat build/heat_mpi build/heat_blocks
 
 serial: build/heat
@@ -34,6 +34,11 @@ verify-part2: build/heat build/heat_mpi
 verify-part2-results:
 	python3 part2/verify_results.py
 
+# Evidence-pipeline regression tests use a real serial build and a mocked MPI
+# launcher. They check capture/verification, not distributed solver correctness.
+test-part2-evidence:
+	python3 -m unittest discover -s part2/tests -v
+
 # Part 3: block-decomposed solver, same flags (bit-for-bit with serial), and its checks.
 blocks: build/heat_blocks
 
@@ -49,6 +54,11 @@ verify-part3: build/heat build/heat_mpi build/heat_blocks
 
 verify-part3-results:
 	python3 part3/verify_results.py
+
+# Temporary fixtures and a mocked MPI launcher test evidence capture/validation;
+# these are not distributed solver or performance measurements.
+test-part3-evidence:
+	python3 -m unittest discover -s part3/tests -v
 
 # Order-only prerequisite: create the directory without rebuilding merely
 # because another file changes the directory's modification time.

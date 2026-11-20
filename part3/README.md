@@ -1,11 +1,12 @@
 # Part 3: 2D block decomposition
 
-**Status: implemented; awaiting compilation and cluster evidence on the Ubuntu VMs.**
-Start with the [delivery checklist](DELIVERY.md) and the [analysis](ANALYSIS.md).
-The block logic (process grid, 2D split, four-direction exchange without corners,
-subarray gather) was checked by an exact Python emulation: 102/102 fields were
-bit-identical to the serial loop for P up to 9. That emulation is not a substitute for
-the MPI runs below.
+**Status: implemented and previously built/run on the Ubuntu cluster.** The
+19 November archive records 90/90 matches across two/three VMs and P=4,6 timing.
+The original fields and required P=8 timing evidence remain open; see
+[recovery](RECOVERY.md), the [delivery checklist](DELIVERY.md) and [analysis](ANALYSIS.md).
+The runner keeps new fields, checks real guest CPU capacity, adds P=8 when capacity
+allows, and refuses oversubscription in cluster mode. Local mocked pipeline tests
+exercise the evidence tools; they do not constitute fresh MPI execution evidence.
 
 | File | Purpose |
 | --- | --- |
@@ -103,7 +104,7 @@ neighbouring block's owned value at the same (i, j).
    python3 part3/verify_results.py --data part3/results/runs/<stamp>
    ```
 
-   This produces:
+   With six checked slots (the archived allocation), the default study includes:
 
    - 3 cases × 6 values of N × P = 1, 2, 3, 4, 6 byte-for-byte comparisons;
    - the 2×2 and 3×2 debug transcripts;
