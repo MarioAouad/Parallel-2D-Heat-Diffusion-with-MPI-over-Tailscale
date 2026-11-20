@@ -2,7 +2,9 @@
 
 For every case, grid size N and process count P this runs the Part 1 serial
 executable and the Part 2 strips executable with identical inputs, compares the
-field files byte by byte (the `cmp` test) and compares the summary values. It
+field files byte by byte (the `cmp` test) and compares the summary values. Every
+field file is kept under fields/ and listed with its SHA-256 in compare.csv and
+manifest.json, so the byte comparison can be repeated offline (verify_results.py). It
 also records the halo-debugging transcripts of assignment section 6 and draws the
 decomposition and Case 1/2 figures for the report.
 
@@ -155,14 +157,19 @@ def main():
                     got = run(mpirun(P, *common, '--out', str(path)))
                     if not path.is_file():
                         raise RuntimeError(f'{path.name} missing: rank 0 must run on the launching VM.')
-                    identical = path.read_bytes() == ref_bytes
+                    got_bytes = path.read_bytes()
+                    identical = got_bytes == ref_bytes
                     mismatched = [k for k in SAME if ref.get(k) != got.get(k)]
                     ok = identical and not mismatched
                     failures += not ok
                     uneven = (N-1) % P != 0
                     rows.append(dict(case=case, N=N, P=P, nodes=int(got['nodes']),
                                      uneven_strips=uneven, bytes=len(ref_bytes),
-                                     identical=identical, summary_mismatch=' '.join(mismatched),
+                                     identical=identical,
+                                     serial_field=ref_path.name,
+                                     serial_sha256=hashlib.sha256(ref_bytes).hexdigest(),
+                                     strips_field=path.name,
+                                     strips_sha256=hashlib.sha256(got_bytes).hexdigest(), summary_mismatch=' '.join(mismatched),
                                      steps=got['steps'], t_total=got['t_total'],
                                      t_comp=got['t_comp'], t_comm=got['t_comm'],
                                      result='PASS' if ok else 'FAIL'))
@@ -170,7 +177,6 @@ def main():
                           f"nodes={got['nodes']} uneven={'yes' if uneven else 'no '} "
                           f"identical={identical}" + (f" mismatch={mismatched}" if mismatched else ''),
                           flush=True)
-                    path.unlink()   # identical bytes are already recorded; keep only references
 
         # 2. Halo-debugging transcripts (assignment section 6: N=8, P=2 then uneven P=3).
         with (out/'debug_halo.txt').open('w', encoding='utf-8') as f:
@@ -222,9 +228,12 @@ def main():
                                     r=args.r, figure_N=args.figure_N, figure_steps=args.figure_steps),
                     scope='Correctness comparison; timings are incidental, not Part 4 measurements')
         (out/'metadata.json').write_text(json.dumps(meta, indent=2)+'\n', encoding='utf-8')
+        # Every field file is evidence too: hash it so the archive can be re-checked offline.
+        names = [n for n in PUBLISHED if (out/n).is_file()]
+        names += sorted(p.relative_to(out).as_posix() for p in fields.glob('*.bin'))
         manifest = [dict(file=name, bytes=(out/name).stat().st_size,
                          sha256=hashlib.sha256((out/name).read_bytes()).hexdigest())
-                    for name in PUBLISHED if (out/name).is_file()]
+                    for name in names]
         (out/'manifest.json').write_text(json.dumps(dict(published_files=manifest), indent=2)+'\n',
                                          encoding='utf-8')
 
