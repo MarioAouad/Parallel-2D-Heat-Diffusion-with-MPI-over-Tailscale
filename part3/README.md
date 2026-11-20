@@ -112,6 +112,18 @@ neighbouring block's owned value at the same (i, j).
 
    Expect roughly 40–60 minutes, since every cross-VM step costs 0.1–1 s.
 
-P = 8 needs eight slots. The team hostfile has six (3 VMs × 2 vCPUs), and the rules forbid
-running more processes than vCPUs. P = 8 is therefore predicted only, and P = 6 (3×2) is
-measured in its place. See the [analysis](ANALYSIS.md).
+P = 8 needs eight **real** slots: the rules forbid more processes than allocated vCPUs.
+With 3 VMs × 2 vCPUs the team has six, so the 19 November study measured P = 6 (3×2)
+instead. To measure P = 8 (4×2):
+
+1. Shut a VM down, raise its vCPUs in VirtualBox (Settings → System → Processor), boot it,
+   and check `nproc`. For example, heat-3 at 4 vCPUs gives 2 + 2 + 4 = 8.
+2. On the launching VM, set that VM's slots in `part0/config/cluster.local.sh`, for example
+   `HEAT3_SLOTS=4`.
+3. Run `python3 part3/run_experiments.py --cluster` as usual. It checks every VM's slots
+   against `nproc` over SSH, refuses a slot without a vCPU, and adds P = 8 to the
+   comparisons, the 4×2 halo transcript and the timing stage. The checked slots go into
+   `metadata.json`, and `verify_results.py` requires them for any P > 6.
+
+Since 20 November the runner also keeps every field file (`fields/`, about 3 MB) with its
+SHA-256, so the byte comparison can be repeated offline.

@@ -11,6 +11,15 @@ and spread over repetitions, interleaved so that network drift affects both alik
 Local mode (one VM) oversubscribes the CPU: fine for correctness, never for timing.
 Cluster mode uses the team hostfile with --map-by node (every P >= 2 run spans at
 least two VMs). Each invocation writes a new timestamped folder.
+
+Slots. In cluster mode the hostfile's slots (part0/config/cluster.sh, HEATn_SLOTS) are
+checked against each VM's real vCPU count (`nproc` over SSH) before anything runs: a
+slot without a vCPU is refused, as the assignment forbids more processes than
+allocated vCPUs. P = 8 (a 4x2 grid) is added to every stage only when the checked slots
+total at least 8. The slots, vCPU counts and this decision go into metadata.json.
+
+Fields. Every serial and blocks field is kept under fields/ and listed with its SHA-256
+in compare.csv and manifest.json, so verify_results.py can repeat the comparison offline.
 """
 import argparse
 import csv
@@ -43,6 +52,28 @@ PUBLISHED = ['compare.csv', 'debug_halo.txt', 'decomposition.png', 'decompositio
 
 def ints(text):
     return [int(v) for v in text.split(',') if v]
+
+
+def cluster_slots():
+    """Slots per VM from the rendered hostfile, checked against the VM's real vCPUs.
+
+    Returns a list of dict(host=heatN, slots, vcpus). Hosts are recorded by alias only,
+    never by address. Raises if any VM has more slots than vCPUs.
+    """
+    hosts = []
+    for k, line in enumerate(l for l in HOSTFILE.read_text().splitlines() if l.strip() and not l.startswith('#')):
+        address, _, rest = line.partition(' ')
+        slots = int(rest.split('slots=')[1].split()[0]) if 'slots=' in rest else 1
+        p = subprocess.run(['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=15', address, 'nproc'],
+                           capture_output=True, text=True, timeout=60)
+        if p.returncode or not p.stdout.strip().isdigit():
+            raise SystemExit(f'Cannot read the vCPU count of heat{k+1} over SSH: {p.stderr.strip()}')
+        vcpus = int(p.stdout.strip())
+        if slots > vcpus:
+            raise SystemExit(f'heat{k+1} has slots={slots} but only {vcpus} vCPUs (nproc). Allocate the vCPUs '
+                             f'in VirtualBox first, or lower HEAT{k+1}_SLOTS in cluster.local.sh.')
+        hosts.append(dict(host=f'heat{k+1}', slots=slots, vcpus=vcpus))
+    return hosts
 
 
 def dims_create(P):
@@ -107,7 +138,8 @@ def main():
     parser.add_argument('--serial', type=Path, default=ROOT/'build'/'heat')
     parser.add_argument('--strips', type=Path, default=ROOT/'build'/'heat_mpi')
     parser.add_argument('--blocks', type=Path, default=ROOT/'build'/'heat_blocks')
-    parser.add_argument('--np', type=ints, default=[1, 2, 3, 4, 6], help='process counts')
+    parser.add_argument('--np', type=ints, default=None,
+                        help='process counts (default 1,2,3,4,6, plus 8 when 8 real slots exist)')
     parser.add_argument('--N', type=ints, default=[8, 9, 10, 17, 64, 101])
     parser.add_argument('--cases', default='1,2,V')
     parser.add_argument('--steps', type=int, default=20, help='fixed steps for Cases 1 and 2')
@@ -117,7 +149,8 @@ def main():
     parser.add_argument('--figure-steps', type=int, default=500)
     parser.add_argument('--timing', action='store_true', help='run stage 3 (default: on in cluster mode)')
     parser.add_argument('--no-timing', action='store_true')
-    parser.add_argument('--timing-np', type=ints, default=[4, 6])
+    parser.add_argument('--timing-np', type=ints, default=None,
+                        help='default 4,6, plus 8 when 8 real slots exist')
     parser.add_argument('--timing-N', type=ints, default=[512, 2048, 8192])
     parser.add_argument('--timing-steps', type=int, default=10)
     parser.add_argument('--timing-reps', type=int, default=3)
@@ -133,14 +166,28 @@ def main():
         if not exe.is_file():
             parser.error(f'Missing {exe}. Build first: make serial strips blocks')
     serial_exe, strips_exe, blocks_exe = (str(p.resolve()) for p in (args.serial, args.strips, args.blocks))
+    hosts = None
     if args.cluster:
         subprocess.run(['bash', '-c', f'source {shlex.quote(str(ROOT/"part0/config/cluster.sh"))}'],
                        check=True)
         extra = CLUSTER_ARGS
-        if max(args.np + (args.timing_np if timing else [])) > 6:
-            parser.error('The team hostfile has 6 slots; P must be <= 6 in cluster mode.')
+        hosts = cluster_slots()
+        total = sum(h['slots'] for h in hosts)
+        print('Slots checked against nproc: ' + ', '.join(
+            f"{h['host']} {h['slots']}/{h['vcpus']}" for h in hosts) + f' -> {total} slots', flush=True)
     else:
         extra = shlex.split(args.mpirun_args if args.mpirun_args is not None else '--oversubscribe')
+        total = None   # local: oversubscribed, correctness only
+    with_eight = total is None or total >= 8
+    if args.np is None:
+        args.np = [1, 2, 3, 4, 6] + ([8] if with_eight else [])
+    if args.timing_np is None:
+        args.timing_np = [4, 6] + ([8] if with_eight else [])
+    if total is not None and max(args.np + (args.timing_np if timing else [])) > total:
+        parser.error(f'The checked hostfile has {total} slots; P must be <= {total} in cluster mode.')
+    if not with_eight:
+        print('P = 8 skipped: fewer than 8 real slots (see part0/config/cluster.local.sh.example).',
+              flush=True)
 
     stamp = datetime.now(timezone.utc)
     out = args.out or ROOT/'part3'/'results'/'runs'/stamp.strftime('%Y%m%dT%H%M%S%fZ')
@@ -183,24 +230,28 @@ def main():
                     got = run(mpirun(blocks_exe, 'blocks', P, *common, '--out', str(path)))
                     if not path.is_file():
                         raise RuntimeError(f'{path.name} missing: rank 0 must run on the launching VM.')
-                    identical = path.read_bytes() == ref_bytes
+                    got_bytes = path.read_bytes()
+                    identical = got_bytes == ref_bytes
                     mismatched = [k for k in SAME if ref.get(k) != got.get(k)]
                     ok = identical and not mismatched and (int(got['Py']), int(got['Px'])) == (Py, Px)
                     failures += not ok
                     uneven = (N-1) % Py != 0 or (N-1) % Px != 0
                     rows.append(dict(case=case, N=N, P=P, Py=got['Py'], Px=got['Px'], nodes=int(got['nodes']),
                                      uneven_blocks=uneven, bytes=len(ref_bytes), identical=identical,
+                                     serial_field=ref_path.name,
+                                     serial_sha256=hashlib.sha256(ref_bytes).hexdigest(),
+                                     blocks_field=path.name,
+                                     blocks_sha256=hashlib.sha256(got_bytes).hexdigest(),
                                      summary_mismatch=' '.join(mismatched), steps=got['steps'],
                                      t_total=got['t_total'], t_comp=got['t_comp'], t_comm=got['t_comm'],
                                      result='PASS' if ok else 'FAIL'))
                     print(f"{'PASS' if ok else 'FAIL'}  case={case} N={N:<4} P={P} grid={got['Py']}x{got['Px']} "
                           f"nodes={got['nodes']} uneven={'yes' if uneven else 'no '} identical={identical}"
                           + (f" mismatch={mismatched}" if mismatched else ''), flush=True)
-                    path.unlink()
 
         # Stage 2a: halo-debugging transcripts (2x2 and 3x2 grids, N=8, one step, Case 1).
         with (out/'debug_halo.txt').open('w', encoding='utf-8') as f:
-            for P in (4, 6):
+            for P in [p for p in (4, 6, 8) if p <= max(args.np)]:
                 text = run(mpirun(blocks_exe, 'blocks', P, '--case', '1', '--N', '8', '--r', str(args.r),
                                   '--steps', '1', '--debug-print'), summary=False)
                 f.write(f'$ mpirun -np {P} heat_blocks --decomp blocks --case 1 --N 8 --r {args.r} '
@@ -318,12 +369,16 @@ def main():
                                     r=args.r, figure_N=args.figure_N, figure_steps=args.figure_steps,
                                     timing=timing, timing_np=args.timing_np, timing_N=args.timing_N,
                                     timing_steps=args.timing_steps, timing_reps=args.timing_reps),
+                    cluster_slots=hosts,
                     scope='Correctness comparison plus a small strips-vs-blocks timing check; '
                           'full scaling study belongs to Part 4')
         (out/'metadata.json').write_text(json.dumps(meta, indent=2)+'\n', encoding='utf-8')
+        # Every field file is evidence too: hash it so the archive can be re-checked offline.
+        names = [n for n in PUBLISHED if (out/n).is_file()]
+        names += sorted(p.relative_to(out).as_posix() for p in fields.glob('*.bin'))
         manifest = [dict(file=name, bytes=(out/name).stat().st_size,
                          sha256=hashlib.sha256((out/name).read_bytes()).hexdigest())
-                    for name in PUBLISHED if (out/name).is_file()]
+                    for name in names]
         (out/'manifest.json').write_text(json.dumps(dict(published_files=manifest), indent=2)+'\n',
                                          encoding='utf-8')
 

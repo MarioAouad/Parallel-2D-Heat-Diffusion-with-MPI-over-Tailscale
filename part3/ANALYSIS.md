@@ -126,9 +126,12 @@ may move faster. If they do, t<sub>w</sub> shrinks, latency weighs relatively mo
 the 3-neighbour layouts lose some of their advantage. The measured check will show which
 regime applies.
 
-**P = 8 cannot be measured.** The cluster has six slots (3 VMs × 2 vCPUs), and the
-assignment forbids running more processes than vCPUs. P = 8 is answered by the model
-only; P = 6 (3×2) is measured instead, since it has the same 3-neighbour structure.
+**P = 8 was not measured in the 19 November study.** That cluster had six slots (3 VMs ×
+2 vCPUs), and the assignment forbids running more processes than vCPUs. So there P = 8 is
+answered by the model only, and P = 6 (3×2), which has the same 3-neighbour structure, is
+measured instead. The scripts now run P = 8 automatically once eight real vCPUs are
+allocated and checked (see the [guide](README.md)). Until such a run is archived, P = 8
+stays model-only.
 
 ## Then check: measured strips vs blocks
 

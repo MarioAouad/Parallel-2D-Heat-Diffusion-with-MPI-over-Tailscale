@@ -11,7 +11,8 @@ ignored `runs/` directory. Review it before publishing:
 2. the figures have been inspected;
 3. every P ≥ 2 row has `nodes` ≥ 2.
 
-Then copy the folder unchanged, except for `fields/`, to `part3/results/<date>-cluster/`,
+Then copy the folder unchanged, **including** `fields/` (Git accepts
+`part3/results/*-cluster/fields/*.bin`), to `part3/results/<date>-cluster/`,
 and add a row above. `make verify-part3-results` checks the newest archived study.
 
 The timing stage is a small, repeated check of the Part 3 strips-vs-blocks question.

@@ -1018,3 +1018,34 @@ Agent actions, on new branch part2-fields from origin/main 0c66f96:
 - llm_log/README.md: export status table and per-member export instructions.
 
 Still open: (1) the new Part 2 cluster run, then archiving it with fields; (2) teammates' exports and any earlier claude.ai conversations; (3) a re-export of session 0cf186f8 when it ends.
+
+
+# Part 3 P=8 support and field retention - 2026-11-20T18:59:57+02:00
+
+Team member: operator of node heat-3. Tool: Claude Code, VS Code extension. Model: Claude Opus 5.5 (claude-opus-5-5). Manual visible-message record. The full session transcript is in llm_log/sessions/2026-11-19-0cf186f8.md (re-export pending).
+
+User requests (verbatim):
+
+[screenshot of a heat-3 Part 2 cluster run: 84/84 identical, "PASS 7 published hashes", no field lines]
+
+i want to fix this in part 3 :
+The eight-process measurement. Your recorded cluster has six allocated vCPUs. The scripts now support an expanded cluster, but eight real slots must be available and the experiment must actually run.
+The old binary output files. They were omitted or deleted. CSVs and plots cannot recover their exact bytes. A new run with the updated scripts must retain the outputs.
+
+Agent findings:
+- The Part 2 run in the screenshot used the old scripts: 7 manifest entries and no field verification lines. The user was asked to pull 164087f and rerun; that run was not archived.
+- On main 164087f, Part 3 did not yet support P > 6 (hard limit at run_experiments.py line 140) and still deleted blocks fields (line 199). cluster.sh hard-coded slots=2.
+
+Agent actions, on new branch part3-p8-fields from main 164087f:
+- part0/config/cluster.sh: optional HEAT1_SLOTS/HEAT2_SLOTS/HEAT3_SLOTS (default 2, validated whole numbers 1-99) rendered into the hostfile. Tested default, 4 slots, an injection attempt (refused) and 0 (refused). cluster.local.sh.example and part0/config/README.md document it.
+- part3/run_experiments.py:
+  - cluster_slots() reads the hostfile and checks each VM's slots against nproc over SSH; it refuses a slot without a vCPU and records aliases only;
+  - P=8 is added to the comparisons, the 4x2 debug transcript and the timing stage only when the checked slots total >= 8;
+  - every serial/blocks field is kept and hashed into compare.csv and manifest.json; metadata records cluster_slots.
+- part2/verify_results.py: check_fields generalised (decomp argument). Behaviour unchanged.
+- part3/verify_results.py: reuses the Part 2 field checker for blocks; requires checked slots for any cluster P > 6 and the 4x2 transcript for P = 8; reports old studies as record-only.
+- .gitignore: archived part3 *-cluster/fields/*.bin allowed.
+- part3/README.md, ANALYSIS.md, DELIVERY.md, results/README.md and docs/deliverables.md: P=8 procedure. Both gaps are recorded as open until a new run is archived.
+- Tests in WSL: local study with P=8 gave 108/108 identical (grids up to 4x2), 130 fields (3.0 MB), 4x2 transcript present, verifier PASS exact. Slot guard tested with a fake hostfile and SSH: 2/2/4 on 2/2/4 vCPUs accepted (8); 2/2/4 on 2/2/2 refused. Archived Part 0/1/2/3 verifiers still pass; Part 2 tamper tests still 4/4 caught.
+
+Still open: allocating 8 real vCPUs on the VMs, then the actual cluster run, then archiving with fields.
