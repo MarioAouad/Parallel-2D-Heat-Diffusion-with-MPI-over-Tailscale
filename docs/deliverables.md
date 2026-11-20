@@ -72,7 +72,7 @@ The same-architecture parallel fields must match the serial output bit for bit f
 
 The later study needs fixed comparable step counts, at least three independent runs per configuration with median/spread, strong/weak scaling and computation/communication timing. Our three timed trips for a large ping-pong size are not three independent full experiments.
 
-The example hostfile has six slots. Later comparisons at P=8 require eight actual allocated vCPU slots or discussion of a resource-limited case with the professor. Increasing hostfile numbers without allocating real vCPUs is not a valid fix. This does not invalidate the present six-process hello or two-process benchmark.
+The example hostfile has six slots. Comparisons at P=8 require eight actual allocated vCPU slots or discussion of a resource-limited case with the professor. Increasing hostfile numbers without allocating real vCPUs is not a valid fix. `cluster.sh` now takes optional per-VM slot counts, and `part3/run_experiments.py --cluster` checks each against the VM's `nproc` before running P = 8. The P = 8 measurement stays open until it has actually been run on eight real vCPUs. This does not invalidate the present six-process hello or two-process benchmark.
 
 ## Section 12: AI use
 

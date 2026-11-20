@@ -3,3 +3,10 @@
 HEAT1_IP="YOUR_FIRST_VM_TAILSCALE_IPV4"
 HEAT2_IP="YOUR_SECOND_VM_TAILSCALE_IPV4"
 HEAT3_IP="YOUR_THIRD_VM_TAILSCALE_IPV4"
+
+# Optional: slots per VM (default 2). Raise one ONLY after giving that VM the same
+# number of vCPUs in VirtualBox (VM off -> Settings -> System -> Processor), and check
+# with "nproc" inside the VM. Eight real slots (e.g. 2 + 2 + 4) allow the P = 8 runs.
+# HEAT1_SLOTS=2
+# HEAT2_SLOTS=2
+# HEAT3_SLOTS=2

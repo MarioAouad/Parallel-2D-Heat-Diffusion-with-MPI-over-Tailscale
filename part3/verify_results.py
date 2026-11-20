@@ -5,14 +5,28 @@ the run), every comparison PASS and byte-identical, true 2D grids (Px >= 2) cove
 uneven blocks present, several N, raw runs successful and consistent with the CSV,
 for a cluster study every P >= 2 run on at least two machines, and the strips-vs-blocks
 timing summary complete (both decompositions, every P and N, all repetitions).
+
+Fields: if the study kept its field files (written by run_experiments.py since
+20 November 2026), the byte comparison is repeated offline with the Part 2 checker:
+hashes and sizes, every blocks field byte-identical to its serial field, each serial
+field tied to the min/max (and Case V error norms) its run printed, and each serial
+field recomputed independently in Python. Older studies are reported as record-only.
+
+Eight processes: a cluster run with P > 6 must record, in metadata.json, the slots of
+every VM checked against its real vCPU count (nproc), with slots <= vCPUs everywhere
+and enough slots in total. A P = 8 study must also contain the 4x2 halo transcript.
 """
 import argparse
 import csv
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+_spec = importlib.util.spec_from_file_location('part2_verify', HERE.parent/'part2'/'verify_results.py')
+part2_verify = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(part2_verify)
 
 
 def require(condition, message):
@@ -88,6 +102,24 @@ def main():
     text = (folder/'debug_halo.txt').read_text(encoding='utf-8')
     require('of 2x2 grid' in text and 'of 3x2 grid' in text, 'Halo debug transcripts for 2x2 and 3x2 are missing')
 
+    has_fields = 'blocks_sha256' in rows[0]
+    if has_fields:
+        references, figures, approximate = part2_verify.check_fields(folder, rows, runs, names, 'blocks')
+
+    largest = max([int(r['P']) for r in rows] +
+                  [int(P) for P in meta['parameters'].get('timing_np', [])
+                   if meta['parameters'].get('timing')])
+    slots_note = ''
+    if cluster and largest > 6:
+        hosts = meta.get('cluster_slots')
+        require(hosts, f'P = {largest} was run, but metadata.json has no checked slot record')
+        require(all(h['slots'] <= h['vcpus'] for h in hosts), 'A VM had more slots than vCPUs')
+        total = sum(h['slots'] for h in hosts)
+        require(total >= largest, f'P = {largest} exceeds the {total} checked slots')
+        slots_note = ', '.join(f"{h['host']} {h['slots']}/{h['vcpus']}" for h in hosts)
+    if largest >= 8:
+        require('of 4x2 grid' in text, 'P = 8 was run, but the 4x2 halo transcript is missing')
+
     timing_note = 'no timing stage'
     if meta['parameters'].get('timing'):
         p = meta['parameters']
@@ -110,6 +142,19 @@ def main():
     if cluster:
         print('PASS every P >= 2 run used at least two machines')
     print(f'PASS raw runs consistent with compare.csv; 2x2 and 3x2 halo transcripts present; {timing_note}')
+    if slots_note:
+        print(f'PASS P up to {largest} on checked real slots (slots/vCPUs: {slots_note})')
+    if has_fields:
+        exact = ('exactly' if not approximate else
+                 f'({approximate} Case V fields within tolerance: the sin() of this C library differs in the '
+                 'last bit from the one on the VMs; run on Ubuntu for an exact check)')
+        print(f'PASS {len(rows)} blocks fields re-compared byte for byte offline against {references} serial '
+              'fields; hashes, sizes, min/max and V error norms match their runs')
+        print(f'PASS all {references} serial fields equal an independent Python recomputation of the scheme '
+              f'{exact}; {figures} figure field pairs byte-identical')
+    else:
+        print('NOTE record-only study: fields were not retained, so byte equality comes from '
+              'compare.csv and was not re-checked offline')
 
 
 if __name__ == '__main__':

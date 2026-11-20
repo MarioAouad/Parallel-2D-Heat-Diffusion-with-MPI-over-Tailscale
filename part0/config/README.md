@@ -11,8 +11,8 @@ nano part0/config/cluster.local.sh
 
 Replace the three quoted placeholders with the real Tailscale IPv4 addresses, obtained with `tailscale ip -4` in each VM. Use the same VM order on every checkout. Save the actual configuration locally; `.gitignore` excludes it. No passwords or authentication keys belong in this file.
 
-The launchers source `cluster.sh`, which validates local values and renders the ignored `hosts` file with two slots per VM. `hosts.example` shows the required syntax with placeholders. You do not type the addresses twice. Missing or placeholder configuration produces an explanation instead of launching MPI with invalid endpoints.
+The launchers source `cluster.sh`, which validates local values and renders the ignored `hosts` file with two slots per VM, or `HEAT1_SLOTS`/`HEAT2_SLOTS`/`HEAT3_SLOTS` from `cluster.local.sh` when set (whole numbers; anything else is refused). `hosts.example` shows the required syntax with placeholders. You do not type the addresses twice. Missing or placeholder configuration produces an explanation instead of launching MPI with invalid endpoints.
 
-Hostname/hello use the rendered six-slot hostfile. Ping-pong chooses exactly two slots from the same configuration: two on one VM or one on each pair endpoint. Changing slot numbers does not allocate extra vCPUs.
+Hostname/hello use the rendered six-slot hostfile. Ping-pong chooses exactly two slots from the same configuration: two on one VM or one on each pair endpoint. Changing slot numbers does not allocate extra vCPUs: raise a VM's vCPUs in VirtualBox first, then its slots. `part3/run_experiments.py --cluster` checks every VM's slots against `nproc` over SSH and refuses a slot without a vCPU.
 
 Keep local configuration and original private route/metadata files out of the public repository. Preserve archived public measurements; separately record every new run and its private configuration.

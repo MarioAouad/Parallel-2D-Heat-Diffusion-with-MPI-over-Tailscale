@@ -26,7 +26,20 @@ for name in HEAT1_IP HEAT2_IP HEAT3_IP; do
     done
 done
 
+# Slots per VM: optional HEATn_SLOTS in cluster.local.sh, default 2. A slot only
+# PERMITS a process; it must not exceed the vCPUs really allocated to that VM
+# (part3/run_experiments.py checks this with nproc over SSH before using > 6).
+for name in HEAT1_SLOTS HEAT2_SLOTS HEAT3_SLOTS; do
+    value=${!name:-2}
+    if [[ ! $value =~ ^[1-9][0-9]?$ ]]; then
+        echo "$name must be a whole number from 1 to 99 (got '$value')." >&2
+        return 2
+    fi
+    printf -v "$name" '%s' "$value"
+done
+
 # Render the ignored hostfile from the same configuration. The hostname/hello
 # tests and pair benchmark therefore use the same endpoints without duplication.
-printf '%s slots=2\n%s slots=2\n%s slots=2\n' \
-    "$HEAT1_IP" "$HEAT2_IP" "$HEAT3_IP" > "$config_directory/hosts"
+printf '%s slots=%s\n%s slots=%s\n%s slots=%s\n' \
+    "$HEAT1_IP" "$HEAT1_SLOTS" "$HEAT2_IP" "$HEAT2_SLOTS" "$HEAT3_IP" "$HEAT3_SLOTS" \
+    > "$config_directory/hosts"

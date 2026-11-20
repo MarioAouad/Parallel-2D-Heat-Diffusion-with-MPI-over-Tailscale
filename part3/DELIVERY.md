@@ -5,6 +5,17 @@ evidence points at the reviewed [cluster study](results/2026-11-19-cluster/) of 
 (90/90 byte-identical across 2–3 VMs). Checkpoint C3 also includes the Part 4
 performance runs, which are not part of this checklist.
 
+**Two evidence gaps remain open until a new cluster run is archived:**
+
+1. **P = 8 was never measured.** The study had six real vCPUs, so P = 8 is model-only.
+   The scripts now support it, but it counts only after eight real vCPUs are allocated
+   (checked with `nproc`) and the run actually happens. See the [guide](README.md).
+2. **The field files were not kept.** The 19 November runner deleted each blocks field
+   after comparing it, and the CSVs and plots cannot recover those bytes. The verifier
+   reports that study as *record-only*. The runner now keeps every field with its SHA-256.
+   The verifier then repeats the byte comparison offline and recomputes each serial field
+   independently.
+
 | Requirement (assignment section 7) | Where it is implemented | Evidence |
 | --- | --- | --- |
 | Arrange P processes in a Px×Py grid; each owns a rectangular block of interior nodes with ghost layers on all four sides | Local (rows+2)×(cols+2) storage in [heat_blocks.cpp](heat_blocks.cpp) | Grid/size test ([console/check-blocks.txt](results/2026-11-19-cluster/console/check-blocks.txt)); [decomposition.png](results/2026-11-19-cluster/decomposition.png) |

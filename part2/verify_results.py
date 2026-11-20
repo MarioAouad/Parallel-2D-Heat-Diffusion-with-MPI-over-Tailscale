@@ -103,8 +103,8 @@ def field_summary(values, N, case, T):
     return out
 
 
-def check_fields(folder, rows, runs, names):
-    """Repeat the serial-vs-strips byte comparison from the stored files."""
+def check_fields(folder, rows, runs, names, decomp='strips'):
+    """Repeat the serial-vs-parallel byte comparison from the stored files (strips or blocks)."""
     printed = {}
     for r in runs:
         c = r['command']
@@ -113,8 +113,8 @@ def check_fields(folder, rows, runs, names):
                 t.split('=', 1) for t in r['stdout'].splitlines()[-1].split())
     checked, approximate = set(), set()
     for r in rows:
-        N, ref_name, got_name = int(r['N']), r['serial_field'], r['strips_field']
-        for name, digest in ((ref_name, r['serial_sha256']), (got_name, r['strips_sha256'])):
+        N, ref_name, got_name = int(r['N']), r['serial_field'], r[decomp+'_field']
+        for name, digest in ((ref_name, r['serial_sha256']), (got_name, r[decomp+'_sha256'])):
             require('fields/'+name in names, f'{name} is not in the manifest')
             require(hashlib.sha256((folder/'fields'/name).read_bytes()).hexdigest() == digest,
                     f'{name}: SHA-256 differs from compare.csv')
@@ -143,7 +143,7 @@ def check_fields(folder, rows, runs, names):
         checked.add(ref_name)
     figures = sorted(n for n in names if n.startswith('fields/figure_serial_case'))
     for name in figures:
-        other = name.replace('figure_serial_', 'figure_strips_')
+        other = name.replace('figure_serial_', 'figure_'+decomp+'_')
         require(other in names and (folder/other).read_bytes() == (folder/name).read_bytes(),
                 f'{other} is missing or differs from {name}')
     return len(checked), len(figures), len(approximate)
