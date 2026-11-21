@@ -1,0 +1,1 @@
+PASS hashes, source provenance, comparisons, raw summaries, V norms, halo values and recomputed timing aggregates: {'comparisons': 108, 'fields': True, 'pairs': 110, 'references': 18, 'approximate': 0, 'published': 141, 'warnings': 0, 'timing': 36, 'p8': True}

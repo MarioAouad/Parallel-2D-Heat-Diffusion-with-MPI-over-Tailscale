@@ -1,5 +1,8 @@
 # Part 2 evidence recovery and remaining records
 
+**Current review, 21 November 2026:** The [new retained-field cluster study](results/2026-11-21-retained-cluster/) passes strict verification: 84/84 exact comparisons, 109 retained fields, all three VMs represented. The missing-original-fields gap is closed by this new run; old archives remain record-only. Earlier dates and open-gap descriptions below refer to the historical archive, not the current delivery.
+
+
 The heat solver has no known numerical or halo-exchange defect from the review.
 Its C++ source and the dated cluster measurements are unchanged. The fixes concern
 the written explanation and how experiments retain and verify evidence.

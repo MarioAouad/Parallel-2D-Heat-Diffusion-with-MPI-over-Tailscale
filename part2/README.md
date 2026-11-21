@@ -1,6 +1,9 @@
 # Part 2: 1D strip decomposition
 
-**Status: implemented; C2 is supported by the archived run records. Original binary-field evidence remains open.** Start with the [delivery checklist](DELIVERY.md)
+**Current review, 21 November 2026:** The [new retained-field cluster study](results/2026-11-21-retained-cluster/) passes strict verification: 84/84 exact comparisons, 109 retained fields, all three VMs represented. The missing-original-fields gap is closed by this new run; old archives remain record-only. Earlier dates and open-gap descriptions below refer to the historical archive, not the current delivery.
+
+
+**Status: C2 technical evidence complete; the new retained-field cluster archive passes strict verification.** Start with the [delivery checklist](DELIVERY.md)
 and the [analysis](ANALYSIS.md). The [cluster study](results/2026-11-19-cluster/) shows
 84/84 strips fields byte-identical to the serial reference for P = 1–4 across two and
 three VMs, including uneven strips.

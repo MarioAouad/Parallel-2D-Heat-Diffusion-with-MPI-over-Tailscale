@@ -1,8 +1,11 @@
 # Part 3: block decomposition, correctness argument and the two report questions
 
+**Current review, 21 November 2026:** The [new retained-field cluster study](results/2026-11-21-retained-cluster/) passes strict verification: 108/108 exact comparisons, 130 retained fields, all three VMs represented. The retained-field and required P=8 measurement gaps are closed. Full checkpoint C3 still includes Part 4. Earlier dates and open-gap descriptions below refer to the historical archive, not the current delivery.
+
+
 ## Outcome and provenance
 
-**Status: implemented; original fields and the required P=8 measurement remain open.** The [reviewed cluster study](results/2026-11-19-cluster/) of
+**Status: implementation, retained fields and required P=8 measurements verified. The first analysis below is historical; the final section analyzes the new P=4,8 run.** The [reviewed cluster study](results/2026-11-19-cluster/) of
 19 November 2026 gives 90/90 block fields byte-identical to serial on two or three VMs
 (P = 1, 2, 3, 4, 6; grids up to 3×2). It also gives a three-repetition strips-vs-blocks
 timing check. The results are in the last two sections.
@@ -232,3 +235,37 @@ From the [cluster study](results/2026-11-19-cluster/) (launched from heat-3, Ope
 These records support distributed correctness. Original binary fields and the
 required P=8 timing check remain open; see [recovery](RECOVERY.md). Full checkpoint
 C3 also requires Part 4 performance work.
+
+## Current measured P=4,8 check: retained-field run reviewed 21 November
+
+Source: [new timing summary](results/2026-11-21-retained-cluster/timing_summary.csv).
+Case 1, r=0.2, ten steps, three repetitions, map-by-node, tcp/self transport,
+4+2+2 guest vCPUs; layouts alternate order by repetition. All runs used three VMs.
+The table reports median halo exchange milliseconds per step and the number of
+paired repetitions won by blocks. Each repetition is independently cross-checked
+against raw output, and every median/min/max is recomputed by the verifier.
+
+| P | N | Strips ms/step | Blocks ms/step | Blocks paired wins |
+| ---: | ---: | ---: | ---: | ---: |
+| 4 | 512 | 271.638 | 183.776 | 3/3 |
+| 4 | 2048 | 931.222 | 476.507 | 3/3 |
+| 4 | 8192 | 2592.544 | 2126.008 | 2/3 |
+| 8 | 512 | 1710.703 | 825.441 | 3/3 |
+| 8 | 2048 | 3094.589 | 3522.835 | 0/3 |
+| 8 | 8192 | 11518.758 | 8459.666 | 3/3 |
+
+Blocks have the lower median in five of six configurations. At P=8,N=2048,
+strips win all three pairs, although the earlier bandwidth/latency model favors
+blocks. At P=8,N=512 the earlier worst-link model can favor strips, while blocks
+win here. This does not support a universal small-N winner or a stable crossover.
+The older P=4,6 observations above remain historical results rather than predictions
+of every later run. The pre-run network probes used DERP relays on several paths;
+route continuity was not measured. CPU allocation and phase ordering also differ
+from the earlier campaign. These factors were not isolated experimentally, so no
+single cause is asserted for the discrepancies. At least 97.56% of every recorded
+timing run is attributed to the halo region, including waits.
+
+Eight processes are slower than four at each tested N in this run, for both
+layouts. Parallel decomposition correctness therefore does not establish speedup.
+Use this as the required Part 3 measured comparison, and use the controlled Part 4
+campaign to test scaling and the model on the documented allocation/transport.

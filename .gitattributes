@@ -10,6 +10,10 @@ part0/results/setup/** -text whitespace=cr-at-eol
 part1/results/** -text whitespace=cr-at-eol
 part2/results/** -text whitespace=cr-at-eol
 part3/results/** -text whitespace=cr-at-eol
+part4/results/** -text whitespace=cr-at-eol
+# Debug transcripts intentionally end with a blank separator; preserve measured bytes.
+part2/results/*-cluster/debug_halo.txt -text whitespace=cr-at-eol,-blank-at-eof
+part3/results/*-cluster/debug_halo.txt -text whitespace=cr-at-eol,-blank-at-eof
 docs/background-solutions/** -text whitespace=cr-at-eol
 llm_log/** -text whitespace=cr-at-eol
 *.pdf binary

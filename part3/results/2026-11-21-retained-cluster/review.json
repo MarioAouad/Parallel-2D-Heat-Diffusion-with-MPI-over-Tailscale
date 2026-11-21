@@ -1,0 +1,25 @@
+{
+  "reviewed_client_date": "2026-11-21",
+  "original_bundle_sha256": "5c62cc594070572f7a2a2b4fd5cae5485a89fef0b043f4766e2adaa9c0a175ff",
+  "revision": "60fc8024fc4d95f504ce51e97d8e924f09f3603c",
+  "retained_fields": 130,
+  "cpu_allocation": {
+    "heat1": 4,
+    "heat2": 2,
+    "heat3": 2
+  },
+  "all_vm_binary_hashes_identical": true,
+  "all_raw_returncodes_zero": true,
+  "all_raw_stderr_empty": true,
+  "fields_and_timing_strict_verification": "PASS",
+  "plots_visually_inspected": [
+    "cases.png",
+    "timing.png"
+  ],
+  "privacy": "Original outer bundle with endpoints/inventories remains private. Study files copied byte for byte after text inspection. Published manifest unchanged.",
+  "limitations": [
+    "Recorded provenance, not cryptographic attestation of remote source compilation.",
+    "Connectivity prechecks included DERP relays; no assertion of route continuity during timing.",
+    "Windows independent Case V recomputation used documented library tolerance; serial-versus-MPI retained fields are exactly byte-identical."
+  ]
+}

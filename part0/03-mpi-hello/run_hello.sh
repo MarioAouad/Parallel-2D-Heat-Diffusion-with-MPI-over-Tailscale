@@ -9,7 +9,7 @@ binary="$repo_root/build/mpi_hello"
 
 # All six processes execute mpi_hello; the program's Allreduce exchanges data.
 # This script chooses the processes/hosts. The C++ program chooses rank behavior.
-exec mpirun --hostfile "$repo_root/part0/config/hosts" -np 6 --map-by slot \
+exec mpirun --hostfile "$repo_root/part0/config/hosts" -np 6 --map-by node --rank-by node \
     --wdir "$repo_root" \
     --mca pml ob1 \
     --mca plm_rsh_args "-o BatchMode=yes -o ConnectTimeout=15" \

@@ -23,6 +23,10 @@ __pycache__/
 /part1/results/runs/
 /part2/results/runs/
 /part3/results/runs/
+/part4/results/runs/
+/part4/results/analysis-local/
+# Original endpoint-bearing command output is private, including in reviewed campaigns.
+/part4/results/**/private/
 *.partial
 
 # Reproducible full-grid snapshots; retain reviewed CSVs, plots, JSON and logs.

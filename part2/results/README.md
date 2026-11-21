@@ -2,7 +2,8 @@
 
 | Record | Role | Contents |
 | --- | --- | --- |
-| [19 November cluster study](2026-11-19-cluster/) | **Primary Part 2 delivery (checkpoint C2)** | 84/84 byte-identical serial-vs-strips comparisons across 2–3 VMs, halo-debug transcripts, decomposition and Case 1/2 figures, raw commands, console transcripts, manifest and review |
+| [21 November retained-field study](2026-11-21-retained-cluster/) | **Current primary evidence** | 84/84 exact serial/MPI comparisons; 109 original fields retained; strict offline verification PASS; C2 coverage on 2–3 VMs |
+| [19 November cluster study](2026-11-19-cluster/) | Historical C2 record; original fields absent | 84/84 byte-identical serial-vs-strips comparisons across 2–3 VMs, halo-debug transcripts, decomposition and Case 1/2 figures, raw commands, console transcripts, manifest and review |
 
 Use the [analysis](../ANALYSIS.md) for interpretation and the
 [delivery checklist](../DELIVERY.md) for requirement links.

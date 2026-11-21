@@ -1,0 +1,149 @@
+Slots checked against nproc: heat1 4/4, heat2 2/2, heat3 2/2 -> 8 slots
+PASS  case=1 N=8    P=1 grid=1x1 nodes=1 uneven=no  identical=True
+PASS  case=1 N=8    P=2 grid=2x1 nodes=2 uneven=yes identical=True
+PASS  case=1 N=8    P=3 grid=3x1 nodes=3 uneven=yes identical=True
+PASS  case=1 N=8    P=4 grid=2x2 nodes=3 uneven=yes identical=True
+PASS  case=1 N=8    P=6 grid=3x2 nodes=3 uneven=yes identical=True
+PASS  case=1 N=8    P=8 grid=4x2 nodes=3 uneven=yes identical=True
+PASS  case=1 N=9    P=1 grid=1x1 nodes=1 uneven=no  identical=True
+PASS  case=1 N=9    P=2 grid=2x1 nodes=2 uneven=no  identical=True
+PASS  case=1 N=9    P=3 grid=3x1 nodes=3 uneven=yes identical=True
+PASS  case=1 N=9    P=4 grid=2x2 nodes=3 uneven=no  identical=True
+PASS  case=1 N=9    P=6 grid=3x2 nodes=3 uneven=yes identical=True
+PASS  case=1 N=9    P=8 grid=4x2 nodes=3 uneven=no  identical=True
+PASS  case=1 N=10   P=1 grid=1x1 nodes=1 uneven=no  identical=True
+PASS  case=1 N=10   P=2 grid=2x1 nodes=2 uneven=yes identical=True
+PASS  case=1 N=10   P=3 grid=3x1 nodes=3 uneven=no  identical=True
+PASS  case=1 N=10   P=4 grid=2x2 nodes=3 uneven=yes identical=True
+PASS  case=1 N=10   P=6 grid=3x2 nodes=3 uneven=yes identical=True
+PASS  case=1 N=10   P=8 grid=4x2 nodes=3 uneven=yes identical=True
+PASS  case=1 N=17   P=1 grid=1x1 nodes=1 uneven=no  identical=True
+PASS  case=1 N=17   P=2 grid=2x1 nodes=2 uneven=no  identical=True
+PASS  case=1 N=17   P=3 grid=3x1 nodes=3 uneven=yes identical=True
+PASS  case=1 N=17   P=4 grid=2x2 nodes=3 uneven=no  identical=True
+PASS  case=1 N=17   P=6 grid=3x2 nodes=3 uneven=yes identical=True
+PASS  case=1 N=17   P=8 grid=4x2 nodes=3 uneven=no  identical=True
+PASS  case=1 N=64   P=1 grid=1x1 nodes=1 uneven=no  identical=True
+PASS  case=1 N=64   P=2 grid=2x1 nodes=2 uneven=yes identical=True
+PASS  case=1 N=64   P=3 grid=3x1 nodes=3 uneven=no  identical=True
+PASS  case=1 N=64   P=4 grid=2x2 nodes=3 uneven=yes identical=True
+PASS  case=1 N=64   P=6 grid=3x2 nodes=3 uneven=yes identical=True
+PASS  case=1 N=64   P=8 grid=4x2 nodes=3 uneven=yes identical=True
+PASS  case=1 N=101  P=1 grid=1x1 nodes=1 uneven=no  identical=True
+PASS  case=1 N=101  P=2 grid=2x1 nodes=2 uneven=no  identical=True
+PASS  case=1 N=101  P=3 grid=3x1 nodes=3 uneven=yes identical=True
+PASS  case=1 N=101  P=4 grid=2x2 nodes=3 uneven=no  identical=True
+PASS  case=1 N=101  P=6 grid=3x2 nodes=3 uneven=yes identical=True
+PASS  case=1 N=101  P=8 grid=4x2 nodes=3 uneven=no  identical=True
+PASS  case=2 N=8    P=1 grid=1x1 nodes=1 uneven=no  identical=True
+PASS  case=2 N=8    P=2 grid=2x1 nodes=2 uneven=yes identical=True
+PASS  case=2 N=8    P=3 grid=3x1 nodes=3 uneven=yes identical=True
+PASS  case=2 N=8    P=4 grid=2x2 nodes=3 uneven=yes identical=True
+PASS  case=2 N=8    P=6 grid=3x2 nodes=3 uneven=yes identical=True
+PASS  case=2 N=8    P=8 grid=4x2 nodes=3 uneven=yes identical=True
+PASS  case=2 N=9    P=1 grid=1x1 nodes=1 uneven=no  identical=True
+PASS  case=2 N=9    P=2 grid=2x1 nodes=2 uneven=no  identical=True
+PASS  case=2 N=9    P=3 grid=3x1 nodes=3 uneven=yes identical=True
+PASS  case=2 N=9    P=4 grid=2x2 nodes=3 uneven=no  identical=True
+PASS  case=2 N=9    P=6 grid=3x2 nodes=3 uneven=yes identical=True
+PASS  case=2 N=9    P=8 grid=4x2 nodes=3 uneven=no  identical=True
+PASS  case=2 N=10   P=1 grid=1x1 nodes=1 uneven=no  identical=True
+PASS  case=2 N=10   P=2 grid=2x1 nodes=2 uneven=yes identical=True
+PASS  case=2 N=10   P=3 grid=3x1 nodes=3 uneven=no  identical=True
+PASS  case=2 N=10   P=4 grid=2x2 nodes=3 uneven=yes identical=True
+PASS  case=2 N=10   P=6 grid=3x2 nodes=3 uneven=yes identical=True
+PASS  case=2 N=10   P=8 grid=4x2 nodes=3 uneven=yes identical=True
+PASS  case=2 N=17   P=1 grid=1x1 nodes=1 uneven=no  identical=True
+PASS  case=2 N=17   P=2 grid=2x1 nodes=2 uneven=no  identical=True
+PASS  case=2 N=17   P=3 grid=3x1 nodes=3 uneven=yes identical=True
+PASS  case=2 N=17   P=4 grid=2x2 nodes=3 uneven=no  identical=True
+PASS  case=2 N=17   P=6 grid=3x2 nodes=3 uneven=yes identical=True
+PASS  case=2 N=17   P=8 grid=4x2 nodes=3 uneven=no  identical=True
+PASS  case=2 N=64   P=1 grid=1x1 nodes=1 uneven=no  identical=True
+PASS  case=2 N=64   P=2 grid=2x1 nodes=2 uneven=yes identical=True
+PASS  case=2 N=64   P=3 grid=3x1 nodes=3 uneven=no  identical=True
+PASS  case=2 N=64   P=4 grid=2x2 nodes=3 uneven=yes identical=True
+PASS  case=2 N=64   P=6 grid=3x2 nodes=3 uneven=yes identical=True
+PASS  case=2 N=64   P=8 grid=4x2 nodes=3 uneven=yes identical=True
+PASS  case=2 N=101  P=1 grid=1x1 nodes=1 uneven=no  identical=True
+PASS  case=2 N=101  P=2 grid=2x1 nodes=2 uneven=no  identical=True
+PASS  case=2 N=101  P=3 grid=3x1 nodes=3 uneven=yes identical=True
+PASS  case=2 N=101  P=4 grid=2x2 nodes=3 uneven=no  identical=True
+PASS  case=2 N=101  P=6 grid=3x2 nodes=3 uneven=yes identical=True
+PASS  case=2 N=101  P=8 grid=4x2 nodes=3 uneven=no  identical=True
+PASS  case=V N=8    P=1 grid=1x1 nodes=1 uneven=no  identical=True
+PASS  case=V N=8    P=2 grid=2x1 nodes=2 uneven=yes identical=True
+PASS  case=V N=8    P=3 grid=3x1 nodes=3 uneven=yes identical=True
+PASS  case=V N=8    P=4 grid=2x2 nodes=3 uneven=yes identical=True
+PASS  case=V N=8    P=6 grid=3x2 nodes=3 uneven=yes identical=True
+PASS  case=V N=8    P=8 grid=4x2 nodes=3 uneven=yes identical=True
+PASS  case=V N=9    P=1 grid=1x1 nodes=1 uneven=no  identical=True
+PASS  case=V N=9    P=2 grid=2x1 nodes=2 uneven=no  identical=True
+PASS  case=V N=9    P=3 grid=3x1 nodes=3 uneven=yes identical=True
+PASS  case=V N=9    P=4 grid=2x2 nodes=3 uneven=no  identical=True
+PASS  case=V N=9    P=6 grid=3x2 nodes=3 uneven=yes identical=True
+PASS  case=V N=9    P=8 grid=4x2 nodes=3 uneven=no  identical=True
+PASS  case=V N=10   P=1 grid=1x1 nodes=1 uneven=no  identical=True
+PASS  case=V N=10   P=2 grid=2x1 nodes=2 uneven=yes identical=True
+PASS  case=V N=10   P=3 grid=3x1 nodes=3 uneven=no  identical=True
+PASS  case=V N=10   P=4 grid=2x2 nodes=3 uneven=yes identical=True
+PASS  case=V N=10   P=6 grid=3x2 nodes=3 uneven=yes identical=True
+PASS  case=V N=10   P=8 grid=4x2 nodes=3 uneven=yes identical=True
+PASS  case=V N=17   P=1 grid=1x1 nodes=1 uneven=no  identical=True
+PASS  case=V N=17   P=2 grid=2x1 nodes=2 uneven=no  identical=True
+PASS  case=V N=17   P=3 grid=3x1 nodes=3 uneven=yes identical=True
+PASS  case=V N=17   P=4 grid=2x2 nodes=3 uneven=no  identical=True
+PASS  case=V N=17   P=6 grid=3x2 nodes=3 uneven=yes identical=True
+PASS  case=V N=17   P=8 grid=4x2 nodes=3 uneven=no  identical=True
+PASS  case=V N=64   P=1 grid=1x1 nodes=1 uneven=no  identical=True
+PASS  case=V N=64   P=2 grid=2x1 nodes=2 uneven=yes identical=True
+PASS  case=V N=64   P=3 grid=3x1 nodes=3 uneven=no  identical=True
+PASS  case=V N=64   P=4 grid=2x2 nodes=3 uneven=yes identical=True
+PASS  case=V N=64   P=6 grid=3x2 nodes=3 uneven=yes identical=True
+PASS  case=V N=64   P=8 grid=4x2 nodes=3 uneven=yes identical=True
+PASS  case=V N=101  P=1 grid=1x1 nodes=1 uneven=no  identical=True
+PASS  case=V N=101  P=2 grid=2x1 nodes=2 uneven=no  identical=True
+PASS  case=V N=101  P=3 grid=3x1 nodes=3 uneven=yes identical=True
+PASS  case=V N=101  P=4 grid=2x2 nodes=3 uneven=no  identical=True
+PASS  case=V N=101  P=6 grid=3x2 nodes=3 uneven=yes identical=True
+PASS  case=V N=101  P=8 grid=4x2 nodes=3 uneven=no  identical=True
+TIME  rep=1 strips P=4 N=512   comm/step=   271.64 ms comp/step=   0.286 ms
+TIME  rep=1 blocks P=4 N=512   comm/step=   243.10 ms comp/step=   0.391 ms
+TIME  rep=1 strips P=8 N=512   comm/step=  1706.20 ms comp/step=   0.234 ms
+TIME  rep=1 blocks P=8 N=512   comm/step=  1036.04 ms comp/step=   0.161 ms
+TIME  rep=1 strips P=4 N=2048  comm/step=   689.81 ms comp/step=   3.091 ms
+TIME  rep=1 blocks P=4 N=2048  comm/step=   395.81 ms comp/step=   2.731 ms
+TIME  rep=1 strips P=8 N=2048  comm/step=  3239.72 ms comp/step=   2.589 ms
+TIME  rep=1 blocks P=8 N=2048  comm/step=  3522.83 ms comp/step=   6.229 ms
+TIME  rep=1 strips P=4 N=8192  comm/step=  2853.66 ms comp/step=  39.767 ms
+TIME  rep=1 blocks P=4 N=8192  comm/step=  2126.01 ms comp/step=  41.819 ms
+TIME  rep=1 strips P=8 N=8192  comm/step= 11989.96 ms comp/step=  23.589 ms
+TIME  rep=1 blocks P=8 N=8192  comm/step=  8459.67 ms comp/step=  47.155 ms
+TIME  rep=2 blocks P=4 N=512   comm/step=   181.32 ms comp/step=   0.189 ms
+TIME  rep=2 strips P=4 N=512   comm/step=   496.67 ms comp/step=   0.414 ms
+TIME  rep=2 blocks P=8 N=512   comm/step=   513.45 ms comp/step=   0.370 ms
+TIME  rep=2 strips P=8 N=512   comm/step=  2041.65 ms comp/step=   0.252 ms
+TIME  rep=2 blocks P=4 N=2048  comm/step=   626.06 ms comp/step=   3.078 ms
+TIME  rep=2 strips P=4 N=2048  comm/step=   931.22 ms comp/step=   4.219 ms
+TIME  rep=2 blocks P=8 N=2048  comm/step=  3030.10 ms comp/step=   2.872 ms
+TIME  rep=2 strips P=8 N=2048  comm/step=  2241.65 ms comp/step=   2.849 ms
+TIME  rep=2 blocks P=4 N=8192  comm/step=  2115.48 ms comp/step=  43.320 ms
+TIME  rep=2 strips P=4 N=8192  comm/step=  2535.88 ms comp/step=  63.510 ms
+TIME  rep=2 blocks P=8 N=8192  comm/step=  8797.10 ms comp/step=  45.275 ms
+TIME  rep=2 strips P=8 N=8192  comm/step= 11295.34 ms comp/step=  24.339 ms
+TIME  rep=3 strips P=4 N=512   comm/step=   236.03 ms comp/step=   0.331 ms
+TIME  rep=3 blocks P=4 N=512   comm/step=   183.78 ms comp/step=   0.452 ms
+TIME  rep=3 strips P=8 N=512   comm/step=  1710.70 ms comp/step=   0.166 ms
+TIME  rep=3 blocks P=8 N=512   comm/step=   825.44 ms comp/step=   0.198 ms
+TIME  rep=3 strips P=4 N=2048  comm/step=  1036.34 ms comp/step=   2.966 ms
+TIME  rep=3 blocks P=4 N=2048  comm/step=   476.51 ms comp/step=   3.021 ms
+TIME  rep=3 strips P=8 N=2048  comm/step=  3094.59 ms comp/step=   4.228 ms
+TIME  rep=3 blocks P=8 N=2048  comm/step=  4525.81 ms comp/step=   3.051 ms
+TIME  rep=3 strips P=4 N=8192  comm/step=  2592.54 ms comp/step=  40.547 ms
+TIME  rep=3 blocks P=4 N=8192  comm/step=  2664.07 ms comp/step= 392.228 ms
+TIME  rep=3 strips P=8 N=8192  comm/step= 11518.76 ms comp/step=  36.821 ms
+TIME  rep=3 blocks P=8 N=8192  comm/step=  6424.22 ms comp/step=  68.322 ms
+
+108/108 comparisons bit-for-bit identical; 90 multi-process runs spanned more than one machine.
+36 timing runs recorded (timing_summary.csv).
+Results: /home/mpi/heat-project-repo/output/parts23-20261120T231427Z/part3

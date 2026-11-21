@@ -13,7 +13,7 @@ mkdir -p output
 update_log="output/update-all-$(date -u +%Y%m%dT%H%M%SZ).log"
 {
     echo "Expected revision: $expected"
-    make serial strips blocks
+    make
     echo 'Local guest CPU count:'
     nproc
     for peer in "$HEAT1_IP" "$HEAT2_IP" "$HEAT3_IP"; do
@@ -29,7 +29,7 @@ if [[ -n $(git status --porcelain) ]]; then
 fi
 git pull --ff-only origin main
 test "$(git rev-parse HEAD)" = "$1"
-make serial strips blocks
+make
 echo "Revision: $(git rev-parse HEAD)"
 echo 'Guest CPU count:'
 nproc

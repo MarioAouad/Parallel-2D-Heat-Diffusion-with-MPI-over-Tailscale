@@ -4,15 +4,14 @@ A C++17 heat-diffusion project using three Ubuntu VMs on Windows laptops in
 different homes. Tailscale connects the VMs, SSH launches remote processes, and
 MPI carries messages between them.
 
-**Status, 20 November 2026:** Parts 0 and 1 technical checks pass. Part 2 strips
-and Part 3 blocks are implemented, with archived records of 84/84 and 90/90
-byte-identical comparisons on two/three VMs. The local verification tools, tests
-and documentation are reconciled with the pulled field-retention and real-CPU
-checks. Both archives lack their original binary fields; Part 3 also lacks the
-required P=8 timing measurements. See [Part 2 recovery](part2/RECOVERY.md),
-[Part 3 recovery](part3/RECOVERY.md) and the [deliverable map](docs/deliverables.md).
-Part 4 implementation can start; complete those evidence tasks before treating
-Parts 0–3 as fully closed.
+**Status, 21 November 2026:** Parts 0/1 technical evidence passes. The new reviewed
+[Part 2](part2/results/2026-11-21-retained-cluster/) and [Part 3](part3/results/2026-11-21-retained-cluster/)
+cluster studies contain 84/84 and 108/108 exact serial/MPI matches, all original
+comparison/figure fields, and the required Part 3 P=4,8 timing matrix. Strict
+retained-field/P=8 verification passes. Three VMs used 4+2+2 guest vCPUs and
+matching executable hashes. The previous field-retention and P=8 gaps are closed.
+Part 4 campaign/model/analysis tools are implemented; its real VM campaign remains pending; final report, demonstration and
+complete private AI records remain course-submission requirements.
 
 ## Start here
 
@@ -28,6 +27,8 @@ Parts 0–3 as fully closed.
 | Build and run the 2D block-decomposed solver | [Part 3 guide](part3/README.md) |
 | Read the corner-ghost and strips-vs-blocks answers | [Part 3 analysis](part3/ANALYSIS.md) |
 | Track Part 3 deliverables | [Part 3 delivery checklist](part3/DELIVERY.md) |
+| Plan and run the full performance study | [Part 4 guide](part4/README.md) and [VM instructions](part4/RUN.md) |
+| See Part 4 requirements versus implementation | [Part 4 delivery checklist](part4/DELIVERY.md) |
 | Read the written numerical-method solutions | [PDF and editable source](docs/background-solutions/README.md) |
 | Receive GitHub updates on the VMs | [Git and VM workflow](docs/local-update.md) |
 | Find hardware, requirements and verification details | [Documentation index](docs/README.md) |
@@ -100,12 +101,19 @@ part3/                   2D block-decomposed MPI solver, checks, study and timin
   ANALYSIS.md            corner ghosts, strips-vs-blocks prediction and check
   DELIVERY.md            section 7 requirement-by-requirement evidence
   results/               reviewed cluster study and index
+part4/                   restartable performance campaign, calibration, models and plots
+scripts/                 VM update and experiment/package helpers
 docs/                    documentation index, assignment PDFs and solutions
 llm_log/                 append-only interaction index and record status
 AGENTS.md                course logging instructions
 ```
 
 ## Results and their scope
+
+The current primary studies are the 21 November retained-field archives linked
+above. The following numerical/performance observations explicitly describe the
+older 19 November studies. The new Part 3 timing outcomes differ; see its updated
+analysis before using these older conclusions in a report.
 
 Part 0 has six complete ping-pong sweeps, 22 payload sizes each:
 **132 measurement rows**. The [results guide](part0/results/README.md) explains

@@ -6,25 +6,25 @@ This maps the supplied `heat_mpi_project.pdf` to actual repository contents. A d
 
 | Assignment section | Requirement | Current state |
 | --- | --- | --- |
-| 4.1-4.3 | One Ubuntu VM per host; common user/software; record CPU/RAM | Three timestamped inventories confirm matching Ubuntu/MPI; host CPUs, VM 4096 MB / 2 vCPU and physical Wi-Fi records collected |
+| 4.1-4.3 | One Ubuntu VM per host; common user/software; record CPU/RAM | Matching Ubuntu/MPI and host/VM records collected; original 2+2+2 guest vCPUs updated to 4+2+2 in the reviewed 21 November inventories (about 4 GiB RAM each) |
 | 4.4 | Tailscale inside VMs; reachability and pair routes | Connectivity observed; original full-run before/after route observations preserved in public copies |
 | 4.5 | Every VM can SSH to every other without prompts | COMPLETE: all six directions verified across original captures and the successful heat-2 recheck at 15:30:12 UTC |
 | 4.6 | Cluster hostname and MPI hello | COMPLETE: hostname placement passes; fresh six-rank hello at 15:34:24 UTC shows size=6 and rank_sum=15, two ranks per VM |
 | 4.7 | Same-VM and every-pair ping-pong, 8 B to 16 MiB; model | Six complete sweeps / 132 measured rows; analysis, plots, route qualifications included |
 | C1 | Part 0 plus serial convergence and background tasks | Technical materials ready: verified cluster, reviewed Ubuntu convergence evidence, and written-task PDF/source. Team explanation and private course-record obligations remain |
 | 5 / Part 1 | Serial heat solver and verification | COMPLETE: actual Ubuntu results archived, numerically cross-checked and visually reviewed; six correctness groups pass; analysis and delivery checklist included |
-| 6 / Part 2 | 1D strips, correct halos, identical final output | Implemented: [part2/](../part2/DELIVERY.md); C2 supported by 84/84 recorded byte comparisons across 2–3 VMs; retained-field evidence remains [open](../part2/RECOVERY.md) ([study](../part2/results/2026-11-19-cluster/)) |
-| 7 / Part 3 | 2D Cartesian blocks and column communication | Solver implemented: [part3/](../part3/DELIVERY.md); 90/90 recorded matches across 2–3 VMs; timing checked at P=4,6. Required P=8 measurements and retained-field evidence remain [open](../part3/RECOVERY.md) ([study](../part3/results/2026-11-19-cluster/)) |
-| 8 / Part 4 | Repeated performance study, model and scaling | Future work |
+| 6 / Part 2 | 1D strips, correct halos, identical final output | COMPLETE technical/C2 evidence: [new retained-field study](../part2/results/2026-11-21-retained-cluster/), 84/84 exact matches, 109 fields, strict verification PASS |
+| 7 / Part 3 | 2D Cartesian blocks and column communication | COMPLETE Part 3 implementation/evidence: [new study](../part3/results/2026-11-21-retained-cluster/), 108/108 exact matches, 130 fields, required P=4,8 timing with three repeats; full C3 still needs Part 4 |
+| 8 / Part 4 | Repeated performance study, model and scaling | [Implementation ready](../part4/DELIVERY.md): full matrix, checkpoint/resume, calibration/model overlays, verification and plots. Actual VM performance campaign and review still pending |
 | 9 / Part 5 | Optional GPU extension | Not attempted here; optional |
 
 ## Section 10: final hand-in checklist
 
 | Deliverable | Included now | Remaining work |
 | --- | --- | --- |
-| 1. Code repository | Parts 0–3 sources (serial, strips, blocks), one-command build, option documentation, hostfile, launchers, verified evidence and plotting/offline-check scripts | Part 4 performance scripts |
+| 1. Code repository | Parts 0–3 sources (serial, strips, blocks), one-command build, option documentation, hostfile, launchers, verified evidence and plotting/offline-check scripts | Run and review Part 4 measurements |
 | 2. Background-task solutions PDF | PDF covering 25 required tasks plus optional 6.5, editable LaTeX, figures/tables and reproduction files under docs/background-solutions | Add actual team identification where required and include complete private AI records in the course hand-in |
-| 3. Correctness evidence | Reviewed Ubuntu serial table/plots, raw output, source/archive hashes, instability and stable-case checks; serial-vs-strips (84/84) and serial-vs-blocks (90/90) recorded byte comparisons over several N and P across the VMs | New reviewed studies should retain the original binary fields with the updated Part 2/3 runners |
+| 3. Correctness evidence | Serial numerical evidence plus new strict-verified retained-field studies for strips/blocks and P=8 | Preserve the original private bundle and include the reviewed studies in the final submission |
 | 4. Report, at most 10 pages plus appendices | Part 0 learning guide and report-ready Part 1–3 analyses with figures | Integrate the completed numerical/decomposition material, Part 4 performance results and actual team contributions into the final concise report |
 | 5. Complete llm_log folder and instructions | Root AGENTS rules, this session record and honest missing-history status | Preserve every earlier full interaction, actual member/model/tool/date metadata, and full private exports in the course hand-in |
 | 6. Ten-minute live demo | Cluster can launch programs and communicate | Run heat Cases 1 and 2 across at least three VMs with heat map/animation; change N or P and explain any code |
@@ -43,10 +43,9 @@ The 39-page Part 0 guide is intentionally explanatory. It is **not** the require
 The delivery indexes for [Part 1](../part1/DELIVERY.md), [Part 2](../part2/DELIVERY.md)
 and [Part 3](../part3/DELIVERY.md) identify the completed technical work. The full
 project hand-in still requires Part 4, the live heat-solver demo, the final report
-and complete private interaction records. Part 2 has an explicit [evidence recovery
-item](../part2/RECOVERY.md): the older archive omitted the binary fields, whereas
-new runs retain them for independent byte comparison. [Part 3](../part3/RECOVERY.md)
-has the same legacy-field limitation and still needs the required P=8 measurement.
+and complete private interaction records. The historical [Part 2](../part2/RECOVERY.md)
+and [Part 3](../part3/RECOVERY.md) field/P=8 evidence gaps are closed by the reviewed
+21 November retained-field studies. Older archives keep their original limitations.
 
 ## Solver contract: serial, strips and blocks implemented
 
@@ -114,3 +113,36 @@ the old measurements and save fresh calibration separately. Part 4 still require
 per-VM serial baselines, both decompositions, both node/slot placements, strong and
 weak scaling, fixed step counts, at least three repetitions, median/spread, and
 model-versus-measurement comparisons.
+
+## Evidence closure, 21 November 2026
+
+The uploaded parts23-20261120T231427Z checked bundle passes strict Part 2
+`--require-fields` and Part 3 `--require-fields --require-p8` checks. The earlier
+missing-field/P=8 items described above are now closed by the new archives.
+All 280 recorded solver commands succeeded with empty stderr. Six strips and six
+blocks correctness groups passed on the launching VM. Inventories/capacity records
+confirm 4+2+2 guest vCPUs; all three VMs have identical hashes for the three binaries.
+The launcher's checkout was clean at revision 60fc802. Raw inventories/endpoints
+remain private; the reviewed study files and manifests retain their original bytes.
+
+Connectivity probes included DERP relay use. This is valid observed cluster data,
+but does not establish a controlled, always-direct performance environment. Part 4
+still needs a fixed documented configuration and matching communication calibration,
+serial baselines, both placements, strong/weak scaling, communication share and
+repeated measurements/model comparisons. Final report, live demo and complete
+missing private AI histories remain open. No further Part 2/3 correctness rerun is
+needed merely because the laptop restarted after these data were collected.
+
+## Part 4 implementation, 21 November 2026
+
+The [Part 4 runner](../part4/README.md) now scripts all required baselines,
+strong/weak scaling, placements, per-run communication fractions, repeated
+statistics, a measured per-host/pairwise Task 8.2 model and a 1us-latency scenario.
+The default eight-slot plan is 429 heat invocations plus calibration/probes.
+Checkpoint/resume and private raw originals are included. Synthetic pipeline tests
+are validation of the tools, not actual Part 4 results. C3 is not marked complete
+until the real full campaign is collected, verified and interpreted.
+
+The reviewed Part 2/3 field files remain intended versioned correctness evidence.
+Temporary Part 4 runs/scratch and private originals are ignored. See the
+[Git inclusion policy](git-inclusion.md) before staging the pending files.

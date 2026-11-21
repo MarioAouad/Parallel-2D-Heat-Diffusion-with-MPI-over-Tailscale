@@ -1,5 +1,8 @@
 # Part 3 evidence recovery and open requirements
 
+**Current review, 21 November 2026:** The [new retained-field cluster study](results/2026-11-21-retained-cluster/) passes strict verification: 108/108 exact comparisons, 130 retained fields, all three VMs represented. The retained-field and required P=8 measurement gaps are closed. Full checkpoint C3 still includes Part 4. Earlier dates and open-gap descriptions below refer to the historical archive, not the current delivery.
+
+
 The block solver has no known numerical or halo-exchange defect from the audit.
 Its C++ source and the original dated measurements remain unchanged. The fixes
 concern evidence retention, verification, report wording and reproducible runs.

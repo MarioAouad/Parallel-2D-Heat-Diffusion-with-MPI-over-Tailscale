@@ -1,8 +1,11 @@
 # Part 2 delivery checklist
 
+**Current review, 21 November 2026:** The [new retained-field cluster study](results/2026-11-21-retained-cluster/) passes strict verification: 84/84 exact comparisons, 109 retained fields, all three VMs represented. The missing-original-fields gap is closed by this new run; old archives remain record-only. Earlier dates and open-gap descriptions below refer to the historical archive, not the current delivery.
+
+
 Part 2 implementation and archived C2 records pass the technical checks.
-**Evidence closure remains open until a new retained-field cluster study is archived.**
-The primary evidence is the reviewed [cluster study of 19 November 2026](results/2026-11-19-cluster/),
+**Retained-field evidence is now archived and verified; C2 technical evidence is complete.**
+The historical evidence below is the reviewed [cluster study of 19 November 2026](results/2026-11-19-cluster/),
 launched from heat-3 across all three VMs. This checklist is the Part 2 handoff. It does
 not claim that Part 3 (blocks), Part 4 (performance) or the final report are complete.
 
@@ -65,13 +68,12 @@ showed that the first packets often go through a relay. The Python scripts need
 GitHub holds the reviewed CSV, figures, raw command JSON, metadata, manifest, console
 transcripts and review. The original transfer folder stays outside the commit.
 
-**Open evidence gap: field files.** The 19 November study deleted each strips field after
+**Historical evidence gap, now closed by the new archive: field files.** The 19 November study deleted each strips field after
 comparing it, so its archive has no `.bin` files. Its byte equality rests on the
 `identical` column recorded during the run, and `verify_results.py` reports it as
 *record-only*. Since 20 November the runner keeps every field with its SHA-256, and the
 verifier repeats the comparison offline and recomputes each serial field independently.
-A new cluster run, archived **with** `fields/`, closes the gap. Until it is archived, the
-gap remains open.
+A new cluster run, archived **with** `fields/`, closes the gap. That complete new study is now archived and verified as linked above.
 
 The complete AI-interaction record for this work still needs the full session exports
 (see `llm_log/`).

@@ -60,6 +60,14 @@ verify-part3-results:
 test-part3-evidence:
 	python3 -m unittest discover -s part3/tests -v
 
+# Part 4 preview is offline. Long measured campaigns require an explicit --run.
+.PHONY: plan-part4 test-part4
+plan-part4:
+	python3 part4/run_experiments.py --plan
+
+test-part4:
+	python3 -m unittest discover -s part4/tests -v
+
 # Order-only prerequisite: create the directory without rebuilding merely
 # because another file changes the directory's modification time.
 build/mpi_hello: part0/03-mpi-hello/mpi_hello.cpp | build

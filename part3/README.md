@@ -1,8 +1,11 @@
 # Part 3: 2D block decomposition
 
+**Current review, 21 November 2026:** The [new retained-field cluster study](results/2026-11-21-retained-cluster/) passes strict verification: 108/108 exact comparisons, 130 retained fields, all three VMs represented. The retained-field and required P=8 measurement gaps are closed. Full checkpoint C3 still includes Part 4. Earlier dates and open-gap descriptions below refer to the historical archive, not the current delivery.
+
+
 **Status: implemented and previously built/run on the Ubuntu cluster.** The
 19 November archive records 90/90 matches across two/three VMs and P=4,6 timing.
-The original fields and required P=8 timing evidence remain open; see
+The historical field/P=8 gaps are now closed by the new study linked above; see
 [recovery](RECOVERY.md), the [delivery checklist](DELIVERY.md) and [analysis](ANALYSIS.md).
 The runner keeps new fields, checks real guest CPU capacity, adds P=8 when capacity
 allows, and refuses oversubscription in cluster mode. Local mocked pipeline tests

@@ -2,7 +2,8 @@
 
 | Record | Role | Contents |
 | --- | --- | --- |
-| [2026-11-19-cluster](2026-11-19-cluster/) | Primary Part 3 delivery: the cluster study | 90/90 byte-identical (P = 1–6, grids up to 3×2, 2–3 VMs); halo transcripts; figures; 36-run strips-vs-blocks timing check. [Review](2026-11-19-cluster/README.md) |
+| [21 November retained-field study](2026-11-21-retained-cluster/) | **Current primary evidence** | 108/108 exact serial/MPI comparisons; 130 original fields retained; strict offline verification PASS; required P=4,8 timing matrix, 36 runs |
+| [2026-11-19-cluster](2026-11-19-cluster/) | Historical cluster study; original fields/P=8 absent | 90/90 byte-identical (P = 1–6, grids up to 3×2, 2–3 VMs); halo transcripts; figures; 36-run strips-vs-blocks timing check. [Review](2026-11-19-cluster/README.md) |
 
 `python3 part3/run_experiments.py --cluster` writes a new timestamped folder under the
 ignored `runs/` directory. Review it before publishing:

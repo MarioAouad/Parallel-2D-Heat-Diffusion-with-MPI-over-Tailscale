@@ -1,0 +1,12 @@
+python3 part3/verify_blocks.py --exe build/heat_blocks --serial build/heat
+test_bad_inputs_are_rejected_once (__main__.BlockChecks.test_bad_inputs_are_rejected_once) ... ok
+test_bit_identical_to_serial (__main__.BlockChecks.test_bit_identical_to_serial) ... ok
+test_ghost_rows_and_columns_equal_neighbour_values (__main__.BlockChecks.test_ghost_rows_and_columns_equal_neighbour_values) ... ok
+test_maximum_principle_symmetry_and_unstable_demo (__main__.BlockChecks.test_maximum_principle_symmetry_and_unstable_demo) ... ok
+test_process_grid_and_block_sizes (__main__.BlockChecks.test_process_grid_and_block_sizes) ... ok
+test_summary_fields_and_timers (__main__.BlockChecks.test_summary_fields_and_timers) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 70.263s
+
+OK

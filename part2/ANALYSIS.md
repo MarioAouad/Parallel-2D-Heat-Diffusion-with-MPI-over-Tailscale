@@ -1,8 +1,11 @@
 # Part 2: strip decomposition, correctness argument and expected cost
 
+**Current review, 21 November 2026:** The [new retained-field cluster study](results/2026-11-21-retained-cluster/) passes strict verification: 84/84 exact comparisons, 109 retained fields, all three VMs represented. The missing-original-fields gap is closed by this new run; old archives remain record-only. Earlier dates and open-gap descriptions below refer to the historical archive, not the current delivery.
+
+
 ## Outcome and provenance
 
-**Status: implementation and C2 run records pass; retained-field evidence remains open.** The [primary cluster study](results/2026-11-19-cluster/)
+**Status: implementation and retained-field C2 evidence pass. The historical discussion below describes the 19 November run.** The [primary cluster study](results/2026-11-19-cluster/)
 was launched from heat-3 at 2026-11-19 18:49:15 UTC. It ran the executables built from commit 1c2b5e6
 on all three VMs, and the source hashes in its metadata match the committed files. In it:
 
