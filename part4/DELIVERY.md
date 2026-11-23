@@ -1,25 +1,32 @@
 # Part 4 delivery checklist
 
-**Implementation complete; real cluster campaign and review pending.** No synthetic
-test output or Part 3 timing table is presented as Part 4 measurement evidence.
+**Technical delivery complete, reviewed 24 November 2026.** The real
+[three-VM study](results/2026-11-24-cluster/) passes strict full verification.
+The required CPU/MPI performance study is complete; optional GPU work is omitted.
 
-| Assignment requirement | Implementation | Closure evidence still needed |
-| --- | --- | --- |
-| 8.1 fixed steps and r near stability limit | Default 20 steps/r=0.24, no --T or output, same heat parameters across the campaign | Full VM run |
-| At least three runs, median/spread | Full profile uses three repetitions; CSVs preserve all rows and median/min/max | Verified full campaign |
-| Power/load and Wi-Fi notes | --notes required; guest inventory, network snapshots and hardware metadata | Actual operator notes and controlled conditions |
-| No oversubscription | Real nproc/slots check, explicit nooversubscribe, observed rank placement and core binding | Guest inventory and probe records |
-| 8.2 serial on each VM at five N | 45 default measurements, per-step and per-grid/interior-node costs | Baseline CSV/raw outputs |
-| Strong scaling, both layouts/placements, all P | 288 default measurements, N512/2048/8192, P1..8 | Curves and verified repetitions |
-| Weak scaling and constant-work discussion | 96 default measurements, exact rounded work recorded | Weak time/efficiency plot |
-| Communication share per run | Raw and summary fractions, plot and timer-maxima caveat | Recorded timers |
-| 8.3 measured compute/communication model | Per-VM compute interpolation, same-transport Part0 benchmark reuse, placement-aware neighbor model | Physically valid fits and model overlays |
-| Model/measured crossover, discrepancies | Generated report derives tested crossovers and notes assumptions | Interpretation of actual routes/load and observed differences |
-| ts=1us counterfactual | Prediction CSV and dotted model curve | Measured campaign plus generated analysis |
-| Advice for Tailscale | Generated report and measured selection tables | Team interpretation in final report |
-| Scripts/raw output reproducibility | Restartable runner, verifier, public/private logs, hashes and source provenance | Reviewed archive |
+| Assignment requirement | Delivered evidence |
+| --- | --- |
+| Fixed comparable steps and near-limit r | All 429 heat runs: Case 1, 20 steps, r=0.24, no --T or field output |
+| Three repeats and spread | 143 configurations x 3; measurements.csv and analysis/summary.csv |
+| AC/load/Wi-Fi and real CPU allocation | Recorded notes/inventories; 4+2+2 vCPUs/slots; core binding/nooversubscribe; 16 observed placement probes |
+| Serial baseline per VM, five N | 45 measurements, per-step/full-grid-node/interior-node rates, serial_baselines PNG/PDF |
+| Both layouts, both placements, strong P=1..8 | 288 measurements; N=512,2048,8192; time/speed-up/efficiency PNG/PDF |
+| Weak scaling | 96 measurements; approximately 1024^2 interior nodes/rank; exact rounded ownership; weak_scaling PNG/PDF |
+| Communication share per run | Timers, ratios and spread; communication_share PNG/PDF; independent-maxima caveat |
+| Measured model and matching transport | Per-guest compute rates; 18 fresh Part 0 ping-pong sweeps with TCP/self; positive physical fits, RMSE and overlays |
+| Crossover and discrepancy answers | Final report: no tested cross-VM crossover; variability, phase ordering, topology and contention limitations |
+| Part 3 P=4,8 layout prediction then check | layout-comparison.csv: 12 cases, both maps, 7 model/measured winner agreements; report page 8 |
+| One-microsecond counterfactual | Prediction CSV and report page 9; only startup changed, bandwidth/compute held fixed |
+| Tailscale advice | Measured best configurations and report recommendations; no route-continuity claim |
+| Reproducibility | Runner, strict verifier, immutable CSVs and figures, original/private raw history and bounded-retry journal |
 
-The final report (at most ten pages plus appendices), actual team contribution
-statements, full AI records and ten-minute live demonstration remain separate
-final deliverables. Full checkpoint C3 requires the actual performance campaign,
-not only this implementation or the already closed Part 2/3 correctness gaps.
+The [final report](../docs/final-report/final-report.pdf) has ten main pages plus
+three plot appendices and names Mario Aouad, Mohamad Farchoukh and Bassem Haddad.
+The team reported shared work across all stages; no exclusive roles were invented.
+Technical C3 evidence is ready; instructor checkpoint acceptance is a separate event.
+
+The whole-project hand-in still requires the team's ten-minute live presentation
+and confirmation that all members' complete private AI histories are included.
+Existing Case 1/2 three-guest field files and heat maps are present; they do not
+establish that a live presentation has occurred. No new full performance or
+correctness campaign is required merely to prepare that presentation.

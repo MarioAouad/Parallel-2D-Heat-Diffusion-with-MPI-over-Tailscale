@@ -105,6 +105,61 @@ resumed. A verified complete folder does not repeat measurements; an interrupted
 final manifest publication is rebuilt from the retained checkpoints and raw data.
 Reviewed dated archives cannot be resumed/overwritten.
 
+For repeated interruptions, collect the actual diagnostics before retrying again.
+`scripts/diagnose-part4.py` is standalone: copy only that file into `/tmp` on the
+launcher and run it against the original folder. Do not pull a new Git revision
+into an interrupted campaign merely to obtain this utility.
+
+```bash
+python3 /tmp/diagnose-part4.py --run /home/mpi/heat-project-repo/part4/results/runs/ACTUAL_FOLDER
+```
+
+The collector writes a new private archive under `output/`, copying the original
+run and session logs and recording bounded read-only CPU/memory/process/MPI and
+Tailscale checks on all three guests. It launches no solver or MPI benchmark and
+never edits checkpoints, sources or existing results. Network probes describe
+conditions at collection time, not throughout earlier measurements. Read failures
+(including unprivileged kernel-log access) are retained as diagnostic evidence.
+Share the printed archive privately. A known parent `setpgid` warning is labelled
+for review, not accepted into the campaign by this utility; other diagnostics
+remain distinguishable. Warning-only rejected attempts can have exit code zero,
+so the existing `failed_attempts_retained` nonzero-exit count does not count them.
+
+After confirming an exact Open MPI 4.1.6 parent `setpgid(...,...)` warning with
+`Permission denied(13)`, an interrupted frozen campaign can use the standalone
+`scripts/resume-part4-checked.py`. Copy only that file to `/tmp`, without pulling
+or changing the campaign's recorded sources/binaries:
+
+```bash
+python3 /tmp/resume-part4-checked.py --run /home/mpi/heat-project-repo/part4/results/runs/ACTUAL_FOLDER --notes "Actual AC/load/Wi-Fi conditions; recovering from reviewed parent setpgid warning"
+```
+
+The helper runs the original runner unchanged. Warning attempts remain rejected;
+only a later clean attempt can become a measurement. After a stop it retries only
+when a new, uncheckpointed MPI heat invocation has exit code zero, solely that
+exact parent warning, and a valid expected numerical/timing summary. A preflight,
+transport, numerical, calibration, analysis or verification failure is not retried
+under this policy. No raw data, recorded source hashes or existing measurements
+are rewritten. Default bounds are three automatic retries per task and 32 total
+per supervised session, followed by a stop for review if exhausted. The recorded
+session notes disclose the retry policy; private `resume-supervisor.jsonl` retains
+events and helper hash. A separate supervisor lock prevents duplicate retry loops.
+The original runner still checks live sources, revision, binaries, MPI and CPU
+allocation on every resume. On success the original offline verifier and packager
+produce the return archive, including private retry history and session logs.
+
+The reviewed 23 November interrupted campaign had 49 retained heat measurements,
+18 calibration sweeps and 16 placement probes. Both rejected heat attempts had
+exit code zero and solely this parent warning. Three guests matched the same
+revision/source hashes and their recorded binaries with slots/vCPUs 4+2+2. At
+diagnostic time each guest had about 4 GB RAM with unused swap; no solvers remained.
+The P=6 interrupted invocation spent about 99.6% of its reported loop time in
+communication (including waiting). Direct and DERP-relayed paths varied across
+post-interruption probes; they do not prove routes throughout the timed loop.
+The diagnostic archive is private and is not a completed Part 4 result. Network
+improvements that deliberately change the experiment conditions belong in a
+separately documented campaign; never silently replace the current study's data.
+
 If model generation stopped because calibration was nonphysical, preserve the
 first measurements and explicitly redo all calibration sweeps with wider coverage:
 

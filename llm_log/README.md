@@ -66,3 +66,22 @@ session (not about this course) was also left out.
   hand-in.
 
 An export that cannot be found must be listed as missing. Never reconstruct it from memory.
+
+
+## Final-delivery recovery, 24 November 2026 local time
+
+The latest immutable local recovery snapshot is
+`private/recovered/20261123T224902038169Z/`: **24 session snapshots / 657 visible
+messages**, attributed to Mario Aouad, whose identity was confirmed by the user.
+These overlap earlier recoveries and must not be added together as unique counts.
+Each snapshot records available model IDs, source hashes and compaction limits.
+Current-turn visible records are retained separately because an active-chat
+snapshot does not include messages created after capture. No hidden reasoning,
+source tool calls or system/developer messages were exported by the recovery tool.
+
+Mario Aouad confirmed the other team members as Mohamad Farchoukh and Bassem Haddad
+and stated that all three worked across all project areas. This dated correction
+supplies current identity/contribution information; older append-only entries
+marked unknown are preserved. It does not identify unrelated or missing old chats.
+The public index and private supplement still cannot certify completeness of the
+other members' earlier sessions; each owner must verify and add their full exports.

@@ -1,51 +1,57 @@
-# Assignment deliverables and our current status
+# Assignment deliverables and final status
 
-This maps the supplied `heat_mpi_project.pdf` to actual repository contents. A document describing a future requirement is not evidence that the requirement has been implemented.
+**24 November 2026: Parts 0-4 technical evidence passes. Optional GPU/CUDA work
+is deliberately omitted.** These statements refer to reviewed saved evidence,
+not to synthetic tests or an assumed live demonstration.
 
-## Parts and checkpoints
+| Requirement | Current delivery |
+| --- | --- |
+| Part 0 | Three-guest setup, all six directed SSH checks, six-rank hello, six full ping-pong sweeps / 132 measurements |
+| Part 1 | Serial solver, five-grid second-order convergence, isolated instability experiment, Cases 1/2 and offline verification |
+| Part 2 | 84/84 exact serial/strips comparisons, 109 retained fields, strict verifier passes |
+| Part 3 | 108/108 exact serial/blocks comparisons, 130 retained fields, P=4,8 timing matrix on real eight-slot allocation |
+| Part 4 | [Full reviewed study](../part4/results/2026-11-24-cluster/): 429 measurements, 18 calibration sweeps, 16 placement probes, all P=1..8, three repeats/configuration |
+| Final report | [Ten main pages plus three plot appendices](final-report/final-report.pdf); actual cluster/results/model and shared contribution statements |
+| Background-task solutions | [Separate PDF and editable source](background-solutions/README.md), all required tasks included |
+| Reproducible evidence check | `make verify-delivery` checks Parts 0-4 offline; no MPI rerun |
+| Live-demo materials | Existing Cases 1/2 images/three-guest field records, plus [new explicit-run helper](../scripts/run-demo.py) |
+| Full private AI histories | Existing records plus newly recovered local visible snapshots; all-member historical completeness still needs team confirmation |
 
-| Assignment section | Requirement | Current state |
-| --- | --- | --- |
-| 4.1-4.3 | One Ubuntu VM per host; common user/software; record CPU/RAM | Matching Ubuntu/MPI and host/VM records collected; original 2+2+2 guest vCPUs updated to 4+2+2 in the reviewed 21 November inventories (about 4 GiB RAM each) |
-| 4.4 | Tailscale inside VMs; reachability and pair routes | Connectivity observed; original full-run before/after route observations preserved in public copies |
-| 4.5 | Every VM can SSH to every other without prompts | COMPLETE: all six directions verified across original captures and the successful heat-2 recheck at 15:30:12 UTC |
-| 4.6 | Cluster hostname and MPI hello | COMPLETE: hostname placement passes; fresh six-rank hello at 15:34:24 UTC shows size=6 and rank_sum=15, two ranks per VM |
-| 4.7 | Same-VM and every-pair ping-pong, 8 B to 16 MiB; model | Six complete sweeps / 132 measured rows; analysis, plots, route qualifications included |
-| C1 | Part 0 plus serial convergence and background tasks | Technical materials ready: verified cluster, reviewed Ubuntu convergence evidence, and written-task PDF/source. Team explanation and private course-record obligations remain |
-| 5 / Part 1 | Serial heat solver and verification | COMPLETE: actual Ubuntu results archived, numerically cross-checked and visually reviewed; six correctness groups pass; analysis and delivery checklist included |
-| 6 / Part 2 | 1D strips, correct halos, identical final output | COMPLETE technical/C2 evidence: [new retained-field study](../part2/results/2026-11-21-retained-cluster/), 84/84 exact matches, 109 fields, strict verification PASS |
-| 7 / Part 3 | 2D Cartesian blocks and column communication | COMPLETE Part 3 implementation/evidence: [new study](../part3/results/2026-11-21-retained-cluster/), 108/108 exact matches, 130 fields, required P=4,8 timing with three repeats; full C3 still needs Part 4 |
-| 8 / Part 4 | Repeated performance study, model and scaling | [Implementation ready](../part4/DELIVERY.md): full matrix, checkpoint/resume, calibration/model overlays, verification and plots. Actual VM performance campaign and review still pending |
-| 9 / Part 5 | Optional GPU extension | Not attempted here; optional |
+## What remains for the team
 
-## Section 10: final hand-in checklist
+1. Present the required ten-minute live demo to the instructor if it has not
+   already been delivered. Existing plots and raw runs prove technical execution,
+   not that a live presentation occurred. Run Cases 1 and 2 across all three VMs,
+   show the heat map, be ready to change N/P and explain the code. See the
+   [demo/report guide](final-report/README.md). No repeat of the full performance
+   campaign is required for this.
+2. Include every member's complete visible project AI conversations and actual
+   member/tool/model/date metadata in the private course hand-in. Missing earlier
+   chats on other computers/tools cannot be reconstructed from timing archives.
+   See [the record-status index](../llm_log/README.md). This cannot honestly be
+   marked complete from one machine's exports.
+3. Read the final report as a team, check the shared contribution statement, and
+   submit the repository snapshot, separate background PDF, report and private
+   records through the instructor's channel. Instructor acceptance remains external.
 
-| Deliverable | Included now | Remaining work |
-| --- | --- | --- |
-| 1. Code repository | Parts 0–3 sources (serial, strips, blocks), one-command build, option documentation, hostfile, launchers, verified evidence and plotting/offline-check scripts | Run and review Part 4 measurements |
-| 2. Background-task solutions PDF | PDF covering 25 required tasks plus optional 6.5, editable LaTeX, figures/tables and reproduction files under docs/background-solutions | Add actual team identification where required and include complete private AI records in the course hand-in |
-| 3. Correctness evidence | Serial numerical evidence plus new strict-verified retained-field studies for strips/blocks and P=8 | Preserve the original private bundle and include the reviewed studies in the final submission |
-| 4. Report, at most 10 pages plus appendices | Part 0 learning guide and report-ready Part 1–3 analyses with figures | Integrate the completed numerical/decomposition material, Part 4 performance results and actual team contributions into the final concise report |
-| 5. Complete llm_log folder and instructions | Root AGENTS rules, this session record and honest missing-history status | Preserve every earlier full interaction, actual member/model/tool/date metadata, and full private exports in the course hand-in |
-| 6. Ten-minute live demo | Cluster can launch programs and communicate | Run heat Cases 1 and 2 across at least three VMs with heat map/animation; change N or P and explain any code |
+All three members (Mario Aouad, Mohamad Farchoukh and Bassem Haddad) reported joint
+work across all project stages. The report reflects that statement without
+inventing exclusive ownership. GPU and optional nonblocking overlap are not required.
 
-## What the final report must explain
+## Final evidence qualifications
 
-1. Machines, host CPU models, VM vCPU/RAM allocations, network access and direct/DERP observations, with the latency/bandwidth table.
-2. Numerical method, stability condition and convergence study.
-3. Both decomposition designs, a figure and correctness checks.
-4. Performance curves, model and answers to the Part 3/4 questions, including cases where extra machines slow down the computation.
-5. GPU details only if the optional extension is attempted.
-6. A short paragraph describing each team member's contribution; do not invent assignments or authorship.
+The performance campaign contains 143 configurations with exactly three retained
+measurements each (45 serial, 288 strong, 96 weak). All 509 raw invocations remain:
+499 checkpoint references, nine rejected warning-only attempts and one failed
+MPI invocation when a peer VM became unavailable. The final strict verifier passes.
+All original data remains private; only account identifiers in public network
+stdout were additionally redacted, with a new manifest and [hash provenance](../part4/review.json).
 
-The 39-page Part 0 guide is intentionally explanatory. It is **not** the required final ten-page report.
-
-The delivery indexes for [Part 1](../part1/DELIVERY.md), [Part 2](../part2/DELIVERY.md)
-and [Part 3](../part3/DELIVERY.md) identify the completed technical work. The full
-project hand-in still requires Part 4, the live heat-solver demo, the final report
-and complete private interaction records. The historical [Part 2](../part2/RECOVERY.md)
-and [Part 3](../part3/RECOVERY.md) field/P=8 evidence gaps are closed by the reviewed
-21 November retained-field studies. Older archives keep their original limitations.
+Best tested strong speed-ups are 2.68/2.92/2.86 on four ranks within heat1. No tested
+cross-guest configuration beats serial heat1. Wide spread and route/VM changes
+are disclosed; they are observed limitations, not grounds for fabricating timings
+or claiming a stable network. No new correctness/performance runs are required
+solely because recovery helpers, documentation and report files were added.
 
 ## Solver contract: serial, strips and blocks implemented
 
@@ -75,7 +81,7 @@ The same-architecture parallel fields must match the serial output bit for bit f
 
 The later study needs fixed comparable step counts, at least three independent runs per configuration with median/spread, strong/weak scaling and computation/communication timing. Our three timed trips for a large ping-pong size are not three independent full experiments.
 
-The example hostfile has six slots. Comparisons at P=8 require eight actual allocated vCPU slots or discussion of a resource-limited case with the professor. Increasing hostfile numbers without allocating real vCPUs is not a valid fix. `cluster.sh` now takes optional per-VM slot counts, and `part3/run_experiments.py --cluster` checks each against the VM's `nproc` before running P = 8. The P = 8 measurement stays open until it has actually been run on eight real vCPUs. This does not invalidate the present six-process hello or two-process benchmark.
+The original example hostfile has six slots. The reviewed current configuration has eight actual allocated vCPUs and slots (4+2+2), and P=8 has been measured. Increasing slots without allocating real CPUs would not be valid. `cluster.sh` now takes optional per-VM slot counts, and `part3/run_experiments.py --cluster` checks each against the VM's `nproc` before running P = 8. The archived P=8 evidence is complete in the 21 November Part 3 and full Part 4 studies. This does not invalidate the present six-process hello or two-process benchmark.
 
 ## Section 12: AI use
 
@@ -83,7 +89,7 @@ All interactions at setup, code, debugging, analysis and reporting stages must b
 
 Full earlier conversations containing credentials remain private. The public repository can include a safe copy and explain its limits, while the private course hand-in must contain the required complete records. A summary README or index is not a substitute for prompts and responses.
 
-## Reconciled local handoff, 20 November 2026
+## Historical audit: 20 November 2026 (superseded by final status above)
 
 The pulled retention and CPU-slot checks are preserved and the same CPU preflight
 is now shared by both parallel runners (Part 2 no longer assumes six slots). Local evidence tests and
@@ -133,7 +139,7 @@ repeated measurements/model comparisons. Final report, live demo and complete
 missing private AI histories remain open. No further Part 2/3 correctness rerun is
 needed merely because the laptop restarted after these data were collected.
 
-## Part 4 implementation, 21 November 2026
+## Historical implementation checkpoint, 21 November 2026
 
 The [Part 4 runner](../part4/README.md) now scripts all required baselines,
 strong/weak scaling, placements, per-run communication fractions, repeated
@@ -146,3 +152,10 @@ until the real full campaign is collected, verified and interpreted.
 The reviewed Part 2/3 field files remain intended versioned correctness evidence.
 Temporary Part 4 runs/scratch and private originals are ignored. See the
 [Git inclusion policy](git-inclusion.md) before staging the pending files.
+
+
+## Final closure, 24 November 2026
+
+The full Part 4 study and report above supersede earlier pending-campaign statements
+in dated audit entries. All saved Parts 0-4 checks pass. Live presentation and
+all-member private history completeness are the remaining external obligations.

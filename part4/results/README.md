@@ -1,6 +1,31 @@
 # Part 4 results
 
-No reviewed real Part 4 campaign is archived yet.
+The [reviewed full campaign](2026-11-24-cluster/) was measured on 23 November UTC
+and reviewed on 24 November 2026 local time. It passes the strict full-profile
+verifier: 429 heat measurements, 18 calibration sweeps and 16 placement probes.
+There are 143 configurations with exactly three repetitions each. The guests use
+4+2+2 actual vCPUs/slots; all P=1..8 are measured.
+
+```bash
+python3 part4/verify_results.py --data part4/results/2026-11-24-cluster
+```
+
+No CSV, heat summary, command, warning, figure, metadata or checkpoint was changed
+after measurement. The original return archive remains private. The reviewed
+public copy additionally replaces 108 account identifiers in 36 network-status
+stdout records and has a new manifest. The derived/original hashes and exact
+policy are in [the review](../review.json). `private/` and original terminal logs
+stay in the private course hand-in, not the public study.
+
+Of 509 raw invocations, 499 are referenced by successful checkpoints. Nine
+warning-only rejected attempts and one genuine MPI disconnection (exit 205) remain
+in raw history. `failed_attempts_retained=1` counts nonzero process exits only;
+it must not be described as the total number of rejected warning attempts.
+
+Best tested results use four ranks on heat1 with slot placement: speed-ups 2.68,
+2.92 and 2.86 at N=512,2048,8192. None of the 66 cross-guest strong configurations
+beats serial heat1. Retained spread and route/VM interruptions limit stationary
+performance claims; see [the report](../../docs/final-report/final-report.pdf).
 
 New runs, session logs and return archives go under the ignored `runs/` directory.
 Analysis scratch goes under ignored `analysis-local/`. Do not force-add these

@@ -1,9 +1,18 @@
 # Part 4: performance campaign
 
-**Implementation ready; real Part 4 measurements are not collected yet.** The
-reviewed Part 2/3 campaign is correctness evidence and a small timing check. It
-does not replace this full performance matrix. The verified C++ solvers remain
-unchanged; this part orchestrates, records, models and verifies their execution.
+**Reviewed 24 November 2026: the full real three-VM campaign passes strict
+verification.** The [public study](results/2026-11-24-cluster/) contains 429 heat
+measurements in 143 configurations with three repetitions each, 18 calibration
+sweeps and 16 placement probes on 4+2+2 real guest slots. The C++ solvers and the
+recorded campaign/model sources remain unchanged. No additional performance run
+is required to deliver these measured results.
+
+The [ten-page report plus plot appendices](../docs/final-report/final-report.pdf)
+includes the actual results, model answers and the team's shared contribution
+statement. [review.json](review.json) records the independent review and privacy
+derivation; [layout-comparison.csv](layout-comparison.csv) answers the required
+P=4,8 strips/blocks comparison for both placements. Live presentation and complete
+all-member private AI records remain separate final submission obligations.
 
 Start with the [VM run guide](RUN.md), [requirement checklist](DELIVERY.md),
 [model explanation](MODEL.md) and [results policy](results/README.md).

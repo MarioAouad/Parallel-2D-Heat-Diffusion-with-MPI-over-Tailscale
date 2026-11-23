@@ -1,0 +1,50 @@
+{
+  "heat1|heat1": {
+    "latency_s": 6.91275e-06,
+    "seconds_per_byte": 6.746059599378894e-10,
+    "seconds_per_double": 5.396847679503115e-09,
+    "valid": true,
+    "max_bytes": 131072,
+    "rmse_s": 3.2583247550891688e-06
+  },
+  "heat1|heat2": {
+    "latency_s": 0.009978198083335,
+    "seconds_per_byte": 5.974364693414386e-06,
+    "seconds_per_double": 4.779491754731509e-05,
+    "valid": true,
+    "max_bytes": 131072,
+    "rmse_s": 0.0048438029710817536
+  },
+  "heat1|heat3": {
+    "latency_s": 0.1758239655,
+    "seconds_per_byte": 1.9419268323139442e-05,
+    "seconds_per_double": 0.00015535414658511554,
+    "valid": true,
+    "max_bytes": 131072,
+    "rmse_s": 0.056255855014335096
+  },
+  "heat2|heat2": {
+    "latency_s": 1.677266666667e-05,
+    "seconds_per_byte": 9.038643004402088e-10,
+    "seconds_per_double": 7.2309144035216705e-09,
+    "valid": true,
+    "max_bytes": 131072,
+    "rmse_s": 3.0857504204381827e-06
+  },
+  "heat2|heat3": {
+    "latency_s": 0.0852147435,
+    "seconds_per_byte": 1.7816922392102487e-05,
+    "seconds_per_double": 0.0001425353791368199,
+    "valid": true,
+    "max_bytes": 131072,
+    "rmse_s": 0.052873268720057966
+  },
+  "heat3|heat3": {
+    "latency_s": 1.3475666666670001e-05,
+    "seconds_per_byte": 1.895661126999846e-09,
+    "seconds_per_double": 1.5165289015998768e-08,
+    "valid": true,
+    "max_bytes": 131072,
+    "rmse_s": 2.3340999746224395e-05
+  }
+}

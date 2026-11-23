@@ -1,7 +1,9 @@
 # Documentation index
 
-Parts 0 and 1 technical work and evidence review are complete as of
-19 November 2026. Start with the current guides below.
+Parts 0-4 technical evidence and the final report are reviewed as of
+24 November 2026. Start with the [final report and demo guide](final-report/README.md)
+and [hand-in checklist](deliverables.md). Live presentation and all-member private
+AI-history completeness remain team-owned submission obligations.
 
 | Document | Purpose |
 | --- | --- |

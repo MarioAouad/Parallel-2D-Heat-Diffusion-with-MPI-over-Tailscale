@@ -13,7 +13,7 @@ are intentional; do not replace them with a blanket exclusion of all fields.
   manifests, public-safe console evidence and review notes.
 - Part 4 Python sources/tests, Bash helpers, Makefile targets and documentation.
 - .gitignore/.gitattributes and the append-only public interaction log.
-- Later, a reviewed Part 4 archive's public measurements, calibration, raw JSONL,
+- The reviewed Part 4 archive's public measurements, calibration, raw JSONL,
   metadata, placement evidence, analysis tables, plots and generated report.
 
 ## Exclude
@@ -49,3 +49,19 @@ eligible for Git. `make test-part4` tests this distinction.
 Stage the reviewed paths, inspect `git diff --cached --stat` and
 `git diff --cached --check`, and include the corresponding interaction log.
 Do not force-add the full original private bundle or an in-progress campaign.
+
+
+## Final delivery, 24 November 2026
+
+Include `part4/results/2026-11-24-cluster/`, `part4/review.json`, the layout
+comparison CSV, `docs/final-report/` (PDF, source and figures), the demo and
+packaging helpers, current guides and append-only interaction record. The public
+study passes strict verification after account-only redaction of network stdout;
+original warnings, measured values and commands are unchanged.
+
+`output/submission/heat-project-public.zip` is a public-safe working-tree snapshot;
+it is an export, not a Git commit or a substitute for `.git` when launching scripts
+that require a clean checkout. The private supplement and all original archives
+remain ignored. It includes known visible chat records but cannot certify every
+member's missing history. Do not force-add either ZIP to Git. A repository checkout
+and the public snapshot both contain the required source/build/evidence files.

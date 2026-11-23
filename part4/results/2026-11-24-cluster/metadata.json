@@ -1,0 +1,197 @@
+{
+  "schema": 1,
+  "status": "complete",
+  "mode": "cluster",
+  "utc": "2026-11-23T14:45:37.779626+00:00",
+  "parameters": {
+    "profile": "full",
+    "baseline_N": [
+      512,
+      1024,
+      2048,
+      4096,
+      8192
+    ],
+    "strong_N": [
+      512,
+      2048,
+      8192
+    ],
+    "P": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "reps": 3,
+    "steps": 20,
+    "r": 0.24,
+    "weak_base": 1024,
+    "calibration_reps": 3,
+    "calibration_iterations": 3,
+    "calibration_max_bytes": 131072
+  },
+  "hosts": [
+    {
+      "host": "heat1",
+      "slots": 4,
+      "vcpus": 4,
+      "address": "heat1",
+      "local": true,
+      "inventory": {
+        "hostname": "heat1",
+        "vcpus": 4,
+        "platform": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
+        "cpu": "Architecture:                            x86_64\nCPU op-mode(s):                          32-bit, 64-bit\nAddress sizes:                           39 bits physical, 48 bits virtual\nByte Order:                              Little Endian\nCPU(s):                                  4\nOn-line CPU(s) list:                     0-3\nVendor ID:                               GenuineIntel\nModel name:                              Intel(R) Core(TM) i9-14900HX\nCPU family:                              6\nModel:                                   183\nThread(s) per core:                      1\nCore(s) per socket:                      4\nSocket(s):                               1\nStepping:                                1\nBogoMIPS:                                4838.39\nFlags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch ibrs_enhanced fsgsbase bmi1 avx2 bmi2 invpcid rdseed adx clflushopt sha_ni arat md_clear flush_l1d arch_capabilities\nHypervisor vendor:                       KVM\nVirtualization type:                     full\nL1d cache:                               128 KiB (4 instances)\nL1i cache:                               256 KiB (4 instances)\nL2 cache:                                16 MiB (4 instances)\nL3 cache:                                144 MiB (4 instances)\nNUMA node(s):                            1\nNUMA node0 CPU(s):                       0-3\nVulnerability Gather data sampling:      Not affected\nVulnerability Indirect target selection: Mitigation; Aligned branch/return thunks\nVulnerability Itlb multihit:             Not affected\nVulnerability L1tf:                      Not affected\nVulnerability Mds:                       Not affected\nVulnerability Meltdown:                  Not affected\nVulnerability Mmio stale data:           Not affected\nVulnerability Reg file data sampling:    Mitigation; Clear Register File\nVulnerability Retbleed:                  Mitigation; Enhanced IBRS\nVulnerability Spec rstack overflow:      Not affected\nVulnerability Spec store bypass:         Vulnerable\nVulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:                Mitigation; Enhanced / Automatic IBRS; PBRSB-eIBRS SW sequence; BHI SW loop, KVM SW loop\nVulnerability Srbds:                     Not affected\nVulnerability Tsa:                       Not affected\nVulnerability Tsx async abort:           Not affected\nVulnerability Vmscape:                   Not affected",
+        "ram": "total        used        free      shared  buff/cache   available\nMem:      4105437184   504291328  2976813056     1134592   864411648  3601145856\nSwap:     3024089088           0  3024089088",
+        "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+        "build_recipe": "mkdir -p build\ng++ -std=c++17 -O2 -ffp-contract=off -Wall -Wextra -Wpedantic part1/heat_serial.cpp -o build/heat\nmpic++ -DOMPI_SKIP_MPICXX=1 -std=c++17 -O2 -ffp-contract=off -Wall -Wextra -Wpedantic part2/heat_mpi.cpp -o build/heat_mpi\nmpic++ -DOMPI_SKIP_MPICXX=1 -std=c++17 -O2 -ffp-contract=off -Wall -Wextra -Wpedantic part3/heat_blocks.cpp -o build/heat_blocks\nmpic++ -DOMPI_SKIP_MPICXX=1 -std=c++17 -O2 -ffp-contract=off -Wall -Wextra -Wpedantic part0/04-pingpong/mpi_pingpong.cpp -o build/mpi_pingpong",
+        "busy": "",
+        "mpi": "mpirun (Open MPI) 4.1.6\n\nReport bugs to http://www.open-mpi.org/community/help/",
+        "revision": "1355492f732af771446a243ddd79ba9acaf262c7",
+        "dirty": "",
+        "sources": {
+          "part1/heat_serial.cpp": "bc24bfb7a3aa4afadd1f0e8d44feef1d5b479f917440bf6835fa73d77d9a11c4",
+          "part2/heat_mpi.cpp": "a110ee704dfb52c9b146b9344237fd496f3498290fef1f362a5b8526b19c3151",
+          "part3/heat_blocks.cpp": "169347424a0ac168f556b6746a1a2bcddba2f623dd9bb9d9d9c0e5d8fc96ef8d",
+          "part0/04-pingpong/mpi_pingpong.cpp": "b19d9b461fde3a8c7088a2ad9fb6f5360cfbc72a80d09d475711c44b3c876c72",
+          "part4/common.py": "eb0853aacd7674e2e231576f8f9dcbe63ed6811b8eb5d1da30f5a5f9640c3603",
+          "part4/run_experiments.py": "e2cb13b576528779d5f1f823ecb80aeb6cf479f75a84ff877848d013adf50971",
+          "part4/analyze.py": "248ec7ae22166bab9b86577b5348a1b828346ff840caac02ca07ace182c297c9",
+          "part4/verify_results.py": "8199204a52c7006bfaf4b6f092a711dcfb23ec149ded90df78e569b7d8fc4765"
+        },
+        "binaries": {
+          "heat": "308862d721d55a4a0ba0119ee6e2e1e136beee78420b028b8d456fa1c466273c",
+          "heat_mpi": "ea519525008874ccbad4f82bb5f1caaf78472d690d04123959978786bed456b3",
+          "heat_blocks": "10ed62a282e1ef70c4a99e3c434898fa595ccbfe3c64b809f72f389cffc49dbb",
+          "mpi_pingpong": "5bd12d4ec4b03832007dcbb1564adbbb1d2203b32c6942030b8d28b8cb10373d"
+        }
+      }
+    },
+    {
+      "host": "heat2",
+      "slots": 2,
+      "vcpus": 2,
+      "address": "heat2",
+      "local": false,
+      "inventory": {
+        "hostname": "heat2",
+        "vcpus": 2,
+        "platform": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
+        "cpu": "Architecture:                            x86_64\nCPU op-mode(s):                          32-bit, 64-bit\nAddress sizes:                           39 bits physical, 48 bits virtual\nByte Order:                              Little Endian\nCPU(s):                                  2\nOn-line CPU(s) list:                     0,1\nVendor ID:                               GenuineIntel\nModel name:                              12th Gen Intel(R) Core(TM) i7-1255U\nCPU family:                              6\nModel:                                   154\nThread(s) per core:                      1\nCore(s) per socket:                      2\nSocket(s):                               1\nStepping:                                4\nBogoMIPS:                                5222.41\nFlags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 cx16 pcid sse4_1 sse4_2 movbe popcnt aes rdrand hypervisor lahf_lm abm 3dnowprefetch ibrs_enhanced fsgsbase bmi1 bmi2 invpcid rdseed adx clflushopt sha_ni arat md_clear flush_l1d arch_capabilities\nHypervisor vendor:                       KVM\nVirtualization type:                     full\nL1d cache:                               64 KiB (2 instances)\nL1i cache:                               128 KiB (2 instances)\nL2 cache:                                4 MiB (2 instances)\nL3 cache:                                24 MiB (2 instances)\nNUMA node(s):                            1\nNUMA node0 CPU(s):                       0,1\nVulnerability Gather data sampling:      Not affected\nVulnerability Indirect target selection: Mitigation; Aligned branch/return thunks\nVulnerability Itlb multihit:             Not affected\nVulnerability L1tf:                      Not affected\nVulnerability Mds:                       Not affected\nVulnerability Meltdown:                  Not affected\nVulnerability Mmio stale data:           Not affected\nVulnerability Reg file data sampling:    Mitigation; Clear Register File\nVulnerability Retbleed:                  Mitigation; Enhanced IBRS\nVulnerability Spec rstack overflow:      Not affected\nVulnerability Spec store bypass:         Vulnerable\nVulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:                Mitigation; Enhanced / Automatic IBRS; PBRSB-eIBRS SW sequence; BHI SW loop, KVM SW loop\nVulnerability Srbds:                     Not affected\nVulnerability Tsa:                       Not affected\nVulnerability Tsx async abort:           Not affected\nVulnerability Vmscape:                   Not affected",
+        "ram": "total        used        free      shared  buff/cache   available\nMem:      4106162176   449155072  3416551424     1105920   473518080  3657007104\nSwap:     3024089088           0  3024089088",
+        "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+        "build_recipe": "mkdir -p build\ng++ -std=c++17 -O2 -ffp-contract=off -Wall -Wextra -Wpedantic part1/heat_serial.cpp -o build/heat\nmpic++ -DOMPI_SKIP_MPICXX=1 -std=c++17 -O2 -ffp-contract=off -Wall -Wextra -Wpedantic part2/heat_mpi.cpp -o build/heat_mpi\nmpic++ -DOMPI_SKIP_MPICXX=1 -std=c++17 -O2 -ffp-contract=off -Wall -Wextra -Wpedantic part3/heat_blocks.cpp -o build/heat_blocks\nmpic++ -DOMPI_SKIP_MPICXX=1 -std=c++17 -O2 -ffp-contract=off -Wall -Wextra -Wpedantic part0/04-pingpong/mpi_pingpong.cpp -o build/mpi_pingpong",
+        "busy": "",
+        "mpi": "mpirun (Open MPI) 4.1.6\n\nReport bugs to http://www.open-mpi.org/community/help/",
+        "revision": "1355492f732af771446a243ddd79ba9acaf262c7",
+        "dirty": "",
+        "sources": {
+          "part1/heat_serial.cpp": "bc24bfb7a3aa4afadd1f0e8d44feef1d5b479f917440bf6835fa73d77d9a11c4",
+          "part2/heat_mpi.cpp": "a110ee704dfb52c9b146b9344237fd496f3498290fef1f362a5b8526b19c3151",
+          "part3/heat_blocks.cpp": "169347424a0ac168f556b6746a1a2bcddba2f623dd9bb9d9d9c0e5d8fc96ef8d",
+          "part0/04-pingpong/mpi_pingpong.cpp": "b19d9b461fde3a8c7088a2ad9fb6f5360cfbc72a80d09d475711c44b3c876c72",
+          "part4/common.py": "eb0853aacd7674e2e231576f8f9dcbe63ed6811b8eb5d1da30f5a5f9640c3603",
+          "part4/run_experiments.py": "e2cb13b576528779d5f1f823ecb80aeb6cf479f75a84ff877848d013adf50971",
+          "part4/analyze.py": "248ec7ae22166bab9b86577b5348a1b828346ff840caac02ca07ace182c297c9",
+          "part4/verify_results.py": "8199204a52c7006bfaf4b6f092a711dcfb23ec149ded90df78e569b7d8fc4765"
+        },
+        "binaries": {
+          "heat": "308862d721d55a4a0ba0119ee6e2e1e136beee78420b028b8d456fa1c466273c",
+          "heat_mpi": "ea519525008874ccbad4f82bb5f1caaf78472d690d04123959978786bed456b3",
+          "heat_blocks": "10ed62a282e1ef70c4a99e3c434898fa595ccbfe3c64b809f72f389cffc49dbb",
+          "mpi_pingpong": "5bd12d4ec4b03832007dcbb1564adbbb1d2203b32c6942030b8d28b8cb10373d"
+        }
+      }
+    },
+    {
+      "host": "heat3",
+      "slots": 2,
+      "vcpus": 2,
+      "address": "heat3",
+      "local": false,
+      "inventory": {
+        "hostname": "heat3",
+        "vcpus": 2,
+        "platform": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
+        "cpu": "Architecture:                            x86_64\nCPU op-mode(s):                          32-bit, 64-bit\nAddress sizes:                           39 bits physical, 48 bits virtual\nByte Order:                              Little Endian\nCPU(s):                                  2\nOn-line CPU(s) list:                     0,1\nVendor ID:                               GenuineIntel\nModel name:                              12th Gen Intel(R) Core(TM) i7-1255U\nCPU family:                              6\nModel:                                   154\nThread(s) per core:                      1\nCore(s) per socket:                      2\nSocket(s):                               1\nStepping:                                4\nBogoMIPS:                                5222.40\nFlags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch ibrs_enhanced fsgsbase bmi1 avx2 bmi2 invpcid rdseed adx clflushopt sha_ni arat md_clear flush_l1d arch_capabilities\nHypervisor vendor:                       KVM\nVirtualization type:                     full\nL1d cache:                               96 KiB (2 instances)\nL1i cache:                               64 KiB (2 instances)\nL2 cache:                                2.5 MiB (2 instances)\nL3 cache:                                24 MiB (2 instances)\nNUMA node(s):                            1\nNUMA node0 CPU(s):                       0,1\nVulnerability Gather data sampling:      Not affected\nVulnerability Indirect target selection: Mitigation; Aligned branch/return thunks\nVulnerability Itlb multihit:             Not affected\nVulnerability L1tf:                      Not affected\nVulnerability Mds:                       Not affected\nVulnerability Meltdown:                  Not affected\nVulnerability Mmio stale data:           Not affected\nVulnerability Reg file data sampling:    Mitigation; Clear Register File\nVulnerability Retbleed:                  Mitigation; Enhanced IBRS\nVulnerability Spec rstack overflow:      Not affected\nVulnerability Spec store bypass:         Vulnerable\nVulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:                Mitigation; Enhanced / Automatic IBRS; PBRSB-eIBRS SW sequence; BHI SW loop, KVM SW loop\nVulnerability Srbds:                     Not affected\nVulnerability Tsa:                       Not affected\nVulnerability Tsx async abort:           Not affected\nVulnerability Vmscape:                   Not affected",
+        "ram": "total        used        free      shared  buff/cache   available\nMem:      4106178560   470765568  3421499392     1150976   442531840  3635412992\nSwap:     2363486208           0  2363486208",
+        "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+        "build_recipe": "mkdir -p build\ng++ -std=c++17 -O2 -ffp-contract=off -Wall -Wextra -Wpedantic part1/heat_serial.cpp -o build/heat\nmpic++ -DOMPI_SKIP_MPICXX=1 -std=c++17 -O2 -ffp-contract=off -Wall -Wextra -Wpedantic part2/heat_mpi.cpp -o build/heat_mpi\nmpic++ -DOMPI_SKIP_MPICXX=1 -std=c++17 -O2 -ffp-contract=off -Wall -Wextra -Wpedantic part3/heat_blocks.cpp -o build/heat_blocks\nmpic++ -DOMPI_SKIP_MPICXX=1 -std=c++17 -O2 -ffp-contract=off -Wall -Wextra -Wpedantic part0/04-pingpong/mpi_pingpong.cpp -o build/mpi_pingpong",
+        "busy": "",
+        "mpi": "mpirun (Open MPI) 4.1.6\n\nReport bugs to http://www.open-mpi.org/community/help/",
+        "revision": "1355492f732af771446a243ddd79ba9acaf262c7",
+        "dirty": "",
+        "sources": {
+          "part1/heat_serial.cpp": "bc24bfb7a3aa4afadd1f0e8d44feef1d5b479f917440bf6835fa73d77d9a11c4",
+          "part2/heat_mpi.cpp": "a110ee704dfb52c9b146b9344237fd496f3498290fef1f362a5b8526b19c3151",
+          "part3/heat_blocks.cpp": "169347424a0ac168f556b6746a1a2bcddba2f623dd9bb9d9d9c0e5d8fc96ef8d",
+          "part0/04-pingpong/mpi_pingpong.cpp": "b19d9b461fde3a8c7088a2ad9fb6f5360cfbc72a80d09d475711c44b3c876c72",
+          "part4/common.py": "eb0853aacd7674e2e231576f8f9dcbe63ed6811b8eb5d1da30f5a5f9640c3603",
+          "part4/run_experiments.py": "e2cb13b576528779d5f1f823ecb80aeb6cf479f75a84ff877848d013adf50971",
+          "part4/analyze.py": "248ec7ae22166bab9b86577b5348a1b828346ff840caac02ca07ace182c297c9",
+          "part4/verify_results.py": "8199204a52c7006bfaf4b6f092a711dcfb23ec149ded90df78e569b7d8fc4765"
+        },
+        "binaries": {
+          "heat": "308862d721d55a4a0ba0119ee6e2e1e136beee78420b028b8d456fa1c466273c",
+          "heat_mpi": "ea519525008874ccbad4f82bb5f1caaf78472d690d04123959978786bed456b3",
+          "heat_blocks": "10ed62a282e1ef70c4a99e3c434898fa595ccbfe3c64b809f72f389cffc49dbb",
+          "mpi_pingpong": "5bd12d4ec4b03832007dcbb1564adbbb1d2203b32c6942030b8d28b8cb10373d"
+        }
+      }
+    }
+  ],
+  "revision": "1355492f732af771446a243ddd79ba9acaf262c7",
+  "sources": {
+    "part1/heat_serial.cpp": "bc24bfb7a3aa4afadd1f0e8d44feef1d5b479f917440bf6835fa73d77d9a11c4",
+    "part2/heat_mpi.cpp": "a110ee704dfb52c9b146b9344237fd496f3498290fef1f362a5b8526b19c3151",
+    "part3/heat_blocks.cpp": "169347424a0ac168f556b6746a1a2bcddba2f623dd9bb9d9d9c0e5d8fc96ef8d",
+    "part0/04-pingpong/mpi_pingpong.cpp": "b19d9b461fde3a8c7088a2ad9fb6f5360cfbc72a80d09d475711c44b3c876c72",
+    "part4/common.py": "eb0853aacd7674e2e231576f8f9dcbe63ed6811b8eb5d1da30f5a5f9640c3603",
+    "part4/run_experiments.py": "e2cb13b576528779d5f1f823ecb80aeb6cf479f75a84ff877848d013adf50971",
+    "part4/analyze.py": "248ec7ae22166bab9b86577b5348a1b828346ff840caac02ca07ace182c297c9",
+    "part4/verify_results.py": "8199204a52c7006bfaf4b6f092a711dcfb23ec149ded90df78e569b7d8fc4765"
+  },
+  "transport": [
+    "--mca",
+    "pml",
+    "ob1",
+    "--mca",
+    "btl",
+    "tcp,self",
+    "--mca",
+    "btl_tcp_if_include",
+    "tailscale0",
+    "--mca",
+    "oob_tcp_if_include",
+    "tailscale0"
+  ],
+  "reference_host": "heat1",
+  "binding": "core",
+  "notes": "All laptops on AC; heavy applications closed; heat1/heat2/heat3 use Wi-Fi; allocation 4+2+2",
+  "model": "Task8.2 busiest-rank; measured per-host compute, pairwise half-RTT calibration",
+  "session_notes": [
+    "All laptops on AC; heavy applications closed; heat1/heat2/heat3 use Wi-Fi; allocation 4+2+2",
+    "Resuming after Open MPI parent setpgid warning; all laptops on AC; heavy applications closed; all three guests use Wi-Fi; allocation 4+2+2",
+    "Exact Open MPI parent setpgid Permission denied(13) warning-only heat attempts are retried at most 3 times per task and 32 times in this supervised session; all attempts retained. All laptops on AC; heavy applications closed; heat1/heat2/heat3 use Wi-Fi; allocation 4+2+2; supervised recovery after reviewed launcher warnings",
+    "Exact Open MPI parent setpgid Permission denied(13) warning-only heat attempts are retried at most 3 times per task and 32 times in this supervised session; all attempts retained. All laptops on AC; heavy applications closed; heat1/heat2/heat3 use Wi-Fi; allocation 4+2+2; supervised recovery after reviewed launcher warnings",
+    "Exact Open MPI parent setpgid Permission denied(13) warning-only heat attempts are retried at most 3 times per task and 32 times in this supervised session; all attempts retained. All laptops on AC; heavy applications closed; heat1/heat2/heat3 use Wi-Fi; allocation 4+2+2; supervised recovery after reviewed launcher warnings",
+    "Exact Open MPI parent setpgid Permission denied(13) warning-only heat attempts are retried at most 3 times per task and 32 times in this supervised session; all attempts retained. All laptops on AC; heavy applications closed; heat1/heat2/heat3 use Wi-Fi; allocation 4+2+2; supervised recovery after reviewed launcher warnings",
+    "Exact Open MPI parent setpgid Permission denied(13) warning-only heat attempts are retried at most 3 times per task and 32 times in this supervised session; all attempts retained. All laptops on AC; heavy applications closed; heat1/heat2/heat3 use Wi-Fi; allocation 4+2+2; supervised recovery after reviewed launcher warnings",
+    "Exact Open MPI parent setpgid Permission denied(13) warning-only heat attempts are retried at most 3 times per task and 32 times in this supervised session; all attempts retained. All laptops on AC; heavy applications closed; heat1/heat2/heat3 use Wi-Fi; allocation 4+2+2; supervised recovery after reviewed launcher warnings",
+    "Exact Open MPI parent setpgid Permission denied(13) warning-only heat attempts are retried at most 3 times per task and 32 times in this supervised session; all attempts retained. Resuming after peer VM interruption and recovery; all laptops on AC; heavy applications closed; Wi-Fi unchanged; allocation 4+2+2",
+    "Exact Open MPI parent setpgid Permission denied(13) warning-only heat attempts are retried at most 3 times per task and 32 times in this supervised session; all attempts retained. Resuming after peer VM interruption and recovery; all laptops on AC; heavy applications closed; Wi-Fi unchanged; allocation 4+2+2",
+    "Exact Open MPI parent setpgid Permission denied(13) warning-only heat attempts are retried at most 3 times per task and 32 times in this supervised session; all attempts retained. Resuming after peer VM interruption and recovery; all laptops on AC; heavy applications closed; Wi-Fi unchanged; allocation 4+2+2"
+  ],
+  "failed_attempts_retained": 1,
+  "network_snapshot_counts": {
+    "snapshots": 36,
+    "relay_mentions": 2,
+    "direct_mentions": 61
+  },
+  "finished_utc": "2026-11-23T22:32:14.299140+00:00"
+}

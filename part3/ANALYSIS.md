@@ -1,6 +1,6 @@
 # Part 3: block decomposition, correctness argument and the two report questions
 
-**Current review, 21 November 2026:** The [new retained-field cluster study](results/2026-11-21-retained-cluster/) passes strict verification: 108/108 exact comparisons, 130 retained fields, all three VMs represented. The retained-field and required P=8 measurement gaps are closed. Full checkpoint C3 still includes Part 4. Earlier dates and open-gap descriptions below refer to the historical archive, not the current delivery.
+**Current review, 21 November 2026:** The [new retained-field cluster study](results/2026-11-21-retained-cluster/) passes strict verification: 108/108 exact comparisons, 130 retained fields, all three VMs represented. The retained-field and required P=8 measurement gaps are closed. The full [Part 4 campaign](../part4/DELIVERY.md) is now verified; technical C3 evidence is ready. Earlier dates and open-gap descriptions below refer to the historical archive, not the current delivery.
 
 
 ## Outcome and provenance

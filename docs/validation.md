@@ -1,7 +1,10 @@
 # Validation status
 
-**Parts 0 and 1 technical work and evidence review are complete
-(19 November 2026).** This page records the current assessment. Earlier failures
+**Current review, 24 November 2026: Parts 0-4 archived technical evidence passes.**
+The final report is ten main pages plus three plot appendices. `make verify-delivery`
+checks all current studies offline. Part 2/3 retained-field and P=8 checks pass;
+the full Part 4 study has 429 measurements and 18 calibration sweeps.
+The original 19 November checks below remain historical evidence. Earlier failures
 remain in the original evidence and append-only interaction index.
 
 ## Evidence and completed checks
@@ -10,7 +13,7 @@ remain in the original evidence and append-only interaction index.
 | --- | --- |
 | Part 0 measurements | All 30 published files match the manifest; six sweeps, 22 sizes each, 132 rows; hosts, RTT/2, throughput and successful logs agree |
 | Original measurement preservation | Numeric measurements match private originals; public records anonymize identifying fields and retain original/public hashes |
-| Current cluster setup | Three inventories, all six directed SSH logins, correct six-process hostname placement, and six-rank hello with rank_sum=15; two ranks per VM |
+| Original 19 November cluster setup | Three inventories, all six directed SSH logins, correct six-process hostname placement, and six-rank hello with rank_sum=15; two ranks per VM |
 | Repaired setup history | Default verifier checks all 12 preserved text records and assesses the latest capture for each check; the initial snapshot still fails as expected |
 | Part 0 source organization | Original C++ executable tokens and analyzer Python AST were compared; added comments retained the original statements |
 | Analysis | Six analysis tests passed; all six real-data fits and plots reproduced the reviewed model values |
@@ -67,6 +70,6 @@ Default verification uses the later successful captures and exits 0.
   are incidental values. Neither is a controlled Part 4 scaling experiment.
 - The background PDF was preserved with source/provenance and sample-page
   inspection; no new full audit of every written proof is claimed.
-- Part 2/3 decompositions and bit-for-bit comparisons, Part 4 repeated performance
-  study, final report/demo, actual team contributions and complete earlier
-  private AI histories remain in the [deliverable map](deliverables.md).
+- Part 2/3 correctness, Part 4 performance, final report and shared team
+  contribution statements are now delivered. The live presentation and confirmation
+  of complete all-member private AI history remain in the [deliverable map](deliverables.md).

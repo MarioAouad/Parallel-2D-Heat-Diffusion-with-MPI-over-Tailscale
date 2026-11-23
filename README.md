@@ -4,14 +4,19 @@ A C++17 heat-diffusion project using three Ubuntu VMs on Windows laptops in
 different homes. Tailscale connects the VMs, SSH launches remote processes, and
 MPI carries messages between them.
 
-**Status, 21 November 2026:** Parts 0/1 technical evidence passes. The new reviewed
+**Status, 24 November 2026:** Parts 0-4 technical evidence passes. The reviewed
 [Part 2](part2/results/2026-11-21-retained-cluster/) and [Part 3](part3/results/2026-11-21-retained-cluster/)
 cluster studies contain 84/84 and 108/108 exact serial/MPI matches, all original
 comparison/figure fields, and the required Part 3 P=4,8 timing matrix. Strict
 retained-field/P=8 verification passes. Three VMs used 4+2+2 guest vCPUs and
 matching executable hashes. The previous field-retention and P=8 gaps are closed.
-Part 4 campaign/model/analysis tools are implemented; its real VM campaign remains pending; final report, demonstration and
-complete private AI records remain course-submission requirements.
+The [full Part 4 study](part4/results/2026-11-24-cluster/) passes strict verification:
+429 measurements, 18 calibration sweeps, 16 placement probes, all P=1..8 and both
+placements/layouts. The [final report](docs/final-report/final-report.pdf) contains
+ten main pages plus three plot appendices and the team's contribution statement.
+The [live-demo helper](scripts/run-demo.py) and [hand-in checklist](docs/deliverables.md)
+are ready. The actual live presentation and complete all-member private AI
+records remain team-owned course requirements. Optional GPU work is not attempted.
 
 ## Start here
 
@@ -27,7 +32,7 @@ complete private AI records remain course-submission requirements.
 | Build and run the 2D block-decomposed solver | [Part 3 guide](part3/README.md) |
 | Read the corner-ghost and strips-vs-blocks answers | [Part 3 analysis](part3/ANALYSIS.md) |
 | Track Part 3 deliverables | [Part 3 delivery checklist](part3/DELIVERY.md) |
-| Plan and run the full performance study | [Part 4 guide](part4/README.md) and [VM instructions](part4/RUN.md) |
+| Review the completed performance study | [Part 4 guide](part4/README.md), [study](part4/results/2026-11-24-cluster/) and [report](docs/final-report/final-report.pdf) |
 | See Part 4 requirements versus implementation | [Part 4 delivery checklist](part4/DELIVERY.md) |
 | Read the written numerical-method solutions | [PDF and editable source](docs/background-solutions/README.md) |
 | Receive GitHub updates on the VMs | [Git and VM workflow](docs/local-update.md) |
@@ -139,7 +144,9 @@ byte-identical to serial in 90/90 comparisons (P = 1, 2, 3, 4, 6; grids up to 3�
 three VMs). Its available P=4,6 timing check partially answers the strips-vs-blocks
 question. Blocks win all six paired runs at N = 8192, by 1.5–2.3× in the medians;
 strips win 10/12 paired runs at N ≤ 2048. Extra exchange phases are a plausible
-contributor; these measurements do not isolate the cause. P=8 remains open.
+contributor; these measurements do not isolate the cause. P=8 was absent from
+that historical study; the 21 November correctness/timing study and full Part 4
+campaign now supply it on eight real guest vCPUs.
 The [analysis](part3/ANALYSIS.md#then-check-measured-strips-vs-blocks) compares
 this with the Task 8.2 prediction.
 

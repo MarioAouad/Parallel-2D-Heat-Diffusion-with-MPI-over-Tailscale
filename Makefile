@@ -68,6 +68,19 @@ plan-part4:
 test-part4:
 	python3 -m unittest discover -s part4/tests -v
 
+# Final archived evidence only: no new measurements or VM access.
+.PHONY: verify-part4-results verify-delivery
+verify-part4-results:
+	python3 part4/verify_results.py --data part4/results/2026-11-24-cluster
+
+verify-delivery:
+	python3 part0/05-analysis/verify_setup.py
+	python3 part0/05-analysis/verify_results.py
+	python3 part1/verify_results.py
+	python3 part2/verify_results.py --data part2/results/2026-11-21-retained-cluster --require-fields
+	python3 part3/verify_results.py --data part3/results/2026-11-21-retained-cluster --require-fields --require-p8
+	python3 part4/verify_results.py --data part4/results/2026-11-24-cluster
+
 # Order-only prerequisite: create the directory without rebuilding merely
 # because another file changes the directory's modification time.
 build/mpi_hello: part0/03-mpi-hello/mpi_hello.cpp | build

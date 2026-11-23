@@ -1,5 +1,12 @@
 # Cluster inventory
 
+**Current, reviewed 24 November 2026:** the Part 4 inventories confirm heat1=4,
+heat2=2,heat3=2 actual guest vCPUs and matching slots, about 4 GB RAM per VM,
+Ubuntu 24.04.5 and Open MPI 4.1.6. See
+[the immutable campaign metadata](../part4/results/2026-11-24-cluster/metadata.json).
+The original 19 November records below describe the earlier 2+2+2 allocation.
+
+
 These records describe configurations collected on **19 November 2026**.
 They do not independently establish the exact settings during the archived
 17 November ping-pong sweeps. Public node names are generic aliases.
@@ -38,8 +45,8 @@ Heat-2's active adapter establishes Wi-Fi availability; no separate Windows
 default-route capture was supplied for that host. Host RAM for heat-2 remains
 unreported rather than inferred.
 
-The current allocation supports **six ranks total**, two per VM. P=8 requires
-real additional allocated vCPUs or an explicitly discussed resource-limited case.
+That original allocation supported six ranks. The later allocation supports eight
+ranks (4+2+2), and the reviewed Part 3/4 studies include actual P=8 execution.
 
 ## Setup evidence and provenance
 

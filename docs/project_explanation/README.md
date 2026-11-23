@@ -17,4 +17,5 @@ is broader than the retained correctness evidence:
 
 Use those precise statements when presenting the evidence. This qualification
 does not invalidate the required Part 3 P=8 checks or call for rerunning them.
-Full checkpoint C3 still includes the uncollected Part 4 performance campaign.
+The full Part 4 campaign is now collected and strict-verified; see the final report
+in ../final-report/final-report.pdf. Technical C3 evidence is ready.

@@ -2159,3 +2159,656 @@ Full visible messages:
 - part4/verify_results.py: 147.
 - llm_log/private/2026-11-23-pingpong-progress-fix/visible-messages.json:1-30.
 Verified append range: llm_log/LOG.md lines 2116-2162.
+
+## 2026-11-23T13:37:26.983237+00:00 — Clarify new running smoke versus preserved failed folder
+
+Client date: 23 November 2026, Asia/Beirut. Member: not provided. Tool: Codex desktop. Model: GPT-6 family; exact runtime model ID unavailable. Screenshot shows a new smoke run after update with six completed calibration records and13/30 heat measurements. Clarified annotation refers only to preserving the earlier failed folder, not stopping the current run. No full success claimed; await analysis/verification and bundle output. No VM actions, interruption, code edits, commit or push performed.
+
+Full visible messages, selection and attachment reference:
+
+```json
+[
+  {
+    "role": "user",
+    "content": "it's running what do you mean by this?",
+    "annotations": [
+      {
+        "id": "9cead635-ada4-469a-80e2-089e3cd5e494",
+        "text": "Keep the old failed folder. Do not resume it after pulling this fix, because the recorded code version has changed. No heat measurements are being discarded; the new smoke run will repeat the preliminary checks and calibration.",
+        "source": {
+          "contentOffsets": {
+            "startOffset": 960,
+            "endOffset": 1187
+          },
+          "messageId": "msg_0f7a3bbedd475e85016b04401ac9b087d287afde2ca95dc234",
+          "startOffset": 960,
+          "endOffset": 1187
+        }
+      }
+    ],
+    "attachment_reference": "C:/Users/MA21/AppData/Local/Temp/codex-clipboard-834c898d-0c4c-40af-8eb7-56c3db45ade3.png",
+    "observed_image": "New smoke invocation in timestamped folder beginning 20261123T1334; all six CALIBRATION progress records printed; MEASURE13/30 printed; no error or completion shown."
+  },
+  {
+    "role": "assistant",
+    "channel": "commentary",
+    "content": "This is the new smoke run, and it’s progressing correctly so far. It has passed all six calibration steps and reached measurement 13 of 30. Leave it running."
+  },
+  {
+    "role": "assistant",
+    "channel": "final",
+    "content": "**Yes—let this run continue. Do not stop or restart it.**\n\nMy earlier instruction referred to the **old folder from the failed attempt**, not the run in your screenshot. “Keep it” simply means leave that folder untouched; no extra command is needed. :codex-annotation{index=\"1\" id=\"9cead635-ada4-469a-80e2-089e3cd5e494\"}\n\nYou started a **new smoke run** in a new folder, which is exactly right. Your screenshot shows:\n\n- All **six calibration steps passed**.\n- **13 of 30 measurements completed**.\n- No error shown so far.\n\nKeep the terminal open and all three VMs awake. Wait for the remaining measurements, analysis and verification to finish.\n\nAt the end, send me the **`VERIFIED`** output and **`Return bundle:`** line—or any error if it stops. **Don’t start the full campaign yet.**"
+  }
+]
+```
+
+Verified private record: llm_log/private/2026-11-23-smoke-running-clarification/visible-messages.json lines1-41.
+Verified append range: llm_log/LOG.md lines 2163-2207.
+
+
+## 2026-11-23T14:44:19.696Z — Successful live Part 4 smoke and full campaign guidance
+
+Team member: Not provided. Tool: Codex desktop. Model: GPT-6 family; exact runtime model ID unavailable.
+
+The complete current visible prompt and assistant commentary/final are saved privately in llm_log/private/2026-11-23-smoke-success-guidance/visible-messages.json. The prompt contains two identical pasted smoke result blocks. User supplied VERIFIED/PASS for smoke, 30 measurements, six calibration sweeps, 21 published files and zero failed attempts. No archive has yet been independently inspected locally. Checked scripts/run-part4.sh and part4/RUN.md; confirmed full launch, plan size, copy path and expected smoke official=false. No code or measured evidence modified, no Git commit/push performed.
+
+Correction to prior entry: the actual final visible response for smoke-running clarification was:
+
+**Yes—this is working so far. Let it continue.**
+
+My earlier instruction referred to the **old failed run’s folder**. “Keep it” means leave that folder untouched; you don’t need to do anything with it. :codex-annotation{index="1" id="9cead635-ada4-469a-80e2-089e3cd5e494"}
+
+You correctly started a **new smoke run**. Your screenshot shows:
+
+- All **six calibration steps passed**.
+- **13 of 30 measurements completed**.
+- No error shown so far.
+
+Keep the terminal open and all three VMs running and awake. After the measurements, it still needs to finish analysis and verification.
+
+When it finishes, send me the final output, especially **`VERIFIED`** and **`Return bundle:`**, or any error. **Wait before starting the full campaign.**
+
+Current assistant response:
+
+**The smoke run passed successfully.** All **30 measurements**, **six calibration sweeps**, analysis and verification completed, with **zero failed attempts**. The earlier ping-pong diagnostic error is resolved.
+
+`official: False` is expected: this was a small trial using P=1,2. The full campaign must still collect the required performance results, including P=8.
+
+You can now start the **full campaign once, from heat-1**:
+
+```bash
+cd /home/mpi/heat-project-repo
+bash scripts/run-part4.sh full "All laptops on AC; heavy applications closed; heat1/heat2/heat3 use Wi-Fi; allocation 4+2+2"
+```
+
+Use that description only if it matches the actual conditions. **No new pull or rebuild is needed** if nothing changed after this successful smoke run.
+
+Keep all three laptops plugged in and awake, all three VMs running, and the terminal open. Allow **several hours, possibly overnight**: the full campaign has **429 heat measurements plus 18 calibration sweeps**. Don’t change the CPU allocation or pull new code during it.
+
+Also copy the successful smoke bundle to Windows Downloads using this command in **Windows PowerShell**:
+
+```powershell
+scp -P 2222 "mpi@127.0.0.1:/home/mpi/heat-project-repo/part4/results/runs/20261123T133412815245813Z-bundle-20261123T133412815245813Z.tar.gz" "$env:USERPROFILE\Downloads"
+```
+
+Send me that archive for an independent check of the saved results. After the full campaign, send its final output and return bundle too. **Part 4 is not complete until those full results have been verified and reviewed.**
+
+Verified appended entry: llm_log/LOG.md lines 2208-2256. Private visible record: llm_log/private/2026-11-23-smoke-success-guidance/visible-messages.json lines 1-16.
+
+
+## 2026-11-23T16:04:13.700Z — Full Part 4 run stopped on solver stderr
+
+Team member: Not provided. Tool: Codex desktop. Model: GPT-6 family; exact runtime model ID unavailable.
+
+Full visible prompt and assistant responses retained privately at llm_log/private/2026-11-23-full-run-stderr/visible-messages.json; user pasted the same full transcript twice. No original session export is available. Checked run_experiments.py invoke/heat checkpoint order and C++ stderr sites. Exit-code validation precedes empty-stderr validation: reported traceback establishes returncode zero and unexpected stderr, without establishing its cause. Actual raw message remains needed from the VM. No code, results, VM state or Git revision changed. Guidance preserves campaign for possible resume and requests exact retained diagnostic.
+
+Assistant commentary:
+
+The full run stopped after 25 completed measurements because the next MPI invocation produced an unexpected message. Your completed results were saved. I’ll check how to extract that message so we can identify the cause before restarting anything.
+
+Assistant final:
+
+The run stopped during the **26th measurement: strips, N=8192, two MPI processes spread across two VMs**.
+
+**The 25 completed measurements and all 18 calibration sweeps are saved.** You do not need to discard them.
+
+The checker stopped because that invocation printed something to its error/warning output (`stderr`). Its exit code passed the zero-exit check, so **this traceback alone does not tell us whether the message was a warning or a real problem**. This is a different check from the earlier ping-pong issue.
+
+Run this entire block on **heat-1** to show the actual message:
+
+```bash
+cd /home/mpi/heat-project-repo
+python3 - <<'PY'
+import json
+from pathlib import Path
+
+path = Path("part4/results/runs/20261123T144518643559261Z/raw_runs.jsonl")
+records = [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+record = next(r for r in reversed(records)
+              if r["task_id"] == "strong:node:2:8192:strips:1")
+
+print("TASK:", record["task_id"])
+print("EXIT CODE:", record["returncode"])
+print("\nERROR / WARNING:\n" + record["stderr"])
+print("\nPROGRAM OUTPUT:\n" + record["stdout"])
+PY
+```
+
+**Paste the output here. Don’t pull, rebuild, edit files or start another full run yet.** Once we identify the cause, we can determine whether to resume this saved campaign, which normally skips completed measurements.
+
+Verified appended entry: llm_log/LOG.md lines 2258-2299; private record llm_log/private/2026-11-23-full-run-stderr/visible-messages.json lines 1-16.
+
+
+## 2026-11-23T16:07:25.773Z — Open MPI parent setpgid warning, preserve and retry
+
+Team member: Not provided. Tool: Codex desktop. Model: GPT-6 family; exact runtime model ID unavailable.
+
+Complete visible prompt/commentary/final retained privately in llm_log/private/2026-11-23-setpgid-resume/visible-messages.json. No original session export available. Prompt reports returncode zero, expected solver summary, and sole parent setpgid permission warning. Verified Open MPI v4.1.6 primary source at https://github.com/open-mpi/ompi/blob/v4.1.6/orte/mca/plm/rsh/plm_rsh_module.c lines 965-977: parent warning is ignored with child already running. Inspected campaign invoke/complete ordering, strict same-code resume and checkpoint-based verifier: rejected warning invocation has no measurement checkpoint and can be retried unchanged; old raw remains retained. Failed_attempts_retained currently counts nonzero process exit codes, so this warning-only rejected attempt is retained but not counted by that field. No code, measured evidence, configuration, Git revision or VM state changed. No tests needed for read-only diagnosis. User must execute resume inside VM; no credentials requested.
+
+Assistant commentary:
+
+This was an Open MPI launcher warning about setting a process group. The solver returned exit code 0 and printed its timing summary; the campaign stopped because it rejects unexpected warnings. I’ll check the safest way to continue while preserving your completed measurements and the warning record.
+
+Assistant final:
+
+**This is a nonfatal Open MPI launcher warning.** It concerns how MPI groups its SSH processes. Open MPI 4.1.6 explicitly continues after this parent-process warning because the child is already running. [Open MPI source](https://github.com/open-mpi/ompi/blob/v4.1.6/orte/mca/plm/rsh/plm_rsh_module.c#L965-L977)
+
+Your solver returned **exit code 0** and printed its timing summary. The campaign stopped because our checker rejects any unexpected warning—not because this output reports a numerical failure.
+
+**Resume the saved campaign on heat-1:**
+
+```bash
+cd /home/mpi/heat-project-repo
+bash scripts/run-part4.sh resume /home/mpi/heat-project-repo/part4/results/runs/20261123T144518643559261Z "Resuming after Open MPI parent setpgid warning; all laptops on AC; heavy applications closed; all three guests use Wi-Fi; allocation 4+2+2"
+```
+
+Use those conditions only if they remain accurate.
+
+This will:
+
+- Keep the **25 completed measurements and 18 calibration sweeps**.
+- Retry **measurement 26**, then continue.
+- Preserve the original warning and output in the raw history.
+
+**Do not pull, rebuild, change vCPUs or use `sudo` for this retry.** No code change is needed to attempt this resume. If the same warning stops it again, send the output; we should address the recurring warning rather than repeatedly restarting.
+
+Verified appended entry: llm_log/LOG.md lines 2301-2335; private record llm_log/private/2026-11-23-setpgid-resume/visible-messages.json lines 1-16.
+
+
+## 2026-11-23T16:39:06.104Z — Recurring Part 4 stop: source diagnosis and standalone private collector
+
+Team member: Not provided. Tool: Codex desktop. Model: GPT-6 family; exact runtime model ID unavailable.
+
+Complete visible prompt/commentary/final are retained privately at llm_log/private/2026-11-23-repeated-interruption-diagnostic/visible-messages.json. No original session export available. Source review confirms successful invocation exit with stderr stops before checkpoint, and generic traceback omits actual diagnostic. Latest pasted output establishes 49 completed heat tasks, but actual new stderr is not provided. Prior parent setpgid EACCES is nonfatal in Open MPI v4.1.6 source; Linux man-pages document child exec race. Primary sources: https://github.com/open-mpi/ompi/blob/v4.1.6/orte/mca/plm/rsh/plm_rsh_module.c#L965-L977 and https://man7.org/linux/man-pages/man2/setpgid.2.html . Live localhost SSH connection timed out; connected-host inventory showed no enrolled hosts. No VM diagnostics could be inspected directly. No enrollment, account changes, VM changes, campaign changes or publication performed.
+
+Created scripts/diagnose-part4.py lines 1-212: standalone read-only collector, saved evidence/private originals/session copies, warning-vs-exit-failure reporting, bounded remote hardware/memory/process/MPI/network snapshots, checksummed private archive under ignored output. Preserves original campaign; launches no MPI benchmark/solver. Use standalone copy in /tmp so interrupted campaign revision remains unchanged. scripts/tests/test_diagnose_part4.py lines 1-79: three offline checks, all pass, including original and archived bytes, manifest hashes, warning specificity. All 24 existing Part 4 tests pass. part4/RUN.md lines 108-126 document collection and limitations. git diff --check passed (only normal CRLF conversion notice). Solver/runner/verifier source fingerprints unchanged. No claimed live VM success; latest diagnostic and cause of poor scaling await user archive. Narrow warning handling remains unapplied until actual latest diagnostics are reviewed.
+
+Assistant commentary:
+
+The resume worked and saved measurements through 49, but another invocation triggered the warning check. I’ll review the launcher, error handling and saved-run checks. We also need the latest warning text to confirm whether it is the same Open MPI issue or a different problem.
+
+I found a weakness in the runner: it stops on every nonempty warning, even when MPI exits successfully, and hides the warning behind a generic traceback. That explains the first stop. The latest stop may have the same cause, but we need its saved message to confirm it.
+
+I’ll prepare a diagnostic collector that copies the interrupted run and checks CPU capacity, memory, MPI versions, remaining processes and Tailscale connections on all three VMs. It will leave the solver, checkpoints and measured results unchanged.
+
+The collector passed three checks, including a check that it preserves the original evidence byte-for-byte; the existing 24 Part 4 tests also passed. It runs no solver or benchmark.
+
+Your timing output also needs review: some parallel runs are much slower than the serial baseline. That is separate from the warning. The saved communication timings and new network and memory snapshots will help us investigate without guessing. Your 49 completed measurements remain saved.
+
+Assistant final:
+
+**Your 49 completed measurements and all 18 calibration sweeps are saved. Don’t resume again yet.**
+
+The review found two problems in the campaign runner:
+
+- It stops on **every unexpected warning**, even when MPI exits successfully.
+- Its traceback hides the actual warning, making different problems look identical.
+
+The earlier `setpgid … Permission denied(13)` message comes from a timing race during process launch: Linux rejects the parent’s request after the child has already started its executable. Open MPI explicitly treats that parent warning as nonfatal. [Linux documentation](https://man7.org/linux/man-pages/man2/setpgid.2.html), [Open MPI source](https://github.com/open-mpi/ompi/blob/v4.1.6/orte/mca/plm/rsh/plm_rsh_module.c#L965-L977)
+
+**The latest failure may be the same warning, but its actual message is missing from your pasted output.** I cannot confirm that yet.
+
+There is also a separate performance concern: some parallel measurements are much slower than serial. We need to inspect communication time, network connections and memory pressure before drawing conclusions.
+
+I created a diagnostic collector and checked it with **three offline tests**; all **24 existing Part 4 tests** also passed. It copies the saved evidence and checks all three guests without running solvers or changing your campaign.
+
+**1. In Windows PowerShell, copy only the collector to heat-1:**
+
+```powershell
+scp -P 2222 "C:\Users\MA21\Desktop\USJ\Final_Year\1th_semeter\Parallel_Programming\Project\Parallel-2D-Heat-Diffusion-with-MPI-over-Tailscale\scripts\diagnose-part4.py" "mpi@127.0.0.1:/tmp/diagnose-part4.py"
+```
+
+**2. In the heat-1 terminal, run:**
+
+```bash
+python3 /tmp/diagnose-part4.py --run /home/mpi/heat-project-repo/part4/results/runs/20261123T144518643559261Z
+```
+
+Allow a few minutes. It collects the exact warnings, original results, CPU/slot information, memory/swap observations, MPI versions, remaining processes and Tailscale connection checks. Permission errors reading kernel logs are recorded; no `sudo` is needed.
+
+**3. After it prints `DIAGNOSTIC BUNDLE`, copy the archive back using Windows PowerShell:**
+
+```powershell
+scp -P 2222 "mpi@127.0.0.1:/home/mpi/heat-project-repo/output/part4-diagnostic-*.tar.gz" "$env:USERPROFILE\Downloads"
+```
+
+Send me the resulting archive privately. That will let me complete the VM-specific diagnosis and determine the appropriate fix. **Do not pull, rebuild, edit checkpoints or change CPU allocation meanwhile.**
+
+Verified appended entry: llm_log/LOG.md lines 2337-2397; private record llm_log/private/2026-11-23-repeated-interruption-diagnostic/visible-messages.json lines 1-26.
+
+
+## 2026-11-23T16:50:28.664Z — Reviewed private Part 4 diagnostic, frozen campaign recovery
+
+Team member: Not provided. Tool: Codex desktop. Model: GPT-6 family; exact runtime model ID unavailable.
+
+Complete visible prompt/commentary/final at llm_log/private/2026-11-23-reviewed-part4-diagnostic/visible-messages.json; no original full session export available. Original archive SHA256 797416554ce3e36ea94c173620a7487e01b247fcadf1c9cac9ee94fe45fda82a, 19 members. Safely extracted ordinary files/directories under ignored output/reviews/part4-diagnostic-20261123T164222210939Z and verified all diagnostic manifest sizes/hashes. Original archive and extracted original-run evidence remain unchanged. All 91 raw invocation IDs are contiguous; 89 checkpoint references consistent (49 heat, 18 calibration, 16 placement, six network); two unselected records (IDs63/91) both solely parent setpgid Permission denied(13), exit0, complete solver summaries. Reparsed all49 selected summaries using frozen common against planned settings and exact checkpoints. This verifies summary consistency, not full-field correctness or full campaign completion.
+
+All guests: clean revision1355492f732af771446a243ddd79ba9acaf262c7, same Open MPI4.1.6, recorded source hashes and per-host binary hashes match live snapshots. Actual nproc4/2/2 matches slots. About4GB RAM/guest, no swap usage, available memory at post-stop snapshots, no solver processes. Unprivileged kernel logs denied; no claim of ruling out all historical OS events. Latest interrupted N8192/P6/strips run total222.000755s, comm221.163425s (99.6228%), comp0.854213s; independently reduced maxima not additive. Variable direct and DERP routes in diagnostic probes, no inference of route continuity. Both warning attempts are retained despite failed_attempts_retained counting only nonzero exits. 380 required heat tasks remain.
+
+Created scripts/resume-part4-checked.py lines1-203: standalone /tmp supervisor leaves original runner/solvers/sources/metadata hashes untouched; original preflight/locks/checkpoints/verifier run unchanged each retry. Only newly appended, uncheckpointed MPI heat record with exit0, exact same-PID parent warning, valid expected summary and wall-time bound permits bounded retry (three/task,32/session). All warning attempts stay rejected; only later clean output can become measurement. Other failures/stale records/changed history rejected. Private fsynced event journal/helper SHA, recorded condition/retry-policy notes, separate supervisor lock and external session log, original offline verifier/packager after success. No filtering, accepted-warning checkpoint, source-hash bypass or Git/VM mutations. Actual archived latest record qualifies under eligibility checker. scripts/tests/test_resume_part4_checked.py lines1-160 covers nine recovery cases, plus three earlier collector checks: all12pass; changed-source rejection, unknown errors, stale preflight failure, bounded retry and original history/checkpoints retained tested. POSIX orchestration itself has not been executed against live VMs by assistant; offline tests use mocked process/locks. Existing24Part4 tests passed previous turn with core sources unchanged. Updated part4/RUN.md lines128-161 with recovery policy and reviewed observations. git diff --check passed, only normal CRLF notice. No commit/push performed; user must copy only standalone helper into /tmp to retain recorded revision.
+
+Assistant commentary:
+
+I’ll inspect the diagnostic bundle, confirm the latest warning, and check the CPU, memory and network evidence before deciding how to continue the saved run.
+
+The bundle confirms both stops were caused by the same nonfatal `setpgid` warning. The setup checks also match: 4+2+2 vCPUs and slots, the same code revision and MPI version, unchanged binaries, and no leftover solver processes.
+
+The slowdown is separate. In the interrupted six-process run, 99.6% of the reported loop time was communication time, which includes waiting. The network checks show relayed and variable connections. Memory was available and swap was unused when the diagnostics were collected.
+
+I’ll add a supervised resume command that retries only this exact warning, with limits, while retaining every attempt and keeping the campaign’s code version unchanged.
+
+Assistant final:
+
+**The bundle is valid, and both interruptions have the same confirmed cause: the nonfatal Open MPI parent `setpgid` warning.** Both MPI invocations exited with code 0; the campaign stopped because it rejects unexpected warnings.
+
+The checks show:
+
+| Check | Finding |
+|---|---|
+| vCPUs and slots | **Correct: 4+2+2** |
+| Code and MPI | Same revision, clean checkouts, Open MPI 4.1.6 on all three VMs |
+| Binaries | Match each VM’s original campaign records |
+| Saved progress | **49 measurements, 18 calibration sweeps, 16 placement probes** |
+| Memory | About 4 GB per VM; swap unused and memory available at diagnostic time |
+| Remaining solver processes | None |
+
+I also rechecked all **49 saved measurement summaries against their checkpoints and planned settings**. They are consistent. This does not yet establish a completed Part 4 campaign.
+
+**The slowdown is a separate network/communication issue.** The interrupted six-process run recorded **222 seconds total and 221.16 seconds in communication—about 99.6%**, including waiting. The connection checks showed variable direct and DERP-relayed paths. Those later snapshots cannot establish the route during every measurement, but the timing clearly shows communication dominating.
+
+I added a supervised recovery helper, with **12 offline checks passing** across the diagnostic/recovery tools. It runs your original campaign code unchanged and automatically retries **only this exact warning**, with limits. It preserves every rejected attempt and still stops for other errors.
+
+**You can continue from measurement 50 without repeating the completed 49.**
+
+**1. Windows PowerShell — copy the helper:**
+
+```powershell
+scp -P 2222 "C:\Users\MA21\Desktop\USJ\Final_Year\1th_semeter\Parallel_Programming\Project\Parallel-2D-Heat-Diffusion-with-MPI-over-Tailscale\scripts\resume-part4-checked.py" "mpi@127.0.0.1:/tmp/resume-part4-checked.py"
+```
+
+**2. heat-1 terminal — start supervised resume:**
+
+```bash
+python3 /tmp/resume-part4-checked.py --run /home/mpi/heat-project-repo/part4/results/runs/20261123T144518643559261Z --notes "All laptops on AC; heavy applications closed; heat1/heat2/heat3 use Wi-Fi; allocation 4+2+2; supervised recovery after reviewed launcher warnings"
+```
+
+Use those conditions only if accurate. **Do not pull, rebuild or change the VM allocation.** Keep all three laptops and VMs awake.
+
+There are **380 measurements remaining**, plus final analysis and verification. The helper packages the results after success. Send me the final output and return bundle; if it stops, send the last output.
+
+Verified appended entry: llm_log/LOG.md lines 2399-2459; private record llm_log/private/2026-11-23-reviewed-part4-diagnostic/visible-messages.json lines 1-21.
+
+
+## 2026-11-23T20:52:53.855Z — Resume after peer VM loss at Part 4 measurement337
+
+Team member: Not provided. Tool: Codex desktop. Model: GPT-6 family; exact runtime model ID unavailable.
+
+Full visible user prompt/commentary/final plus complete attached terminal text preserved in llm_log/private/2026-11-23-peer-vm-outage/visible-messages.json. Attachment is terminal output, not a full original chat export. Parsed all287 printed MEASURE lines: contiguous50..336, five SUPERVISED RETRY entries, then strong:node:6:8192:blocks:3 exit205 with ORTE lost remote daemon communication to heat3. This is a real connectivity/daemon failure; helper correctly refused automatic warning-only retry. User reports peer VM recovered. 336 completed expected (93 remain), but live state still must be checked on launcher. No claim of direct live access or completion. Original source/runner inspected to confirm resume checks revision, sources, binaries, MPI, CPU and idle solver state. Instructions check allthree guests/processes and SSH/nproc slots, read actual checkpoint count, then same frozen campaign supervised resume with interruption notes. /tmp helper retransfer only if missing. No changes to code, measured results or VMs; no tests needed for guidance-only work. No Git commit/push.
+
+Assistant commentary:
+
+I’ll read the pasted output to see where it stopped and whether the latest failure was a launcher warning or a connection problem. Then I’ll give you the steps to resume the saved campaign.
+
+Assistant final:
+
+**You can resume the same campaign. Your log reached measurement 336/429, so 93 measurements remain.**
+
+The helper successfully handled **five known launcher warnings**. The final stop was different: **MPI lost communication with heat3**, and exited with code **205**. That matches the VM interruption you described. The helper correctly stopped instead of automatically retrying a disconnected VM.
+
+**1. Check that all three VMs are ready.**
+
+On **each VM**, run:
+
+```bash
+hostname
+nproc
+pgrep -a -x 'heat|heat_mpi|heat_blocks|mpi_pingpong'
+```
+
+Expected CPU counts: **heat1=4, heat2=2, heat3=2**. The last command should print nothing. If it lists leftover solver processes, send me that output before continuing.
+
+On **heat-1**, also check for an existing launcher:
+
+```bash
+pgrep -af '[r]esume-part4-checked.py|[r]un_experiments.py|[m]pirun'
+```
+
+If this lists a running campaign, do not start another copy.
+
+**2. Check connectivity, slots and saved progress from heat-1.**
+
+```bash
+cd /home/mpi/heat-project-repo
+source part0/config/cluster.sh
+python3 - <<'PY'
+import json
+from pathlib import Path
+from part0.config.check_slots import check_slots
+
+print("VM capacity:", check_slots(Path("part0/config/hosts")))
+folder = Path("part4/results/runs/20261123T144518643559261Z")
+state = json.loads((folder / "state.json").read_text())["completed"]
+done = sum("experiment" in value for value in state.values())
+print("Saved measurements:", done, "/ 429")
+print("Remaining:", 429 - done)
+PY
+```
+
+This should confirm **4+2+2** and **336 saved measurements**, assuming nothing else ran afterward. If it reports a connection or configuration error, send that output first.
+
+**3. Resume using the same helper.**
+
+Once those checks pass, run on **heat-1**:
+
+```bash
+python3 /tmp/resume-part4-checked.py --run /home/mpi/heat-project-repo/part4/results/runs/20261123T144518643559261Z --notes "Resuming after peer VM interruption and recovery; all laptops on AC; heavy applications closed; Wi-Fi unchanged; allocation 4+2+2"
+```
+
+Adjust the conditions in the notes if necessary. It should retry **measurement 337**, preserve the earlier measurements and failed attempts, and continue.
+
+If heat-1 also rebooted and the helper is missing, copy it again using **Windows PowerShell**, then repeat step 3:
+
+```powershell
+scp -P 2222 "C:\Users\MA21\Desktop\USJ\Final_Year\1th_semeter\Parallel_Programming\Project\Parallel-2D-Heat-Diffusion-with-MPI-over-Tailscale\scripts\resume-part4-checked.py" "mpi@127.0.0.1:/tmp/resume-part4-checked.py"
+```
+
+**Do not pull, rebuild, edit checkpoints or change vCPUs.** A reboot alone does not require repeating the completed measurements. The runner will check that code, binaries, MPI and allocation still match before continuing.
+
+Keep all three machines awake. After measurement 429, wait for **analysis, verification and the return bundle**; send me the final output and archive. We will retain the interruption notes when reviewing the final timings.
+
+Verified appended entry: llm_log/LOG.md lines 2461-2539; private visible record lines 1-17.
+
+
+## 2026-11-23T20:55:45.301Z — Explain local process/CPU checks versus peer connectivity
+
+Team member: Not provided. Tool: Codex desktop. Model: GPT-6 family; exact runtime model ID unavailable.
+
+Full visible user prompt and assistant commentary/final retained privately at llm_log/private/2026-11-23-local-versus-cluster-check/visible-messages.json, with original attachment path and observation. No original complete chat export available. User's local hostname/nproc/pgrep output confirms heat1/4 and no matching local solver; it says nothing about other guest processes. Screenshot shows three green Tailscale machine entries, not SSH/MPI readiness. Provided existing check_slots checker invocation to read local and SSH peer vCPU counts; requested peer-local process checks before resume. No code, results, configurations or VM state changed. No tests or publication.
+
+Assistant commentary:
+
+That output is correct: those commands check only heat-1. The empty `pgrep` result means no matching heat simulation is running on heat-1; it does not list other VMs.
+
+Assistant final:
+
+**That is the expected output. Those commands check only the VM where you run them.**
+
+- `hostname` → this VM is **heat-1**.
+- `nproc` → heat-1 has **4 vCPUs**, correct.
+- `pgrep` → no matching simulation processes are running on heat-1, which is what we wanted.
+
+They do **not** list the other VMs. Your screenshot shows all three machines online in Tailscale; we still need to check SSH access and CPU counts.
+
+Run this on **heat-1** to check all three:
+
+```bash
+cd /home/mpi/heat-project-repo
+source part0/config/cluster.sh
+python3 - <<'PY'
+from pathlib import Path
+from part0.config.check_slots import check_slots
+
+for vm in check_slots(Path("part0/config/hosts")):
+    print(vm)
+PY
+```
+
+Expected results:
+
+| VM alias | Slots | vCPUs |
+|---|---:|---:|
+| heat1 | 4 | 4 |
+| heat2 | 2 | 2 |
+| heat3 | 2 | 2 |
+
+Your friends should also run the original `pgrep` command inside their VMs to check for leftover simulation processes. **Send me the three-VM check output before resuming.**
+
+Verified appended entry: llm_log/LOG.md lines 2541-2586; private record llm_log/private/2026-11-23-local-versus-cluster-check/visible-messages.json lines 1-17.
+
+
+## 2026-11-23T20:57:35.586Z — Successful three-guest capacity check; provide remaining resume steps
+
+Team member: Not provided. Tool: Codex desktop. Model: GPT-6 family; exact runtime model ID unavailable.
+
+Full visible prompt/commentary/final and attachment observation retained privately at llm_log/private/2026-11-23-capacity-confirmed-resume/visible-messages.json. No original complete session export available. User screenshot confirms checker successfully reached all three guests with matching slots/vCPUs4+2+2. Guidance checks existing launcher, resumes same frozen folder with documented peer outage and accurate conditions, uses original preflight for sources/binaries/process checks, and optionally restores /tmp helper without pulling. Expected next337/429 and remaining93 are based on prior supplied log, not a new direct checkpoint read. Final verification/package still pending. No code/configuration/evidence/VM changes or publication. No tests needed for explanation and commands using existing reviewed helper.
+
+Assistant commentary:
+
+The check passed: all three VMs are reachable, and their slots match the 4+2+2 vCPU allocation. You can now resume the saved campaign after checking that another launcher isn’t already running.
+
+Assistant final:
+
+**That output is correct: all three VMs are reachable, with slots/vCPUs 4+2+2. No hostfile change is needed.**
+
+**1. On heat-1, check that no campaign is already running:**
+
+```bash
+pgrep -af '[r]esume-part4-checked.py|[r]un_experiments.py|[m]pirun'
+```
+
+If it prints nothing, continue. If it lists processes, send me that output before starting another run.
+
+**2. Resume the saved campaign on heat-1:**
+
+```bash
+cd /home/mpi/heat-project-repo
+python3 /tmp/resume-part4-checked.py --run /home/mpi/heat-project-repo/part4/results/runs/20261123T144518643559261Z --notes "Resuming after peer VM interruption and recovery; all laptops on AC; heavy applications closed; Wi-Fi unchanged; allocation 4+2+2"
+```
+
+Adjust the notes if the conditions differ. The runner will check all three VMs again, including their code, binaries and leftover solver processes.
+
+Based on your last log, it should continue at **337/429**, with **93 measurements remaining**, without repeating the completed measurements.
+
+If it says `/tmp/resume-part4-checked.py` is missing, copy it again from **Windows PowerShell**, then repeat step 2:
+
+```powershell
+scp -P 2222 "C:\Users\MA21\Desktop\USJ\Final_Year\1th_semeter\Parallel_Programming\Project\Parallel-2D-Heat-Diffusion-with-MPI-over-Tailscale\scripts\resume-part4-checked.py" "mpi@127.0.0.1:/tmp/resume-part4-checked.py"
+```
+
+**3. Let it finish.**
+
+Keep all three laptops plugged in and awake, all three VMs running, and the terminal open. **Do not pull, rebuild or change vCPUs during the campaign.**
+
+A `SUPERVISED RETRY` message means the helper is handling the known launcher warning. If it returns to the prompt with `STOPPED`, send the last output.
+
+**4. After measurement 429, wait for verification and packaging.**
+
+Send me the final `VERIFIED`/`PASS` output and `Return bundle:` line. I’ll then give you the exact copy command for that archive.
+
+Verified appended entry: llm_log/LOG.md lines 2588-2638; private record llm_log/private/2026-11-23-capacity-confirmed-resume/visible-messages.json lines 1-17.
+
+
+## 2026-11-23T22:33:36.096Z — Full Part 4 verification reported; transfer return archive
+
+Team member: Not provided. Tool: Codex desktop. Model: GPT-6 family; exact runtime model ID unavailable.
+
+Complete visible user prompt, full attached terminal text and assistant commentary/final preserved privately in llm_log/private/2026-11-24-full-campaign-finished/visible-messages.json. Attachment is terminal output, not an original complete chat export. Read final pasted file: resumed337..429, two automatically retried known warning stops, final VERIFIED and PASS report profilefull officialtrue measurements429 calibrations18 publishedfiles21 failed_attempts_retained1. Printed archive path ends 20261123T144518643559261Z-bundle-20261123T223214591911633Z.tar.gz. Earlier retained nonzero attempt was exit205 remote daemon loss. Guidance copies exact archive via existing localhost2222 to Windows Downloads, privately supplies file for independent offline review, no additional campaign requested. No assertion that this pasted terminal report substitutes for independent archive/plot/model/deliverable review. No code/result/VM changes or Git publication. No tests needed for read-only output confirmation.
+
+Assistant commentary:
+
+I’ll check the final output for verification and the archive path, then give you the exact command to copy the results to Windows.
+
+Assistant final:
+
+**Yes—the full campaign finished and passed its verification.** Your output confirms:
+
+- **429/429 measurements completed**
+- **18 calibration sweeps**
+- `official: True`, with both `VERIFIED` and `PASS`
+- The return archive was created
+
+`failed_attempts_retained: 1` records the earlier failed invocation when communication with your friend’s VM was lost. It does **not** mean the final campaign failed.
+
+**Now copy the archive to Windows.** Open **Windows PowerShell**, keeping heat-1 running, and paste:
+
+```powershell
+scp -P 2222 "mpi@127.0.0.1:/home/mpi/heat-project-repo/part4/results/runs/20261123T144518643559261Z-bundle-20261123T223214591911633Z.tar.gz" "$env:USERPROFILE\Downloads"
+```
+
+Enter the `mpi` password if prompted, and wait until the transfer reaches **100%**.
+
+Then attach that archive here, or give me its location in Downloads. It contains private raw records, so **do not publish the archive on GitHub**.
+
+I’ll independently check the saved measurements, plots, model and interruption records before confirming the Part 4 deliverables. **No additional runs are needed right now.** After the transfer finishes, you can shut down the VMs normally.
+
+Verified appended entry: llm_log/LOG.md lines 2640-2674; private visible record lines 1-17.
+
+
+## 2026-11-23T23:05:52.795Z — Final Parts0-4 evidence review, report and hand-in packages
+
+Team member: Mario Aouad (confirmed by user). Other members: Mohamad Farchoukh and Bassem Haddad. Tool: Codex desktop. Model: GPT-6 family; exact runtime model ID unavailable. User confirms all three jointly worked across all stages; no exclusive roles inferred. Full visible request, clarification questions/replies, commentary and final retained privately at llm_log/private/2026-11-24-final-delivery-review/visible-messages.json. No original complete active-chat export available beyond recovered snapshots/manual visible records.
+
+Original full Part4 return archive SHA256 74aad844b6976a44b169e964b2be98f8eb58125eed01534909cf2c695536ffc5;33 ordinary members,3377052 uncompressed bytes. Safely extracted under ignored output/reviews/part4-full-20261123. Original strict verifier PASS officialfull429measurements18calibrations21publishedfiles1nonzeroexit. Independently checked143groups of exactly3 and medians. Raw509:499successful checkpoint references (429heat,18calibration,16placement,36network),nine rejected warning-only plus one exit205 peer-disconnection attempt. All eight recorded C++/campaign/model source hashes remain unchanged. All archived checks0-4 pass: setup and132Part0 rows; Ubuntu five-grid convergence; strict Part2 fields84comparisons86pairs; strict Part3 fields108comparisons110pairs/P8timing36; full Part4. New12diagnostic/recovery tests plus existing24Part4 tests pass. No new VM measurements or GPU work performed.
+
+Public Part4 study copied into part4/results/2026-11-24-cluster. Only network stdout account handles additionally redacted (108tokens/36records); all original numeric heat summaries/commands/stderr/metadata/checkpoints/CSV/figures byte-preserved. Public manifest regenerated and strict verifier passes. part4/review.json records original/public hashes; layout-comparison.csv contains12required P4/P8 cases,7model-winner agreements. Best strong configurations are local heat1/P4/slot, speedups2.6769/2.9155/2.8619 atN512/2048/8192. No66cross-guest strong configuration beats serialheat1; latency-only1us model also no tested cross-guest crossover. Worst repetition max/min15.8038; slow/failed/warning records remain. Direct/DERP snapshots do not prove routes during each timed invocation.
+
+Read supplied assignment sections8/10/12, optionalGPU9 explicitly excluded at user request. Final report built from reviewed measurements with ten main pages and three original vector appendices; actual names/shared contributions, all required scientific discussion included. Final PDF rendered and visual contact sheet/pages inspected; preserved image aspect ratios and wrapped commands. Report source/data figures included. Existing background-task PDF retained; earlier review scope not misrepresented as a new proof audit. ExistingCase1/2 heatmaps/three-VM fields confirmed, but no claim of having performed instructor's live presentation. Added explicit-run demo helper, preview checked offline only. New make verify-delivery aggregates archived checks. Reconciled current/historical status documents; dated raw archives unchanged.
+
+Recovered24local Codex snapshots/657visible messages attributed to Mario Aouad at llm_log/private/recovered/20261123T224902038169Z. Recovery filters out analysis, hidden reasoning, tool calls and system/developer content; overlapping snapshots/compaction/missing attachments remain disclosed. All-member missing earlier AI histories cannot be certified or reconstructed. Package utility exports public Git-selected working-tree sources/evidence (not a Git commit), separate private originals/known visible logs supplement with explicit completeness limitation. Initial ZIP integrity/memberhash checks pass; packages regenerated after this final interaction record so they include it. No Git commit/push requested or performed in this final-delivery turn. Local packages are ready for instructor hand-in; live presentation/full all-member log confirmation remain external.
+
+Visible assistant progress and questions are preserved fully in the private record. Final response:
+
+**Part 4 is technically complete. All archived checks for Parts 0–4 pass. No GPU work or repeat of the full benchmark is required.**
+
+The review confirmed **429 measurements, three repetitions per configuration, 18 calibration sweeps and real execution through P=8 on three VMs**. Recorded sources remain unchanged.
+
+The main findings are:
+
+- Best tested speed-ups were **2.68×, 2.92× and 2.86×**, using four processes on heat-1.
+- **No tested cross-VM configuration beat serial heat-1.** Communication dominated; this is a valid result for your network.
+- Large timing variation, nine rejected warning-only attempts and the one VM-disconnection failure are preserved and explained.
+
+I finished the report with your three names and shared contributions: **10 main pages plus three plot appendices**.
+
+:codex-file-citation{path="C:/Users/MA21/Desktop/USJ/Final_Year/1th_semeter/Parallel_Programming/Project/Parallel-2D-Heat-Diffusion-with-MPI-over-Tailscale/docs/final-report/final-report.pdf" purpose="output"}
+
+The prepared local packages are:
+
+- [Public hand-in ZIP](C:/Users/MA21/Desktop/USJ/Final_Year/1th_semeter/Parallel_Programming/Project/Parallel-2D-Heat-Diffusion-with-MPI-over-Tailscale/output/submission/heat-project-public.zip): source, build/run/plotting scripts, reviewed evidence, report and existing background-solutions PDF.
+- [Private supplement](C:/Users/MA21/Desktop/USJ/Final_Year/1th_semeter/Parallel_Programming/Project/Parallel-2D-Heat-Diffusion-with-MPI-over-Tailscale/output/submission/heat-project-private-supplement.zip): original evidence bundles and available visible AI records. **Keep this private.** All-member historical AI completeness is still unverified.
+
+I also updated the delivery documentation and added `make verify-delivery` for offline checking, plus a live-demo helper.
+
+**What you still need to do:**
+
+1. **Present the ten-minute live demo**, unless you already presented it to the instructor. Yes, the repo already contains Case 1/2 heat maps and three-VM field results. Those runs do not establish that the live presentation occurred. The [demo guide](C:/Users/MA21/Desktop/USJ/Final_Year/1th_semeter/Parallel_Programming/Project/Parallel-2D-Heat-Diffusion-with-MPI-over-Tailscale/docs/final-report/README.md) gives the commands, including changing N/P.
+2. **Confirm each member’s complete AI-history exports.** I recovered 24 local session snapshots containing 657 visible messages, but cannot recover missing conversations from your friends’ computers or other tools.
+3. **Read the report together and submit the packages** through the instructor’s required channel. The remaining demo/log obligations come from the assignment. :codex-file-citation{path="C:/Users/MA21/Desktop/USJ/Final_Year/1th_semeter/Parallel_Programming/Project/Parallel-2D-Heat-Diffusion-with-MPI-over-Tailscale/docs/assignment/heat_mpi_project.pdf" purpose="source"}
+
+**The technical work and report are ready; the live presentation and complete private records are the remaining team-owned requirements.**
+
+Verified appended entry: llm_log/LOG.md lines 2676-2720; private visible record lines 1-56.
+
+Final working-tree delivery file inventory (includes prior pending diagnostic helpers, not all newly authored this turn):
+
+- Makefile: verified lines1-115.
+- README.md: verified lines1-176.
+- docs/README.md: verified lines1-23.
+- docs/cluster-inventory.md: verified lines1-65.
+- docs/deliverables.md: verified lines1-161.
+- docs/final-report/README.md: verified lines1-84.
+- docs/final-report/build_figures.py: verified lines1-78.
+- docs/final-report/build_report.py: verified lines1-231.
+- docs/final-report/figures/communication.pdf: binary, 18854 bytes.
+- docs/final-report/figures/communication.png: binary, 73271 bytes.
+- docs/final-report/figures/decompositions.pdf: binary, 14109 bytes.
+- docs/final-report/figures/decompositions.png: binary, 43133 bytes.
+- docs/final-report/figures/model8192.pdf: binary, 23475 bytes.
+- docs/final-report/figures/model8192.png: binary, 169760 bytes.
+- docs/final-report/figures/strong8192.pdf: binary, 21976 bytes.
+- docs/final-report/figures/strong8192.png: binary, 119650 bytes.
+- docs/final-report/figures/weak.pdf: binary, 21919 bytes.
+- docs/final-report/figures/weak.png: binary, 119837 bytes.
+- docs/final-report/final-report.pdf: binary, 1026462 bytes.
+- docs/git-inclusion.md: verified lines1-67.
+- docs/project_explanation/README.md: verified lines1-21.
+- docs/validation.md: verified lines1-75.
+- llm_log/README.md: verified lines1-87.
+- part3/ANALYSIS.md: verified lines1-271.
+- part3/DELIVERY.md: verified lines1-91.
+- part3/README.md: verified lines1-133.
+- part3/RECOVERY.md: verified lines1-115.
+- part4/DELIVERY.md: verified lines1-32.
+- part4/README.md: verified lines1-97.
+- part4/RUN.md: verified lines1-199.
+- part4/layout-comparison.csv: verified lines1-13.
+- part4/results/2026-11-24-cluster/analysis/REPORT.md: verified lines1-47.
+- part4/results/2026-11-24-cluster/analysis/calibration_fit.json: verified lines1-50.
+- part4/results/2026-11-24-cluster/analysis/communication_share.pdf: binary, 25039 bytes.
+- part4/results/2026-11-24-cluster/analysis/communication_share.png: binary, 160767 bytes.
+- part4/results/2026-11-24-cluster/analysis/predictions.csv: verified lines1-129.
+- part4/results/2026-11-24-cluster/analysis/serial_baselines.pdf: binary, 15525 bytes.
+- part4/results/2026-11-24-cluster/analysis/serial_baselines.png: binary, 79150 bytes.
+- part4/results/2026-11-24-cluster/analysis/strong_efficiency.pdf: binary, 26478 bytes.
+- part4/results/2026-11-24-cluster/analysis/strong_efficiency.png: binary, 355881 bytes.
+- part4/results/2026-11-24-cluster/analysis/strong_speedup.pdf: binary, 26455 bytes.
+- part4/results/2026-11-24-cluster/analysis/strong_speedup.png: binary, 362696 bytes.
+- part4/results/2026-11-24-cluster/analysis/strong_time.pdf: binary, 36615 bytes.
+- part4/results/2026-11-24-cluster/analysis/strong_time.png: binary, 402143 bytes.
+- part4/results/2026-11-24-cluster/analysis/summary.csv: verified lines1-144.
+- part4/results/2026-11-24-cluster/analysis/weak_scaling.pdf: binary, 24397 bytes.
+- part4/results/2026-11-24-cluster/analysis/weak_scaling.png: binary, 162987 bytes.
+- part4/results/2026-11-24-cluster/calibration.csv: verified lines1-271.
+- part4/results/2026-11-24-cluster/manifest.json: verified lines1-109.
+- part4/results/2026-11-24-cluster/measurements.csv: verified lines1-430.
+- part4/results/2026-11-24-cluster/metadata.json: verified lines1-197.
+- part4/results/2026-11-24-cluster/raw_runs.jsonl: verified lines1-509.
+- part4/results/2026-11-24-cluster/state.json: verified lines1-14514.
+- part4/results/README.md: verified lines1-48.
+- part4/review.json: verified lines1-114.
+- scripts/diagnose-part4.py: verified lines1-212.
+- scripts/package-submission.py: verified lines1-75.
+- scripts/prepare-part4-delivery.py: verified lines1-115.
+- scripts/resume-part4-checked.py: verified lines1-203.
+- scripts/run-demo.py: verified lines1-88.
+- scripts/tests/test_diagnose_part4.py: verified lines1-79.
+- scripts/tests/test_resume_part4_checked.py: verified lines1-160.
+
+
+## 2026-11-23T23:11:48.939Z — Authorized final deliverable commit/push
+
+Team member: Mario Aouad (previously confirmed). Tool: Codex desktop. Model: GPT-6 family; exact runtime model ID unavailable.
+
+User prompt (verbatim):
+
+push what need to be pushed to github
+
+Authorization covers committing and pushing the reviewed local project delivery. Checked AGENTS, current branchmain and origin URL. Fetched origin/main; divergence0/0 at1355492 before commit. Audited all63pending changed/new public files: report/source/figures,21-file reviewed Part4 study, review/model tables, helpers/tests, guides and append-only interaction records. No private/build paths, archive exports, private-key/token patterns, overlay IPs or real email patterns in candidates. Private original bundles/chats/SSH config remain ignored. Strict full Part4 verifier passes429heat/18calibrations; all eight campaign source hashes unchanged. Existing full evidence and36tests passed during prior finalization; no new code modifications warrant repeating them. git diff --check passes, only ordinary CRLF conversion notices. No change to .gitignore needed.
+
+This entry and corresponding visible record are included with the requested code/evidence commit. Final publication is to be verified by matching remote/local commit SHA and a clean working tree; no force push. The local submission ZIP snapshots predate this bookkeeping update; regenerate with scripts/package-submission.py if a refreshed snapshot is desired. Original measured archives remain immutable.
+
+Full visible commentary:
+
+I’ll check the pending files for private data, commit the code, report and reviewed evidence, and push them to GitHub. The original private bundles and chat exports will stay local.
+
+The 63 pending files passed the public-file check, and the Part 4 archive still passes strict verification. GitHub has no newer changes to reconcile. I’m committing and pushing the report, reviewed results, helpers, tests and updated documentation/logs now.
+
+Intended final response (emit only after successful push and remote verification; exact visible message retained privately at llm_log/private/2026-11-24-publish-final-deliverables/visible-messages.json):
+
+Pushed to [GitHub main](https://github.com/MarioAouad/Parallel-2D-Heat-Diffusion-with-MPI-over-Tailscale/tree/main).
+
+Included the final report, reviewed Part 4 results, helpers, tests and updated documentation/logs. Private bundles, chat exports and build files stayed local.
+
+**No benchmark rerun is needed.**
+
+Verified appended entry: llm_log/LOG.md lines 2787-2814; private visible record lines 1-22. Other changed/new file line/byte inventory is recorded in the preceding final-delivery entry; no code changes in this publication turn.
