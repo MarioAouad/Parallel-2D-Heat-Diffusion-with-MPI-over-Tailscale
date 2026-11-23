@@ -137,7 +137,6 @@ def verify_study(folder,require_full=True,allow_synthetic=False):
                 key=f'calibration:{a}:{b}:{rep}';value=completed.get(key)
                 C.require(value,'Missing calibration repetition/link')
                 r=by_id[value['run_id']];command=r['command']
-                C.require(r['stderr'].strip()=='Finished successfully. CSV contains measured results.','Unexpected calibration diagnostic')
                 for flag,setting in [('-np','2'),('--max-bytes',str(p['calibration_max_bytes'])),
                                      ('--iterations',str(p['calibration_iterations'])),('--map-by','node')]:
                     C.require(command[command.index(flag)+1]==setting,'Calibration command mismatch')
@@ -145,6 +144,7 @@ def verify_study(folder,require_full=True,allow_synthetic=False):
                           'Calibration transport/capacity policy differs')
                 check_transport(command,meta['transport'])
                 measured=list(csv.DictReader(io.StringIO(r['stdout'])))
+                C.check_pingpong_diagnostics(r['stderr'],measured)
                 C.require(len(measured)==int(math.log2(p['calibration_max_bytes']))-2,'Incomplete calibration sweep')
                 for row in measured:
                     C.require((row['host0'],row['host1'])==(f'heat{a+1}',f'heat{b+1}'),'Calibration hosts differ')

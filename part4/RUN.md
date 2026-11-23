@@ -50,6 +50,14 @@ If it stops, send the failing output and the printed run folder. Do not launch a
 second campaign over one still running. If a physical calibration slope is not
 positive, retain it: do not edit the fitted parameter to make the model work.
 
+The first published checker incorrectly rejected the Part 0 benchmark's normal
+per-size `Testing ... bytes` stderr progress. The corrected runner/verifier match
+those progress lines to the CSV rows and require the final success marker, while
+still rejecting unexpected diagnostics. If an old smoke run stopped at
+`Unexpected ping-pong diagnostic` before measurements, preserve that folder,
+update/build every VM, and start a new smoke run. Do not resume it with edited
+source hashes: the corrected code is a different revision.
+
 ## 4. Full campaign
 
 Use a persistent terminal if you already have one, or use the VM console and keep

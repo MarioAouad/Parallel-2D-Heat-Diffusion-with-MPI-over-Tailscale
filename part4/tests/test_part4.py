@@ -61,8 +61,9 @@ class FakeCluster:
             while size<=maximum:
                 one=ts+size*slope
                 text+=f'{label},{a},{b},{size},{iterations},1,{2*one},{one},{size/2**20/one}\n'
+                stderr+=f'Testing {size} bytes: {a} <-> {b}\n'
                 size*=2
-            stderr='Finished successfully. CSV contains measured results.\n'
+            stderr+='Finished successfully. CSV contains measured results.\n'
         else:
             def opt(flag):return args[args.index(flag)+1]
             N,steps,r=int(opt('--N')),int(opt('--steps')),float(opt('--r'))
@@ -113,6 +114,22 @@ class DesignTests(unittest.TestCase):
 
     def test_remote_inventory_program_compiles(self):
         compile(R.inventory_program(),'<remote-inventory>','exec')
+
+    def test_real_pingpong_progress_and_success_are_accepted(self):
+        rows=[dict(bytes='8',host0='heat1',host1='heat2'),dict(bytes='16',host0='heat1',host1='heat2')]
+        C.check_pingpong_diagnostics('Testing 8 bytes: heat1 <-> heat2\nTesting 16 bytes: heat1 <-> heat2\nFinished successfully. CSV contains measured results.\n',rows)
+
+    def test_progress_without_final_success_is_rejected(self):
+        with self.assertRaisesRegex(ValueError,'Unexpected ping-pong diagnostic'):
+            C.check_pingpong_diagnostics('Testing 8 bytes: heat1 <-> heat1\n',[dict(bytes='8',host0='heat1',host1='heat1')])
+
+    def test_additional_mpi_warning_is_not_ignored(self):
+        with self.assertRaisesRegex(ValueError,'Unexpected ping-pong diagnostic'):
+            C.check_pingpong_diagnostics('Testing 8 bytes: heat1 <-> heat1\nMPI WARNING\nFinished successfully. CSV contains measured results.\n',[dict(bytes='8',host0='heat1',host1='heat1')])
+
+    def test_progress_wrong_host_or_size_is_rejected(self):
+        with self.assertRaisesRegex(ValueError,'Unexpected ping-pong diagnostic'):
+            C.check_pingpong_diagnostics('Testing 16 bytes: heat1 <-> heat3\nFinished successfully. CSV contains measured results.\n',[dict(bytes='8',host0='heat1',host1='heat2')])
 
 
 class EvidenceTests(unittest.TestCase):

@@ -19,6 +19,18 @@ def require(ok, message):
         raise ValueError(message)
 
 
+def check_pingpong_diagnostics(stderr, rows):
+    """Accept the unchanged Part 0 benchmark's exact progress protocol.
+
+    Rank zero prints one progress line per CSV row to stderr, then the success
+    marker. Extra warnings/errors are still rejected, not silently discarded.
+    """
+    expected=[f"Testing {r['bytes']} bytes: {r['host0']} <-> {r['host1']}" for r in rows]
+    expected.append('Finished successfully. CSV contains measured results.')
+    require(bool(rows) and stderr.strip().splitlines()==expected,
+            'Unexpected ping-pong diagnostic: progress/hosts/success do not match CSV; inspect raw_runs.jsonl')
+
+
 def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 

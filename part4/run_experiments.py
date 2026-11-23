@@ -147,9 +147,8 @@ class Campaign:
                                  '--max-bytes',str(self.p['calibration_max_bytes']),
                                  '--iterations',str(self.p['calibration_iterations']),'--warmup','1'])
                     record=self.invoke(key,command,allow_stderr=True)
-                    C.require(record['stderr'].strip()=='Finished successfully. CSV contains measured results.',
-                              'Unexpected ping-pong diagnostic')
                     rows=list(csv.DictReader(io.StringIO(record['stdout'])))
+                    C.check_pingpong_diagnostics(record['stderr'],rows)
                     for row in rows:
                         C.require((row['host0'],row['host1'])==(f'heat{a+1}',f'heat{b+1}'),'Calibration host placement differs')
                         C.require(float(row['oneway_s'])>0 and math.isfinite(float(row['oneway_s'])) and

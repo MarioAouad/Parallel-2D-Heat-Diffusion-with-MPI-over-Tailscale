@@ -28,7 +28,8 @@ done
 
 # Slots per VM: optional HEATn_SLOTS in cluster.local.sh, default 2. A slot only
 # PERMITS a process; it must not exceed the vCPUs really allocated to that VM
-# (part3/run_experiments.py checks this with nproc over SSH before using > 6).
+# Part 2/3/4 runners verify all counts using check_slots.py: local nproc for the
+# launching guest, verified SSH for the others.
 for name in HEAT1_SLOTS HEAT2_SLOTS HEAT3_SLOTS; do
     value=${!name:-2}
     if [[ ! $value =~ ^[1-9][0-9]?$ ]]; then
