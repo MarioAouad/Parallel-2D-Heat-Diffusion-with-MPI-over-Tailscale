@@ -2812,3 +2812,60 @@ Included the final report, reviewed Part 4 results, helpers, tests and updated d
 **No benchmark rerun is needed.**
 
 Verified appended entry: llm_log/LOG.md lines 2787-2814; private visible record lines 1-22. Other changed/new file line/byte inventory is recorded in the preceding final-delivery entry; no code changes in this publication turn.
+
+
+## 2026-11-24T15:14Z — Part 4 explanation PDF
+
+Team member: unknown (session run under Git user Bassem Haddad; member not stated in the prompt). Tool: Claude Code (VS Code extension). Model: Claude Opus 5.5 (`claude-opus-5-5`).
+
+User prompt (verbatim):
+
+i need you to build an explanation pdf like the one for part 0 to 3 for part 4
+
+Visible progress responses (verbatim):
+
+I'm gathering the Part 4 sources (docs, CSVs, final-report text) so the new explanation matches the Part 0–3 PDFs; next I'll read the assignment's Part 4 section and the runner code.
+
+I have all the numbers; now checking the Part 0 link summary for comparison, then I'll add the Part 4 figures and write the HTML.
+
+Adding two Part 4 figures (calibration comparison and a model time-budget breakdown) to the figure builder.
+
+Both figures render and the model totals match `predictions.csv`. I'm fixing the overlapping legend on the calibration chart, then I'll write the HTML.
+
+Writing the Part 4 HTML now. It reuses the Part 3 stylesheet, the archived Part 4 plots and the two new figures.
+
+Checking a few numbers I quoted before assembling the page.
+
+Applying the corrections from that check, then assembling and printing the PDF.
+
+The 19-page PDF renders cleanly. Last steps: add it to the folder index and append the session record to `llm_log/LOG.md`, as `AGENTS.md` requires.
+
+Final response: summarised in the visible chat (PDF location, structure, two new figures, sources, no new experiment, nothing committed). The final message text is not copied here because this entry is written before it is sent; the raw session export, if saved, is the complete record.
+
+Work done: read-only analysis of the reviewed Part 4 campaign (no VM, MPI or solver run; no archived file modified). New figures computed from `calibration_fit.json`, `summary.csv`, `state.json` and the Part 0 summary with the model functions of `part4/common.py`/`part4/analyze.py`; the step-budget model totals were checked against `predictions.csv`. PDF printed with headless Microsoft Edge from the HTML.
+
+Files created or modified:
+- docs/project_explanation/part4_explanation.html: new, lines 1-665.
+- docs/project_explanation/part4_explanation.pdf: new, binary, 1418482 bytes, 19 pages.
+- docs/project_explanation/figures/part4_calibration.png: new, binary, 66194 bytes.
+- docs/project_explanation/figures/part4_step_budget.png: new, binary, 145904 bytes.
+- docs/project_explanation/build_figures.py (untracked): docstring lines 16-19 added; Part 4 functions lines 290-404; main() lines 406-417 now also calls them.
+- docs/project_explanation/README.local.md (untracked): Part 4 rows lines 16-17, figure row line 18, sources lines 28-30.
+- llm_log/LOG.md: this entry appended after line 2814.
+
+Nothing was committed or pushed.
+
+
+## 2026-11-24 — Authorized commit/push of the Part 4 explanation PDF
+
+Team member: unknown (Git user Bassem Haddad; member not stated). Tool: Claude Code (VS Code extension). Model: Claude Opus 5.5 (`claude-opus-5-5`).
+
+User prompts (verbatim):
+
+commit and push the part 4 explanation the pdf only
+
+1, pdf plus the log
+
+Visible responses (verbatim, abridged to the decision): the first commit attempt (PDF plus LOG.md) was blocked by the permission check before any change; the assistant explained that AGENTS.md requires the interaction record in every requested commit, which conflicts with "PDF only", and offered (1) PDF plus the log entry or (2) strictly the PDF. The user chose option 1.
+
+Scope: commit docs/project_explanation/part4_explanation.pdf (new, binary, 1418482 bytes) and the appended LOG.md entries (the preceding Part 4 explanation entry and this one) on main; fast-forward push to origin. HTML source, figures, build_figures.py and README.local.md stay uncommitted. Local main and origin/main were 0/0 before committing.
