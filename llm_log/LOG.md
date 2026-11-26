@@ -2869,3 +2869,93 @@ commit and push the part 4 explanation the pdf only
 Visible responses (verbatim, abridged to the decision): the first commit attempt (PDF plus LOG.md) was blocked by the permission check before any change; the assistant explained that AGENTS.md requires the interaction record in every requested commit, which conflicts with "PDF only", and offered (1) PDF plus the log entry or (2) strictly the PDF. The user chose option 1.
 
 Scope: commit docs/project_explanation/part4_explanation.pdf (new, binary, 1418482 bytes) and the appended LOG.md entries (the preceding Part 4 explanation entry and this one) on main; fast-forward push to origin. HTML source, figures, build_figures.py and README.local.md stay uncommitted. Local main and origin/main were 0/0 before committing.
+
+
+## 2026-11-25 15:41–15:46 Asia/Beirut — Read-only submission review
+
+Team member unknown (not stated). Tool: Codex. Recorded model: GPT-6.2 Sol (`gpt-6.2-sol`). The two visible user messages, progress updates and full response are preserved verbatim in the private transcript below. No repository files changed in that review.
+
+## 2026-11-25 21:10–21:23 Asia/Beirut — Corrections and repository cleanup
+
+Team member unknown (not stated). Tool: Codex. Recorded model: GPT-6.2 Sol (`gpt-6.2-sol`). The full prompts, progress and final response for both turns are preserved in `llm_log/private/recovered/2026-11-25-repo-cleanup/review-and-cleanup.visible.jsonl`. The original local runtime includes non-visible material and was left at its source. No commit or push was requested.
+
+User request (verbatim)
+
+```text
+Do and fix the stuff that need to be fixed and delete what need to be deleted.
+
+there is lot of md files and readme in this repo, and many folder. So basically there is a lot of stuff fix it
+
+```
+
+Verified all six archive checks, six fresh serial tests, launcher dispatch with local stand-ins, 172 relative documentation links, the rebuilt PDFs and the original evidence hashes. No live MPI run was made. Removed 371 ignored files, including 308 extracted files matched to the original archives in the private ZIP. Preserved the diagnostic review, private originals, measured rows and binary field archives.
+
+Files changed
+
+- `.gitignore` (lines 51)
+- `Makefile` (lines 11–12, 14–17, 38, 59, 79)
+- `README.md` (lines 3–7, 9, 11, 14, prior 50–68 removed, 17–19, 22–26, 28–29, 31–35, 38, 40–42, 44–50, 52, 54–58, 60–63)
+- `docs/README.md` (prior lines 1–23 removed)
+- `docs/deliverables.md` (lines 1, 3, 5–65)
+- `docs/final-report/README.md` (lines 1, 3–6, 8, 10–11, 19–22, 24, 26–27, prior 47–53 removed, 33–37)
+- `docs/final-report/build_figures.py` (lines prior 24–24 removed, 77)
+- `docs/final-report/build_report.py` (lines 93, 98, 102–103, 142–143, 145)
+- `docs/final-report/figures/communication.pdf` (removed)
+- `docs/final-report/figures/decompositions.pdf` (removed)
+- `docs/final-report/figures/model8192.pdf` (removed)
+- `docs/final-report/figures/strong8192.pdf` (removed)
+- `docs/final-report/figures/weak.pdf` (removed)
+- `docs/final-report/final-report.pdf` (pages 1, 2 and 5 replaced)
+- `docs/git-inclusion.md` (prior lines 1–67 removed)
+- `docs/local-update.md` (lines 56)
+- `docs/part0-closeout.md` (lines 60)
+- `docs/parts2-3-rerun.md` (lines 1–33)
+- `docs/project_explanation/README.md` (lines 1, 3–9, 11–14, 16–17)
+- `docs/project_explanation/part0_explanation.pdf` (page 3 corrected)
+- `docs/project_explanation/part3_explanation.pdf` (page 17 corrected)
+- `docs/validation.md` (prior lines 1–75 removed)
+- `part0/results/README.md` (lines 59)
+- `part1/ANALYSIS.md` (lines 125)
+- `part1/DELIVERY.md` (prior lines 1–50 removed)
+- `part1/README.md` (lines 9, 50, 102, 110, 115–116)
+- `part1/results/2026-11-19-ubuntu/README.md` (lines 22)
+- `part1/results/README.md` (lines 10)
+- `part2/ANALYSIS.md` (lines 21, 68)
+- `part2/DELIVERY.md` (prior lines 1–82 removed)
+- `part2/README.md` (lines 3–5, 14, 16–17, 144, 176)
+- `part2/RECOVERY.md` (prior lines 1–84 removed)
+- `part2/results/README.md` (lines 9)
+- `part3/ANALYSIS.md` (lines 3, 139–175, 248, 271–272)
+- `part3/DELIVERY.md` (prior lines 1–91 removed)
+- `part3/README.md` (lines 3–5, 13, 15–16, 86, 88–91, 93–95)
+- `part3/RECOVERY.md` (prior lines 1–115 removed)
+- `part4/DELIVERY.md` (prior lines 1–32 removed)
+- `part4/README.md` (lines 17)
+- `scripts/heat.sh` (lines 1–48 (new))
+- `scripts/package-submission.py` (lines 2, prior 4–6 removed, 8, 10–11, 13–22, 25–48, 50–62, 64–105, 107–132)
+- Private visible transcript (lines 1–11) and its manifest (lines 1–24).
+- `output/submission/heat-project-public.zip` and `output/submission/heat-project-private-supplement.zip` regenerated locally.
+- This append-only log entry (lines 2875–2939).
+
+
+## 2026-11-25 23:16 Asia/Beirut — Submission and live-demo guidance
+
+Team member unknown (not stated). Tool Codex. Exact recorded model ID: `gpt-6.2-sol`. The two hand-in/demo questions and full answers are preserved in the private visible transcript below. No project files changed in those guidance turns.
+
+## 2026-11-26 19:04 Asia/Beirut — Authorized GitHub synchronization
+
+Team member unknown (not stated). Tool Codex. Exact recorded model ID: `gpt-6.2-sol`.
+
+User prompt (verbatim)
+
+```text
+Push the changes to github and pull if there is changes
+```
+
+Fetched origin/main and verified zero commits of divergence before staging. Re-ran all six archived-evidence checks. The commit includes the reviewed source and documentation cleanup recorded above, and this interaction index entry. The private supplement and transcripts are local ignored files. The visible prompts, progress and responses are kept in `llm_log/private/recovered/2026-11-26-github-sync/`. Publish status will be recorded privately after remote verification.
+
+Files touched by this interaction
+
+- `llm_log/private/recovered/2026-11-26-github-sync/hand-in-and-sync.visible.jsonl` lines 1–8.
+- `llm_log/private/recovered/2026-11-26-github-sync/manifest.json` lines 1–23.
+- `llm_log/LOG.md` lines 2942–2962 appended.

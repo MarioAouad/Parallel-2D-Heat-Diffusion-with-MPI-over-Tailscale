@@ -1,12 +1,8 @@
 # Part 2: 1D strip decomposition
 
-**Current review, 21 November 2026:** The [new retained-field cluster study](results/2026-11-21-retained-cluster/) passes strict verification: 84/84 exact comparisons, 109 retained fields, all three VMs represented. The missing-original-fields gap is closed by this new run; old archives remain record-only. Earlier dates and open-gap descriptions below refer to the historical archive, not the current delivery.
-
-
-**Status: C2 technical evidence complete; the new retained-field cluster archive passes strict verification.** Start with the [delivery checklist](DELIVERY.md)
-and the [analysis](ANALYSIS.md). The [cluster study](results/2026-11-19-cluster/) shows
-84/84 strips fields byte-identical to the serial reference for P = 1–4 across two and
-three VMs, including uneven strips.
+The [reviewed cluster study](results/2026-11-21-retained-cluster/) has 84 exact
+serial comparisons and 109 retained fields for P=1–4, including uneven strips
+and runs across two or three VMs.
 
 | File | Purpose |
 | --- | --- |
@@ -15,10 +11,10 @@ three VMs, including uneven strips.
 | [run_experiments.py](run_experiments.py) | C2 study: byte-for-byte comparisons, halo-debug transcripts, figures (`make verify-part2`, add `--cluster`) |
 | [verify_results.py](verify_results.py) | Offline check of an archived study (`make verify-part2-results`) |
 | [tests/test_evidence.py](tests/test_evidence.py) | Evidence-capture and tampering regression tests (`make test-part2-evidence`); MPI is mocked, so these are not cluster measurements |
-| [DELIVERY.md](DELIVERY.md) · [ANALYSIS.md](ANALYSIS.md) · [results/](results/README.md) | Checklist, interpretation, evidence index |
+| [Analysis](ANALYSIS.md) and [results](results/README.md) | Design rationale and evidence index |
 
-The Part 1 reference [`heat_serial.cpp`](../part1/heat_serial.cpp) is unchanged and
-stays the `--decomp serial` executable (`build/heat`). Part 3 (blocks) is now available in [part3/](../part3/README.md). The Part 2 solver source is retained unchanged to preserve the archived source hash.
+The [project launcher](../README.md#build-and-run) selects this solver with
+`--decomp strips`. The underlying executable is `build/heat_mpi`.
 
 ## Build and run (Ubuntu, repository root, as `mpi`)
 
@@ -145,7 +141,7 @@ N-1 not divisible by P, **across at least two VMs**.
    ```
 
 2. **Cluster** (from ONE VM; all three VMs must have pulled and run `make` in
-   `~/heat-project-repo`, with routes direct in `tailscale ping`):
+   `~/heat-project-repo`, with routes checked using `tailscale ping`):
 
    ```bash
    python3 part2/run_experiments.py --cluster
@@ -177,7 +173,7 @@ python3 part2/verify_results.py --data part2/results/runs/<stamp> --require-fiel
 
 The 19 November legacy archive records byte equality but does not contain its binary
 fields. The verifier labels that limitation; it never presents the old records as a
-fresh byte comparison. See [evidence recovery](RECOVERY.md).
+fresh byte comparison.
 
 Run folders are git-ignored until reviewed. Copy the reviewed cluster run to
 `part2/results/<date>-cluster/`, as was done for Part 1 (see the [results index](results/README.md)).

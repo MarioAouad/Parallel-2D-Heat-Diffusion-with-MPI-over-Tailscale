@@ -7,7 +7,7 @@
 | [First Ubuntu run](2026-11-19-ubuntu-smoke/) | Historical build/smoke evidence | One N=16 solver summary and transcript provenance; superseded in scope by the full Ubuntu study |
 
 Use the [analysis](../ANALYSIS.md) for interpretation and the
-[delivery checklist](../DELIVERY.md) for requirement links. The Ubuntu study is
+[course hand-in](../../docs/deliverables.md) for requirement links. The Ubuntu study is
 complete; earlier records are retained evidence rather than pending tasks.
 
 `make verify-part1-results` checks the primary published archive offline.

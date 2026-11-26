@@ -6,7 +6,7 @@ The earlier task solver was adapted into this project interface. Its separate
 retained with the background deliverable.
 
 **Status: Part 1 technical work and Ubuntu evidence review complete.** Start with
-the [delivery checklist](DELIVERY.md) and [numerical analysis](ANALYSIS.md). The
+the [numerical analysis](ANALYSIS.md). The
 primary [Ubuntu result archive](results/2026-11-19-ubuntu/) includes the actual
 CSV tables, figures, raw commands and source/provenance metadata.
 
@@ -47,7 +47,7 @@ python part1/run_experiments.py --exe build/heat.exe
 | `--T T` | Positive final time; choose an integer step count and reduce dt so effective r does not exceed the request |
 | `--steps M` | Positive fixed step count; dt=r/N^2; supply exactly one of this option and `--T` |
 | `--out FILE` | Optional full grid: raw little-endian IEEE-754 doubles, row-major, boundaries included, no header |
-| `--decomp serial` | Default serial; strips/blocks explicitly rejected until implemented |
+| `--decomp serial` | Default serial. Use `./heat` with MPI for strips or blocks |
 | `--allow-unstable-demo` | Explicit Task 6.7 experiment only; requires Case 1, fixed steps and r>0.25 |
 | `--help` | Show usage |
 
@@ -99,7 +99,7 @@ The C++ file performs the simulation. These scripts support verification and
 delivery. Reviewed CSVs, figures, source metadata and raw command JSON are
 submission evidence. Binary fields and fresh unreviewed run folders stay ignored.
 
-## Completed evidence and next stage
+## Reviewed evidence
 
 The [primary Ubuntu study](results/2026-11-19-ubuntu/) has been received,
 numerically cross-checked and visually reviewed. Six correctness test groups
@@ -107,12 +107,10 @@ passed; the five-grid observed orders are 2.00577, 2.00144, 2.00036 and 2.00009.
 All five binary snapshots passed format/boundary checks; stable fields passed
 bounds/symmetry checks.
 
-See [ANALYSIS.md](ANALYSIS.md) for interpretation and
-[DELIVERY.md](DELIVERY.md) for the handoff. The
+See [the analysis](ANALYSIS.md) for interpretation. The
 [results index](results/README.md) distinguishes the completed Ubuntu study from
 earlier Windows and Ubuntu smoke evidence. Use `make verify-part1-results`
 for an offline integrity/numerical check.
 
-The serial reference is ready for Part 2 comparisons. Keep it and its arithmetic
-order intact while implementing strips. Timings in the existing raw output are
-incidental; controlled repeated measurements belong to Part 4.
+Parts 2 and 3 use this implementation as the bytewise reference. The timing
+campaign is documented in [Part 4](../part4/README.md).

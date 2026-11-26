@@ -53,6 +53,4 @@ Wait for a successful push before pulling on the VMs. Current source and deliver
 files come from Git; old local transfer bundles are historical artifacts.
 Parts 2 and 3 are implemented. Use the [Parts 2/3 rerun guide](parts2-3-rerun.md)
 for remote updates, fresh retained-field evidence, P=8 and the return bundle.
-Part 4 performance work follows.
-
-Part 4 is now implemented. After the code is published, follow [Part 4 VM instructions](../part4/RUN.md). The updater builds every executable, including the reused ping-pong calibration program.
+For a separate performance run, follow the [Part 4 VM instructions](../part4/RUN.md). The updater builds the solvers and the ping-pong calibration program.

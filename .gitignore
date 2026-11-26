@@ -48,6 +48,7 @@ __pycache__/
 # Keep full private exports and credentials out of this PUBLIC repository.
 /private/
 /llm_log/private/
+/llm_log/raw/
 /llm_log/raw-private/
 /part0/config/cluster.local.sh
 /part0/config/hosts

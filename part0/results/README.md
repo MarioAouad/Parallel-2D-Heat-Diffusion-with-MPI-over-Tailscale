@@ -56,7 +56,7 @@ The [derived summary](analysis/summary.csv) and six plots are reproducible from 
 - There are no per-exchange timing samples or independent-sweep confidence intervals. Small-message min/max in the summary describe four per-size averages, not packet jitter distributions.
 - Route snapshots are not continuous traces. The changing heat2-heat3 condition limits a single-condition model; prioritize a separately recorded stable-route repeat if stronger claims are needed.
 - All-machine inventories and current setup checks are complete; see the [closeout](../../docs/part0-closeout.md). Earlier missing private AI history remains a separate submission item.
-- Heat-field verification is in the completed [Part 1 delivery](../../part1/DELIVERY.md); later parallel solver correctness and scaling require their own evidence.
+- Heat-field verification is in the completed [Part 1 delivery](../../part1/README.md); later parallel solver correctness and scaling require their own evidence.
 
 ## Why this matters later
 

@@ -6,7 +6,7 @@
 | [19 November cluster study](2026-11-19-cluster/) | Historical C2 record; original fields absent | 84/84 byte-identical serial-vs-strips comparisons across 2–3 VMs, halo-debug transcripts, decomposition and Case 1/2 figures, raw commands, console transcripts, manifest and review |
 
 Use the [analysis](../ANALYSIS.md) for interpretation and the
-[delivery checklist](../DELIVERY.md) for requirement links.
+[course hand-in](../../docs/deliverables.md) for requirement links.
 
 `make verify-part2-results` checks the newest archived study offline.
 `python3 part2/run_experiments.py [--cluster]` writes a new timestamped folder under the

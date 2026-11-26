@@ -18,7 +18,7 @@ The archive was re-verified after transfer and reviewed (`review.json`). It reco
 the original byte comparisons, but its binary fields were omitted. Current offline
 checks verify hashes, full coverage, raw/CSV summary consistency, V error norms
 and machine counts; they cannot repeat the original `cmp`. New runs retain all
-fields and support `--require-fields`; see [recovery](RECOVERY.md).
+fields and support `--require-fields`; see the [rerun guide](../docs/parts2-3-rerun.md).
 
 Before any MPI run, the decomposition logic had been checked by an exact Python emulation
 of the row split, ghost layout, two-shift exchange and gather. It produced 96/96 fields
@@ -65,7 +65,7 @@ The same argument covers the V-case error norms. They are computed on rank 0 fro
 gathered field in the serial loop order, so the reduction order does not change.
 Minimum and maximum are combined with `MPI_MIN`/`MPI_MAX`, which involve no rounding.
 
-What the argument needs, and what the tests check (see [DELIVERY.md](DELIVERY.md)):
+The archived tests check the following:
 
 1. the strips tile rows 1..N−1 exactly once (row-size test, gather offsets);
 2. every ghost row equals the neighbour's current edge row before each update (debug test);

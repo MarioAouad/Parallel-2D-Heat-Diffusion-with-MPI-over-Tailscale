@@ -8,10 +8,13 @@ CPPFLAGS += -DOMPI_SKIP_MPICXX=1
 # ffp-contract=off prepares consistent arithmetic for the later heat solver.
 CXXFLAGS := -std=c++17 -O2 -ffp-contract=off -Wall -Wextra -Wpedantic
 
-.PHONY: all serial strips verify-results verify-setup analyze test-analysis check-serial verify-part1 verify-part1-results check-strips verify-part2 verify-part2-results test-part2-evidence blocks check-blocks verify-part3 verify-part3-results test-part3-evidence
-all: build/mpi_hello build/mpi_pingpong build/heat build/heat_mpi build/heat_blocks
+.PHONY: all heat serial strips verify-results verify-setup analyze test-analysis check-serial verify-part1 verify-part1-results check-strips verify-part2 verify-part2-results test-part2-evidence blocks check-blocks verify-part3 verify-part3-results test-part3-evidence
+all: heat build/mpi_hello build/mpi_pingpong build/heat build/heat_mpi build/heat_blocks
 
-serial: build/heat
+serial: heat build/heat
+
+heat: scripts/heat.sh
+	install -m 755 $< $@
 
 build/heat: part1/heat_serial.cpp | build
 	$(SERIAL_CXX) $(CXXFLAGS) $< -o $@
@@ -32,7 +35,7 @@ verify-part2: build/heat build/heat_mpi
 	python3 part2/run_experiments.py
 
 verify-part2-results:
-	python3 part2/verify_results.py
+	python3 part2/verify_results.py --data part2/results/2026-11-21-retained-cluster --require-fields
 
 # Evidence-pipeline regression tests use a real serial build and a mocked MPI
 # launcher. They check capture/verification, not distributed solver correctness.
@@ -53,7 +56,7 @@ verify-part3: build/heat build/heat_mpi build/heat_blocks
 	python3 part3/run_experiments.py
 
 verify-part3-results:
-	python3 part3/verify_results.py
+	python3 part3/verify_results.py --data part3/results/2026-11-21-retained-cluster --require-fields --require-p8
 
 # Temporary fixtures and a mocked MPI launcher test evidence capture/validation;
 # these are not distributed solver or performance measurements.
@@ -73,13 +76,7 @@ test-part4:
 verify-part4-results:
 	python3 part4/verify_results.py --data part4/results/2026-11-24-cluster
 
-verify-delivery:
-	python3 part0/05-analysis/verify_setup.py
-	python3 part0/05-analysis/verify_results.py
-	python3 part1/verify_results.py
-	python3 part2/verify_results.py --data part2/results/2026-11-21-retained-cluster --require-fields
-	python3 part3/verify_results.py --data part3/results/2026-11-21-retained-cluster --require-fields --require-p8
-	python3 part4/verify_results.py --data part4/results/2026-11-24-cluster
+verify-delivery: verify-setup verify-results verify-part1-results verify-part2-results verify-part3-results verify-part4-results
 
 # Order-only prerequisite: create the directory without rebuilding merely
 # because another file changes the directory's modification time.

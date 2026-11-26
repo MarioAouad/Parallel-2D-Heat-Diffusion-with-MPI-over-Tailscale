@@ -19,7 +19,7 @@ the corresponding earlier Windows boundary-heated snapshots byte-for-byte.
 All three PNG figures were visually inspected. This is serial evidence; no
 parallel solver has been validated yet.
 
-Read [the analysis](../../ANALYSIS.md) and [delivery checklist](../../DELIVERY.md).
+Read [the analysis](../../ANALYSIS.md) and [course hand-in](../../../docs/deliverables.md).
 From the repository root, run `make verify-part1-results` to verify the public
 archive. New experiments go into a new run folder; this study is preserved.
 Raw loop timings are incidental correctness-study measurements, not Part 4 data.

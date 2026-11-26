@@ -57,7 +57,7 @@ host-key error or a missing directory. Later direct probes do not establish the
 route during the 17 November sweeps. Use the
 [measured route qualifications](../part0/results/README.md) in the report.
 
-[Part 1](../part1/DELIVERY.md) is also complete technically. The next stage is
+[Part 1](../part1/README.md) is also complete technically. The next stage is
 Part 2 strip decomposition; the hours-long Part 0 sweeps need not be repeated
 merely to continue. New setup/troubleshooting instructions remain in the
 numbered [Part 0 guides](../part0/README.md), with the current Git workflow in

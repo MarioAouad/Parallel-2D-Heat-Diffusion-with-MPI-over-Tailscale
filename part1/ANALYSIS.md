@@ -122,7 +122,7 @@ MPI correctness evidence; serial/strips/blocks comparisons remain later work.
 
 ## Delivery and reproducibility
 
-The [delivery checklist](DELIVERY.md) links the sources and all evidence.
+The [results index](results/README.md) links the archived evidence.
 `make check-serial` reruns the six correctness groups. `make verify-part1`
 creates a fresh study directory; `make verify-part1-results` checks the archived
 Ubuntu evidence without running the solver. The latter also checks hashes,

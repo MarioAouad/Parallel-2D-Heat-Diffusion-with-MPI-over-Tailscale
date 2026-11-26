@@ -14,7 +14,7 @@ derivation; [layout-comparison.csv](layout-comparison.csv) answers the required
 P=4,8 strips/blocks comparison for both placements. Live presentation and complete
 all-member private AI records remain separate final submission obligations.
 
-Start with the [VM run guide](RUN.md), [requirement checklist](DELIVERY.md),
+Start with the [VM run guide](RUN.md), [hand-in checklist](../docs/deliverables.md),
 [model explanation](MODEL.md) and [results policy](results/README.md).
 
 | File | Role |

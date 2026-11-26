@@ -90,17 +90,17 @@ table(['Guest','Host CPU model','Guest vCPUs / slots','Guest RAM'],[
  ['heat2','Intel Core i7-1255U','2 / 2','4096 MB configured'],
  ['heat3','Intel Core i7-1255U','2 / 2','4096 MB configured']],widths=[49,205,100,140])
 para('Each guest used Ubuntu 24.04.5 LTS, Open MPI 4.1.6, user mpi, the same absolute repository path, NAT networking and Tailscale inside the guest. Operators reported all laptops on AC, heavy applications closed and Wi-Fi on all three hosts. Guest CPU counts and slot limits were checked before execution; the eight-rank runs used eight real allocated guest vCPUs.')
-para('The network has both direct and DERP observations. These are snapshots, not a continuous route trace. The Windows-host physical core counts do not replace guest vCPU limits. The three CPU models/guests have different serial compute rates; the model therefore uses a measured rate for each guest.')
+para('The network showed both direct and DERP paths. Page 5 gives the observations for each pair. The model uses each guest’s measured serial compute rate.')
 sub('Numerical problem and interface')
 para('We solve u_t = u_xx + u_yy on [0,1]^2 with alpha=1 and h=1/N. Case 1 has four hot edges u=1; Case 2 has hot top/bottom edges including corners, and cold left/right edges. Interior nodes initially have u=0. Test V uses sin(pi x)sin(pi y) with zero boundaries.')
 code('u_next(i,j) = u_old(i,j) + r * (left + right + down + up - 4*centre)\nr = dt/h^2; 0 < r <= 1/4;  storage index = j*(N+1) + i')
 para('The solvers use contiguous double arrays, a fixed arithmetic order and two time levels swapped every step. Only interior nodes are updated; fixed boundaries exist in both buffers. With --T, the number of steps is rounded up and dt adjusted to reach T without exceeding the requested r. Ordinary unstable requests are rejected.')
-para('Executable equivalents are documented: build/heat --decomp serial, build/heat_mpi --decomp strips and build/heat_blocks --decomp blocks. Each accepts --case, --N, --r, --steps or --T, and --out. Output is one full row-major little-endian double field plus a machine-readable summary.')
+para('The ./heat launcher selects serial, strips or blocks with --decomp. Launch the MPI layouts with mpirun. Each solver accepts --case, --N, --r and either --steps or --T. The summary is machine-readable. With --out, the program writes the full field in row-major little-endian doubles.')
 
 page('2. Numerical verification and stability')
 para('Test V has exact solution sin(pi x)sin(pi y) exp(-2 pi^2 T). The Ubuntu convergence study uses T=0.05 and r=0.2. The discrete L2 norm is h sqrt(sum(e^2)); the maximum norm is max(abs(e)).')
-table(['N','Steps','Maximum error','Discrete L2 error','Order'],[
- [r['N'],r['steps'],f"{float(r['err_inf']):.7g}",f"{float(r['err_l2']):.7g}",f"{float(r['order']):.5f}" if r['order'] else '-'] for r in convergence],widths=[48,62,145,145,94])
+table(['N','h = 1/N','Steps','Maximum error','Discrete L2 error','Order'],[
+ [r['N'],r['h'],r['steps'],f"{float(r['err_inf']):.7g}",f"{float(r['err_l2']):.7g}",f"{float(r['order']):.5f}" if r['order'] else '-'] for r in convergence],widths=[40,87,58,116,122,71])
 picture(ROOT/'part1/results/2026-11-19-ubuntu/convergence.png',width=5.8,height=3.0)
 para('Halving h reduces the errors by approximately four: observed orders approach two. Forward Euler is first order in time; fixed r implies dt=O(h^2), giving overall O(h^2) along this refinement path. An independent discrete sine-mode amplification calculation agrees with both recorded norms to the documented tolerance.','SmallReport')
 sub('Deliberately crossing the stability limit')
@@ -139,9 +139,10 @@ for label,key in [('heat1-local','heat1|heat1'),('heat2-local','heat2|heat2'),('
     o=old_by[label];n=links[key]
     data.append([label,f"{float(o['model_latency_us']):.3f}",f"{float(o['model_bandwidth_MiB_s']):.4g}",f"{n['latency_s']*1e6:.3f}",f"{1/n['seconds_per_byte']/2**20:.4g}"])
 table(['Pair','Part0 ts, us','Part0 MiB/s','Part4 ts, us','Part4 MiB/s'],data,widths=[104,98,98,98,96])
-para('Bandwidth is the reciprocal fitted seconds/byte, converted to MiB/s. These are model parameters, not instantaneous packet rates. Local Part0/shared-memory and Part4/TCP values deliberately differ. Cross-guest startup in the current calibration is about 9.98 ms, 175.82 ms and 85.21 ms, orders of magnitude above microsecond interconnects.','SmallReport')
+para('<b>Part 0 route probes.</b> Heat1–heat2 was direct before and after. Heat1–heat3 switched from DERP to direct in the pre-run probe and was direct afterward. Heat2–heat3 showed DERP before and direct afterward. These probes leave the route during each sweep unknown.','SmallReport')
+para('Bandwidth is the reciprocal fitted seconds per byte, converted to MiB/s. The current cross-guest startup estimates are about 9.98, 175.82 and 85.21 ms. The local estimates differ because Part 0 used shared memory and Part 4 forced TCP.','SmallReport')
 sub('Estimator and units')
-para('For each size, take the median half-RTT across the three sweeps. ts is the median of the four size medians at8,16,32,64 bytes. Fit the anchored transfer slope b over the three largest sizes: b=sum(m*(t(m)-ts))/sum(m^2), in seconds/byte. For a payload measured in doubles, tw=8b. All six fitted slopes are positive; RMSE and original samples are retained. Half-RTT assumes roughly symmetric directions.')
+para('For each size, take the median half-RTT across three sweeps. The startup ts is the median at 8, 16, 32 and 64 bytes. Fit the slope b=sum(m*(t(m)-ts))/sum(m^2) over the three largest sizes in seconds per byte. For doubles, tw=8b. All six slopes are positive. Half-RTT assumes roughly symmetric directions.')
 code('compute_q = owned_interior_cells_q * c_guest(q)(N)\nexchange_q = sum_over_neighbors [ ts_link + doubles_qj * tw_link ]\npredicted_step_time = max_q (compute_q + exchange_q)')
 para('Strips send N+1 doubles to each existing neighbor. Blocks send their owned column count along a row boundary and owned row count along a column boundary. Exact uneven ownership and the observed rank-to-guest map determine each cost. The boundary ranks have fewer neighbors. This is the Task 8.2 model extended to heterogeneous guests and real placement.')
 sub('What the model omits')

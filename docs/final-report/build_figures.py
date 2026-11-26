@@ -21,7 +21,6 @@ colors = ['#176B8A','#B75C28','#467845','#7A4F8A']
 styles = [(d,m) for d in ('strips','blocks') for m in ('node','slot')]
 def save(fig,name):
     fig.savefig(OUT/(name+'.png'),bbox_inches='tight')
-    fig.savefig(OUT/(name+'.pdf'),bbox_inches='tight')
     plt.close(fig)
 
 fig, axes = plt.subplots(1,2,figsize=(7,2.8),constrained_layout=True)
@@ -75,4 +74,4 @@ for ax,layout in zip(axes,['strips','blocks']):
     ax.set_xticks([0,4,8]);ax.set_yticks([0,4,8])
 fig.text(.5,-.02,'Schematic ownership only; ghost layers surround each local subdomain. No diagonal halo is needed.',ha='center',fontsize=8)
 save(fig,'decompositions')
-print('Built five report figure pairs in',OUT)
+print('Built five report figures in',OUT)

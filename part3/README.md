@@ -1,15 +1,8 @@
 # Part 3: 2D block decomposition
 
-**Current review, 21 November 2026:** The [new retained-field cluster study](results/2026-11-21-retained-cluster/) passes strict verification: 108/108 exact comparisons, 130 retained fields, all three VMs represented. The retained-field and required P=8 measurement gaps are closed. The full [Part 4 campaign](../part4/DELIVERY.md) is now verified; technical C3 evidence is ready. Earlier dates and open-gap descriptions below refer to the historical archive, not the current delivery.
-
-
-**Status: implemented and previously built/run on the Ubuntu cluster.** The
-19 November archive records 90/90 matches across two/three VMs and P=4,6 timing.
-The historical field/P=8 gaps are now closed by the new study linked above; see
-[recovery](RECOVERY.md), the [delivery checklist](DELIVERY.md) and [analysis](ANALYSIS.md).
-The runner keeps new fields, checks real guest CPU capacity, adds P=8 when capacity
-allows, and refuses oversubscription in cluster mode. Local mocked pipeline tests
-exercise the evidence tools; they do not constitute fresh MPI execution evidence.
+The [reviewed cluster study](results/2026-11-21-retained-cluster/) has 108 exact
+serial comparisons and 130 retained fields. It includes P=8 correctness and
+P=4,8 timings on eight checked guest vCPUs.
 
 | File | Purpose |
 | --- | --- |
@@ -17,11 +10,10 @@ exercise the evidence tools; they do not constitute fresh MPI execution evidence
 | [verify_blocks.py](verify_blocks.py) | Six correctness groups (`make check-blocks`) |
 | [run_experiments.py](run_experiments.py) | Byte-for-byte comparisons, halo-debug transcripts, figures, and the strips-vs-blocks timing check (`make verify-part3`, add `--cluster`) |
 | [verify_results.py](verify_results.py) | Offline check of an archived study (`make verify-part3-results`) |
-| [DELIVERY.md](DELIVERY.md) · [ANALYSIS.md](ANALYSIS.md) · [results/](results/README.md) | Checklist, report answers, evidence index |
+| [Analysis](ANALYSIS.md) and [results](results/README.md) | Model, measured comparison and evidence index |
 
-The serial reference (`build/heat`, Part 1) and the strips solver (`build/heat_mpi`,
-Part 2) are unchanged. The archived Part 2 evidence verifies itself against the exact
-strips source, so blocks live in their own executable, `build/heat_blocks`.
+The [project launcher](../README.md#build-and-run) selects this solver with
+`--decomp blocks`. The underlying executable is `build/heat_blocks`.
 
 ## Build and run (Ubuntu, repository root, as `mpi`)
 
@@ -91,43 +83,13 @@ Each block prints its rows top to bottom, including the ghost row and column val
 Corners print as `-` because they are never exchanged. Every ghost value must equal the
 neighbouring block's owned value at the same (i, j).
 
-## Evidence (Ubuntu)
+## Verify or rerun
 
-1. **One VM** (quick, oversubscribed):
+```bash
+make check-blocks
+python3 part3/verify_results.py --data part3/results/2026-11-21-retained-cluster --require-fields --require-p8
+```
 
-   ```bash
-   make check-blocks      # six correctness groups
-   ```
-
-2. **Cluster** (from ONE VM; all three VMs must have pulled and run `make` in
-   `~/heat-project-repo`, with routes direct in `tailscale ping`):
-
-   ```bash
-   python3 part3/run_experiments.py --cluster
-   python3 part3/verify_results.py --data part3/results/runs/<stamp>
-   ```
-
-   With six checked slots (the archived allocation), the default study includes:
-
-   - 3 cases × 6 values of N × P = 1, 2, 3, 4, 6 byte-for-byte comparisons;
-   - the 2×2 and 3×2 debug transcripts;
-   - the figures;
-   - the strips-vs-blocks timing check: P = 4, 6; N = 512, 2048, 8192; 10 steps; 3 interleaved repetitions.
-
-   Expect roughly 40–60 minutes, since every cross-VM step costs 0.1–1 s.
-
-P = 8 needs eight **real** slots: the rules forbid more processes than allocated vCPUs.
-With 3 VMs × 2 vCPUs the team has six, so the 19 November study measured P = 6 (3×2)
-instead. To measure P = 8 (4×2):
-
-1. Shut a VM down, raise its vCPUs in VirtualBox (Settings → System → Processor), boot it,
-   and check `nproc`. For example, heat-3 at 4 vCPUs gives 2 + 2 + 4 = 8.
-2. On the launching VM, set that VM's slots in `part0/config/cluster.local.sh`, for example
-   `HEAT3_SLOTS=4`.
-3. Run `python3 part3/run_experiments.py --cluster` as usual. It checks every VM's slots
-   against `nproc` over SSH, refuses a slot without a vCPU, and adds P = 8 to the
-   comparisons, the 4×2 halo transcript and the timing stage. The checked slots go into
-   `metadata.json`, and `verify_results.py` requires them for any P > 6.
-
-Since 20 November the runner also keeps every field file (`fields/`, about 3 MB) with its
-SHA-256, so the byte comparison can be repeated offline.
+The first command runs six correctness groups on one VM. The second verifies
+the saved cluster fields and timing matrix offline. For a new study, use the
+[cluster rerun guide](../docs/parts2-3-rerun.md).
